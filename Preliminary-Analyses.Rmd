@@ -1,0 +1,156 @@
+---
+title: "Preliminary Analyses: Immune-checkpoint blockade (ICB) data"
+#author: "BHK lab"
+date: '2022-08-16'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(survival)
+library(survminer)
+library(readr)
+library(magrittr)
+library(summarytools)
+
+```
+
+## Load data
+
+Read RNA-seq expression, clinicopathological characteristics, and gene meta data for ICB Braun data with PMID 32472114.
+
+Note the expression data is log2(TPM + 0.001), where TPM represents transcripts per million.
+
+```{r load ICB data}
+
+# clinicopathological characteristics  
+dat_sample = read.table('C:/IOProject/Roche/ICB_Braun_coldata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample)
+
+# gene meta data
+dat_gene = read.table('C:/IOProject/Roche/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp = read.table('C:/IOProject/Roche/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample = dat_sample[rownames(dat_sample) %in% colnames(dat_exp), ]
+
+dim(dat_sample)
+
+dat_sample <- dat_sample[order(rownames(dat_sample)), ]
+dat_exp <- dat_exp[, order(colnames(dat_exp))]
+```
+
+## Clinical data summary
+
+The detailed clinicopathological characteristics of the Braun cohort including cancer type, age, sex, respose, overall survival (OS), and progression-free survival (PFS).
+
+```{r clinical data, results='asis'}
+dat_sample_sub <- dat_sample[, c("age","sex", "response","t.os", "survival_time")]
+
+#view(dfSummary(dat_sample_sub))
+
+print(dfSummary(dat_sample_sub), method = 'render')
+
+```
+
+
+We assess under the null hypothesis the sex and response is independent using the Chi-squared test. The p-value = 0.963 shows we don't have enough evidence to reject the null hypothesis.
+
+```{r sex response, results='asis'}
+
+dat_sample_sub <- dat_sample_sub[!is.na(dat_sample_sub$response), ]
+dat_sample_sub %$%  
+  ctable(x = sex, y = response,
+         chisq = TRUE,
+         OR    = TRUE,
+         RR    = TRUE,
+         headings = FALSE) %>%
+  print(method = "render")
+
+```
+
+## Logistic regression analysis
+
+To assess the association between genes and response (i.e., R/NR) variable, we fit the logistic regression model.
+
+The p-value = 0.2078 represents there is not a statistically significant association between response and expression data.
+
+```{r logit}
+
+# for a given gene: ENSG00000000457.9
+
+df <- data.frame(x = as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000000457.9",]),
+                 y = dat_sample$response)
+
+df <- df[!is.na(df$y),]
+df$y <- factor(df$y)
+df$y <- ifelse(df$y == "R", 0, 1)
+
+fit <- glm( y ~ x, 
+              data = df, 
+              family = "binomial")
+
+fit_summary <- summary(fit)
+fit_summary
+
+data.frame(gene_id = "ENSG00000000457.9",
+           "logOR" = fit_summary$coefficients["x", "Estimate"],
+           "SE" = fit_summary$coefficients["x", "Std. Error"],
+           "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+
+```
+
+
+## Survival analysis
+
+### Part I
+
+We consider the Kaplan-Meier and log-rank test to assess if there is any statistically difference in survival rate (e.g., OS) if we divide our data based on sex (F vs. M).
+
+The log-rank test p-value = 0.11 shows there is not any significant diffference in survival rate across two group of sex.  	
+
+
+```{r KM}
+
+df <- data.frame(x = as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000000457.9",]),
+                 t.os = dat_sample$t.os,
+                 os = dat_sample$os,
+                 sex = dat_sample$sex)
+
+
+surv_object <- Surv(time = df$t.os, event = df$os)
+fit <- survfit(surv_object ~ sex, data = df)
+
+ggsurvplot(fit, data = df, pval = TRUE)
+
+```
+
+### Part II
+
+To assess the association between genes and time-to-event variables (e.g., OS), we fit the Cox regression model.
+
+The Cox p-value = 0.22 shows no statistically significant association. 
+
+
+```{r coxph}
+
+fit <- coxph(Surv(t.os, os) ~ x, data = df)
+fit_summary <- summary(fit)
+
+fit_summary
+
+data.frame(gene_id = "ENSG00000000457.9",
+           "logHR" = fit_summary$coefficients["x", "coef"],
+           "SE" = fit_summary$coefficients["x", "se(coef)"],
+           "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+
+
+```
+
