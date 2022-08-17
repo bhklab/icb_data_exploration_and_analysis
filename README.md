@@ -1,4 +1,4 @@
-## Immune-checkpoint blockade (ICB) data analyses:
+## Immune-checkpoint blockade (ICB) data analyses
 
 We include the R and Python codes to doing preliminary analyses and meta-analyses using Immune-checkpoint blockade (ICB) data. 
 
