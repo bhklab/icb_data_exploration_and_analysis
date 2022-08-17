@@ -1,0 +1,278 @@
+---
+title: "Meta-analysis: Immune-checkpoint blockade (ICB) data"
+author: "Farnoosh"
+date: '2022-08-16'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(meta)
+library(metafor)
+library(ggplot2)
+library(survival)
+library(survminer)
+library(readr)
+library(magrittr)
+library(forestplot)
+
+```
+
+
+## Load data
+
+Read RNA-seq expression, clinicopathological characteristics, and gene meta data for ICB Braun (PMID 32472114), Nathanson (PMID 27956380), Snyder (PMID 28552987), and Van Allen (PMID 26359337) data.
+
+Note the expression data is log2(TPM + 0.001), where TPM represents transcripts per million.
+
+### Braun study
+
+```{r load ICB braun data}
+
+# clinicopathological characteristics  
+dat_sample_braun = read.table('C:/IOProject/Roche/ICB_Braun_coldata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_braun)
+
+# gene meta data
+dat_gene_braun = read.table('C:/IOProject/Roche/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_braun)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_braun = read.table('C:/IOProject/Roche/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_braun)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_braun = dat_sample_braun[rownames(dat_sample_braun) %in% colnames(dat_exp_braun), ]
+
+dim(dat_sample_braun)
+
+dat_sample_braun <- dat_sample_braun[order(rownames(dat_sample_braun)), ]
+dat_exp_braun <- dat_exp_braun[, order(colnames(dat_exp_braun))]
+
+```
+
+### Nathanson study
+
+```{r load ICB nathanson data}
+
+# clinicopathological characteristics  
+dat_sample_nathanson = read.table('C:/IOProject/Roche/ICB_Nathanson_coldata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_nathanson)
+
+# gene meta data
+dat_gene_nathanson = read.table('C:/IOProject/Roche/ICB_Nathanson_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_nathanson)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_nathanson = read.table('C:/IOProject/Roche/ICB_Nathanson_expr.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_nathanson)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_nathanson = dat_sample_nathanson[rownames(dat_sample_nathanson) %in% colnames(dat_exp_nathanson), ]
+
+dim(dat_sample_nathanson)
+dat_sample_nathanson <- dat_sample_nathanson[order(rownames(dat_sample_nathanson)), ]
+dat_exp_nathanson <- dat_exp_nathanson[, order(colnames(dat_exp_nathanson))]
+
+```
+
+
+### Snyder study
+
+```{r load ICB snyder data}
+
+# clinicopathological characteristics  
+dat_sample_snyder = read.table('C:/IOProject/Roche/ICB_Snyder_coldata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_snyder)
+
+# gene meta data
+dat_gene_snyder = read.table('C:/IOProject/Roche/ICB_Snyder_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_snyder)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_snyder = read.table('C:/IOProject/Roche/ICB_Snyder_expr.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_snyder)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_snyder = dat_sample_snyder[rownames(dat_sample_snyder) %in% colnames(dat_exp_snyder), ]
+
+dim(dat_sample_snyder)
+
+dat_sample_snyder <- dat_sample_snyder[order(rownames(dat_sample_snyder)), ]
+dat_exp_snyder <- dat_exp_snyder[, order(colnames(dat_exp_snyder))]
+
+```
+
+
+### Van Allen study
+
+```{r load ICB van allen data}
+
+# clinicopathological characteristics  
+dat_sample_van_allen = read.table('C:/IOProject/Roche/ICB_Van_Allen_coldata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_van_allen)
+
+# gene meta data
+dat_gene_van_allen = read.table('C:/IOProject/Roche/ICB_Van_Allen_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_van_allen)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_van_allen = read.table('C:/IOProject/Roche/ICB_Van_Allen_expr.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_van_allen)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_van_allen = dat_sample_van_allen[rownames(dat_sample_van_allen) %in% colnames(dat_exp_van_allen), ]
+
+dim(dat_sample_van_allen)
+
+dat_sample_van_allen <- dat_sample_van_allen[order(rownames(dat_sample_van_allen)), ]
+dat_exp_van_allen <- dat_exp_van_allen[, order(colnames(dat_exp_van_allen))]
+
+```
+
+## Survival analysis
+
+To assess the association between genes and time-to-event variable (e.g., OS), we fit the Cox regression model. For a given gene, zwe fit the model under each study to identify the log(HR) and its standard error (SE). We consider a gene (e.g., ENSG00000019995.6) taht ios in common across studies.
+
+```{r coxph}
+
+# Braun study
+
+df <- data.frame(x = as.numeric(dat_exp_braun[rownames(dat_exp_braun) == "ENSG00000019995.6",]),
+                 t.os = dat_sample_braun$t.os,
+                 os = dat_sample_braun$os)
+
+fit <- coxph(Surv(t.os, os) ~ x, data = df)
+fit_summary <- summary(fit)
+
+fit_summary
+
+cox_braun <- data.frame(gene_id = "ENSG00000019995.6",
+             "logHR" = fit_summary$coefficients["x", "coef"],
+             "SE" = fit_summary$coefficients["x", "se(coef)"],
+             "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+
+
+
+# Nathanson study
+
+df <- data.frame(x = as.numeric(dat_exp_nathanson[rownames(dat_exp_nathanson) == "ENSG00000019995.6",]),
+                 t.os = dat_sample_nathanson$t.os,
+                 os = dat_sample_nathanson$os)
+
+fit <- coxph(Surv(t.os, os) ~ x, data = df)
+fit_summary <- summary(fit)
+
+fit_summary
+
+cox_nathanson <- data.frame(gene_id = "ENSG00000019995.6",
+             "logHR" = fit_summary$coefficients["x", "coef"],
+             "SE" = fit_summary$coefficients["x", "se(coef)"],
+             "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+
+# Snyder study
+
+df <- data.frame(x = as.numeric(dat_exp_snyder[rownames(dat_exp_snyder) == "ENSG00000019995.6",]),
+                 t.os = dat_sample_snyder$t.os,
+                 os = dat_sample_snyder$os)
+
+fit <- coxph(Surv(t.os, os) ~ x, data = df)
+fit_summary <- summary(fit)
+
+fit_summary
+
+cox_snyder <- data.frame(gene_id = "ENSG00000019995.6",
+             "logHR" = fit_summary$coefficients["x", "coef"],
+             "SE" = fit_summary$coefficients["x", "se(coef)"],
+             "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+
+# Van Allen  study
+
+df <- data.frame(x = as.numeric(dat_exp_van_allen[rownames(dat_exp_van_allen) == "ENSG00000019995.6",]),
+                 t.os = dat_sample_van_allen$t.os,
+                 os = dat_sample_van_allen$os)
+
+fit <- coxph(Surv(t.os, os) ~ x, data = df)
+fit_summary <- summary(fit)
+
+fit_summary
+
+cox_van_allen <- data.frame(gene_id = "ENSG00000019995.6",
+             "logHR" = fit_summary$coefficients["x", "coef"],
+             "SE" = fit_summary$coefficients["x", "se(coef)"],
+             "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+
+
+
+```
+
+## Meta-analysis
+
+Meta-analyses can be performed to integrate independent studies to identify more reliable findings by increasing statistical power and reducing false positives. The strengths and limitations of meta-analyses are
+evaluated particularly with respect to their ability to assess variation across studies or heterogeneity. Several meta-analysis methods have been proposed such as combining p-values, combining effect estimates, and rankings. 
+
+Approaches that combine effects including fixed- and random-effects (FE & RE) models are widely used to achieve a broad inferential basis for evaluations of effects. Under the FE model, we assume that there is one true effect that underlies all the studies in the analysis, and that all differences in
+observed effects are due to sampling error. In contrast, the RE model incorporates the variability of the effects across studies in addition to the within-study variability using a two-stage hierarchical process. 
+
+Assessing heterogeneity is a critical issue in meta-analysis because different models may lead to different estimates of overall effect and different standard errors.Several approaches have been suggested over the years for how best to assess homogeneity across studies, and the corresponding research is ongoing. DerSimonian and Laird (DL) (or chi2) is widely used to assess the heterogeneity. 
+
+```{r meta analysis, fig.width = 7}
+
+dat_meta <- rbind(cox_braun, cox_nathanson, 
+                  cox_snyder, cox_van_allen)
+
+rownames(dat_meta) <- c("Braun", "Nathanson", "Snyder", "Van allen")
+
+x <-  dat_meta$logHR
+y <- dat_meta$SE
+dat.xy <- data.frame(x, y)
+rownames(dat.xy) <- rownames(dat_meta)
+res <- metagen(x, y, studlab = rownames(dat.xy), 
+                    method.tau = "DL")
+
+
+forest.meta(res,
+            leftcols = c("studlab", "TE", "seTE"),
+            leftlabs = c("ICB study", "Effect", "SE"),
+            xlab = "logHR", 
+            label.e = "Intervention",
+            sortvar = TE, 
+            #pooled.totals = TRUE,
+            smlab = " ",
+            text.random = "Random effect",
+            print.I2.ci = FALSE,
+            print.Q = TRUE,
+            print.pval.Q = TRUE,
+            digits.sd = 2,
+            print.I2 = TRUE,
+            print.tau2 = TRUE,
+            comb.random =TRUE,
+            comb.fixed = TRUE,
+            text.fixed.w = TRUE,
+            colgap.forest.left = "2cm",
+            layout = "RevMan5", 
+            test.overall.random = TRUE,
+            test.overall.fixed = TRUE,
+            xlim = "symmetric",
+            col.square = "grey70",
+            col.inside = "grey70",
+            col.square.lines = "grey30",
+            col.diamond.random = "blue2",
+            col.diamond.fixed  = "red2",
+            ff.xlab = "bold",
+            fontsize = 11,
+            fs.heading = 11.5,
+            squaresize = 0.55,
+            scientific.pval = TRUE,
+            lty.random = NULL,
+            lty.fixed  = NULL)
+
+
+```
+
