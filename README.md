@@ -1,6 +1,6 @@
 # Immune-checkpoint blockade (ICB) data analysis
 
-We include the R and Python codes to doing preliminary analyses and meta-analyses using Immune-checkpoint blockade (ICB) data. 
+We include the R and Python codes to consider preliminary analysis and meta-analysis using the Immune-checkpoint blockade (ICB) data. 
 
 ## Preliminary analysis
 
