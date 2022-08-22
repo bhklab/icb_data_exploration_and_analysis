@@ -12,7 +12,7 @@ The code can be organized into downloading data, preliminary analyses, and Predi
 
 ### Download data
 
-rds_to_tsv.R: Fetch download links from ORCESTRA's API. Download RDS data objects from Zenodo. Extract all the data and parse them into TSV files, and compress them into a zip file. (Feel free to do changes!!)
+rds_to_tsv.R: Fetch download links from ORCESTRA's API. Download RDS data objects from Zenodo. Extract all the data and parse them into TSV files, and compress them into a zip file.
 
 ### Preliminary 
 
