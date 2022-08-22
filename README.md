@@ -10,6 +10,6 @@ The descriptive statistics, logistic regression model, and survival analyses inc
 
 We consider the ICB studies including Braun (PMID 32472114), Nathanson (PMID 27956380), Snyder (PMID 28552987), and Van Allen (PMID 26359337). For a given gene across studies, we do the following steps 
 
-(1) Fit Cox model to assess the association between the gene expression and response outcome (R vs. NR).
+(1) Fit Cox model to assess the association between the gene expression and OS outcome.
 
 (2) Integrate the estimated effect sizes (i.e., logHR) and their variances across studies using the random effect (RE) meta-analysis approach where the DerSimonian and Laird (DL) is applied to estimate the heterogeneity across studies. 
