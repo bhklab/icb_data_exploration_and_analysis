@@ -26,7 +26,7 @@ Note the expression data is log2(TPM + 0.001), where TPM represents transcripts 
 ```{r load ICB data}
 
 # clinicopathological characteristics  
-dat_sample = read.table('~/Data/TSV/ICB_Braun_coldata.tsv', sep="\t") %>% as.data.frame()
+dat_sample = read.table('~/Data/TSV/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample)
 
 # gene meta data
