@@ -39,7 +39,8 @@ meta: Include the scripts to integrate the association of the genes with ICB res
 denovo_Single_Gene/run_denovo_SG.R: Contain the meta-analysis of the association of these genes with ICB response such as OS, PFS, and response. 
 
 PredictIO/run_PredictIO.R: Include the PredictIO signature computation scripts using the top genes significantly associated with ICB response.
-c
+
+
 PredictIO_Validation/run_PredictIO.R: Include the scripts to validate the PredictIO signature derived from the de novo pan-cancer analysis.
 
 
