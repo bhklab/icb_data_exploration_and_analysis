@@ -4,7 +4,7 @@ This repo contains code associated with the PredictIO signature computation alon
 
 ## Data
 
-The data associated with this analysis is available from ....
+The data associated with this analysis downloaded from ORCESTRA's API. The discovery-validation-cohorts XLSX file represents the subset of discovery and validation cohorts for PredictIO signature computation.  
 
 ## Organization of repo
 
