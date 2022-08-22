@@ -1,7 +1,7 @@
 ########################################################################################################################
 ########################################################################################################################
 
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/meta/Meta-Analysis.R")
+source("~/Code/PredictIO_Signature/meta/Meta-Analysis.R")
 
 ########################################################################################################################
 ########################################################################################################################
@@ -11,9 +11,9 @@ Get_Meta_Analysis_PredictIO <- function( ){
 	IO_MetaScoreID = c( "IO_Resistance" , "IO_Sensitive" , "PredictIO" )
 
 	for(k in 1:length(IO_MetaScoreID)){
-		cox_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_COX_result.RData"  , sep="")
-		di_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_DI_result.RData" , sep="")
-		log_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_LogReg_result.RData"  , sep="")
+		cox_RData= paste( "~/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_COX_result.RData"  , sep="")
+		di_RData= paste( "~/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_DI_result.RData" , sep="")
+		log_RData= paste( "~/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_LogReg_result.RData"  , sep="")
 		sigID= IO_MetaScoreID[k]
 
 		height_cox_1 = 6
@@ -103,7 +103,7 @@ Get_Meta_Analysis_PredictIO <- function( ){
 		## Meta-analysis of the COX models (OS) Continous
 		cancer <- Get_Cancer( cancer=cox_os )
 		seq <- Get_Seq( seq=cox_os )
-		Get_Cox_Forestplot( data = cox_os , cancer = cancer , seq = seq , prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , sigID , sep="") , 
+		Get_Cox_Forestplot( data = cox_os , cancer = cancer , seq = seq , prefix= paste( "~/Result/PredictIO/" , sigID , sep="") , 
 							label= paste( "OS_" , sigID , "_Continous_Cox" , sep="" ) , dir="OS" , 
 							height_1 = height_cox_1 , width_1 = width_cox_1 , height_2 = height_cox_2 , width_2 = width_cox_2 , 
 							height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -111,7 +111,7 @@ Get_Meta_Analysis_PredictIO <- function( ){
 		## Meta-analysis of the COX models (OS) High vs Low
 		cancer <- Get_Cancer( cancer=cox_dicho_os )
 		seq <- Get_Seq( seq=cox_dicho_os )
-		Get_Cox_Forestplot( data = cox_dicho_os , cancer = cancer , seq = seq , prefix=paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , sigID , sep="") , 
+		Get_Cox_Forestplot( data = cox_dicho_os , cancer = cancer , seq = seq , prefix=paste( "~/Result/PredictIO/" , sigID , sep="") , 
 							label= paste( "OS_" , sigID , "_Dicho_Cox" , sep="" ) , dir="OS" , 
 							height_1 = height_cox_1 , width_1 = width_cox_1 , height_2 = height_cox_2 , width_2 = width_cox_2 , 
 							height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -119,7 +119,7 @@ Get_Meta_Analysis_PredictIO <- function( ){
 		## Meta-analysis of the COX models (PFS) Continous
 		cancer <- Get_Cancer( cancer=cox_pfs )
 		seq <- Get_Seq( seq=cox_pfs )
-		Get_Cox_Forestplot( data = cox_pfs , cancer = cancer , seq = seq , prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , sigID , sep="") , 
+		Get_Cox_Forestplot( data = cox_pfs , cancer = cancer , seq = seq , prefix= paste( "~/Result/PredictIO/" , sigID , sep="") , 
 							label= paste( "PFS_" , sigID , "_Continous_Cox" , sep="" ) , dir="PFS" , 
 							height_1 = height_cox_1 , width_1 = width_cox_1 , height_2 = height_cox_2 , width_2 = width_cox_2 , 
 							height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -127,7 +127,7 @@ Get_Meta_Analysis_PredictIO <- function( ){
 		## Meta-analysis of the COX models (PFS) High vs Low
 		cancer <- Get_Cancer( cancer=cox_dicho_pfs )
 		seq <- Get_Seq( seq=cox_dicho_pfs )
-		Get_Cox_Forestplot( data = cox_dicho_pfs , cancer = cancer , seq = seq , prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , sigID , sep="") , 
+		Get_Cox_Forestplot( data = cox_dicho_pfs , cancer = cancer , seq = seq , prefix= paste( "~/Result/PredictIO/" , sigID , sep="") , 
 							label= paste( "PFS_" , sigID , "_Dicho_Cox" , sep="" ) , dir="PFS" , 
 							height_1 = height_cox_1 , width_1 = width_cox_1 , height_2 = height_cox_2 , width_2 = width_cox_2 , 
 							height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -138,7 +138,7 @@ Get_Meta_Analysis_PredictIO <- function( ){
 		## Meta-analysis of the CI models (OS) Continous
 		cancer <- Get_Cancer( cancer=di_os )
 		seq <- Get_Seq( seq=di_os )
-		Get_DI_Forestplot( data = di_os , cancer = cancer , seq = seq , prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , sigID , sep="") , 
+		Get_DI_Forestplot( data = di_os , cancer = cancer , seq = seq , prefix= paste( "~/Result/PredictIO/" , sigID , sep="") , 
 							label= paste( "OS_" , sigID , "_Continous_DI" , sep="" ) , dir="OS" , 
 							height_1 = height_DI_1 , width_1 = width_DI_1 , height_2 = height_DI_2 , width_2 = width_DI_2 , 
 							height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -147,7 +147,7 @@ Get_Meta_Analysis_PredictIO <- function( ){
 		## Meta-analysis of the CI models (PFS) Continous
 		cancer <- Get_Cancer( cancer=di_pfs )
 		seq <- Get_Seq( seq=di_pfs )
-		Get_DI_Forestplot( data = di_pfs , cancer = cancer , seq = seq , prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , sigID , sep="") , 
+		Get_DI_Forestplot( data = di_pfs , cancer = cancer , seq = seq , prefix= paste( "~/Result/PredictIO/" , sigID , sep="") , 
 							label= paste( "PFS_" , sigID , "_Continous_DI" , sep="" ) , dir="PFS" , 
 							height_1 = height_DI_1 , width_1 = width_DI_1 , height_2 = height_DI_2 , width_2 = width_DI_2 , 
 							height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -158,7 +158,7 @@ Get_Meta_Analysis_PredictIO <- function( ){
 		## Meta-analysis of the Log Regression models (Response) Continous
 		cancer <- Get_Cancer( cancer=log_response )
 		seq <- Get_Seq( seq=log_response )
-		Get_LogReg_Forestplot( data = log_response , cancer = cancer , seq = seq , prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , sigID , sep="") , 
+		Get_LogReg_Forestplot( data = log_response , cancer = cancer , seq = seq , prefix= paste( "~/Result/PredictIO/" , sigID , sep="") , 
 							label= paste( "Response_" , sigID , "_Continous_LogReg" , sep="" ) , dir="Response" , 
 							height_1 = height_log_1 , width_1 = width_log_1 , height_2 = height_log_2 , width_2 = width_log_2 , 
 							height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -166,7 +166,7 @@ Get_Meta_Analysis_PredictIO <- function( ){
 		## Meta-analysis of the Log Regression models (Response) High vs Low
 		cancer <- Get_Cancer( cancer=log_dicho_response )
 		seq <- Get_Seq( seq=log_dicho_response )
-		Get_LogReg_Forestplot( data = log_dicho_response , cancer = cancer , seq = seq , prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , sigID , sep="") , 
+		Get_LogReg_Forestplot( data = log_dicho_response , cancer = cancer , seq = seq , prefix= paste( "~/Result/PredictIO/" , sigID , sep="") , 
 							label= paste( "Response_" , sigID , "_Dicho_LogReg" , sep="" ) , dir="Response" , 
 							height_1 = height_log_1 , width_1 = width_log_1 , height_2 = height_log_2 , width_2 = width_log_2 , 
 							height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -187,9 +187,9 @@ Get_Meta_Analysis_PredictIO_PerTumor <- function( ){
 
 	for(k in 1:length(IO_MetaScoreID)){
 		for(l in 1:length(tumorID)){
-			cox_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_COX_result.RData"  , sep="")
-			di_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_DI_result.RData" , sep="")
-			log_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_LogReg_result.RData"  , sep="")
+			cox_RData= paste( "~/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_COX_result.RData"  , sep="")
+			di_RData= paste( "~/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_DI_result.RData" , sep="")
+			log_RData= paste( "~/Result/PredictIO/" , IO_MetaScoreID[k] , "/" , IO_MetaScoreID[k] , "_LogReg_result.RData"  , sep="")
 			sigID= IO_MetaScoreID[k]
 
 			height_cox_1 = 6
@@ -283,7 +283,7 @@ Get_Meta_Analysis_PredictIO_PerTumor <- function( ){
 			if( nrow( cox_os ) >= 3 ){
 				cancer <- Get_Cancer( cancer=cox_os )
 				seq <- Get_Seq( seq=cox_os )
-				Get_Cox_Forestplot( data = cox_os , cancer = cancer , seq = seq , prefix = paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
+				Get_Cox_Forestplot( data = cox_os , cancer = cancer , seq = seq , prefix = paste( "~/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
 									label= paste( "OS_" , sigID , "_Continous_Cox" , sep = "" ) , dir="OS" , 
 									height_1 = height_cox_1 , width_1 = width_cox_1 , height_2 = height_cox_2 , width_2 = width_cox_2 , 
 									height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -294,7 +294,7 @@ Get_Meta_Analysis_PredictIO_PerTumor <- function( ){
 			if( nrow( cox_dicho_os ) >= 3 ){
 				cancer <- Get_Cancer( cancer=cox_dicho_os )
 				seq <- Get_Seq( seq=cox_dicho_os )
-				Get_Cox_Forestplot( data = cox_dicho_os , cancer = cancer , seq = seq , prefix = paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep="") , 
+				Get_Cox_Forestplot( data = cox_dicho_os , cancer = cancer , seq = seq , prefix = paste( "~/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep="") , 
 									label = paste( "OS_" , sigID , "_Dicho_Cox" , sep="" ) , dir="OS" , 
 									height_1 = height_cox_1 , width_1 = width_cox_1 , height_2 = height_cox_2 , width_2 = width_cox_2 , 
 									height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -305,7 +305,7 @@ Get_Meta_Analysis_PredictIO_PerTumor <- function( ){
 			if( nrow( cox_pfs ) >= 3 ){
 				cancer <- Get_Cancer( cancer=cox_pfs )
 				seq <- Get_Seq( seq=cox_pfs )
-				Get_Cox_Forestplot( data = cox_pfs , cancer = cancer , seq = seq , prefix = paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
+				Get_Cox_Forestplot( data = cox_pfs , cancer = cancer , seq = seq , prefix = paste( "~/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
 									label= paste( "PFS_" , sigID , "_Continous_Cox" , sep = "" ) , dir = "PFS" , 
 									height_1 = height_cox_1 , width_1 = width_cox_1 , height_2 = height_cox_2 , width_2 = width_cox_2 , 
 									height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -316,7 +316,7 @@ Get_Meta_Analysis_PredictIO_PerTumor <- function( ){
 			if( nrow( cox_dicho_pfs ) >= 3 ){
 				cancer <- Get_Cancer( cancer=cox_dicho_pfs )
 				seq <- Get_Seq( seq=cox_dicho_pfs )
-				Get_Cox_Forestplot( data = cox_dicho_pfs , cancer = cancer , seq = seq , prefix = paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
+				Get_Cox_Forestplot( data = cox_dicho_pfs , cancer = cancer , seq = seq , prefix = paste( "~/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
 									label= paste( "PFS_" , sigID , "_Dicho_Cox" , sep = "" ) , dir = "PFS" , 
 									height_1 = height_cox_1 , width_1 = width_cox_1 , height_2 = height_cox_2 , width_2 = width_cox_2 , 
 									height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -330,7 +330,7 @@ Get_Meta_Analysis_PredictIO_PerTumor <- function( ){
 			if( nrow( di_os ) >= 3 ){
 				cancer <- Get_Cancer( cancer=di_os )
 				seq <- Get_Seq( seq=di_os )
-				Get_DI_Forestplot( data = di_os , cancer = cancer , seq = seq , prefix = paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
+				Get_DI_Forestplot( data = di_os , cancer = cancer , seq = seq , prefix = paste( "~/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
 									label= paste( "OS_" , sigID , "_Continous_DI" , sep = "" ) , dir = "OS" , 
 									height_1 = height_DI_1 , width_1 = width_DI_1 , height_2 = height_DI_2 , width_2 = width_DI_2 , 
 									height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -342,7 +342,7 @@ Get_Meta_Analysis_PredictIO_PerTumor <- function( ){
 			if( nrow( di_pfs ) >= 3 ){
 				cancer <- Get_Cancer( cancer=di_pfs )
 				seq <- Get_Seq( seq=di_pfs )
-				Get_DI_Forestplot( data = di_pfs , cancer = cancer , seq = seq , prefix = paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
+				Get_DI_Forestplot( data = di_pfs , cancer = cancer , seq = seq , prefix = paste( "~/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
 									label = paste( "PFS_" , sigID , "_Continous_DI" , sep = "" ) , dir = "PFS" , 
 									height_1 = height_DI_1 , width_1 = width_DI_1 , height_2 = height_DI_2 , width_2 = width_DI_2 , 
 									height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -355,7 +355,7 @@ Get_Meta_Analysis_PredictIO_PerTumor <- function( ){
 			if( nrow( log_response ) >= 3 ){
 				cancer <- Get_Cancer( cancer = log_response )
 				seq <- Get_Seq( seq = log_response )
-				Get_LogReg_Forestplot( data = log_response , cancer = cancer , seq = seq , prefix = paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
+				Get_LogReg_Forestplot( data = log_response , cancer = cancer , seq = seq , prefix = paste( "~/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
 									label= paste( "Response_" , sigID , "_Continous_LogReg" , sep = "" ) , dir = "Response" , 
 									height_1 = height_log_1 , width_1 = width_log_1 , height_2 = height_log_2 , width_2 = width_log_2 , 
 									height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 
@@ -366,7 +366,7 @@ Get_Meta_Analysis_PredictIO_PerTumor <- function( ){
 			if( nrow( log_dicho_response ) >= 3 ){
 				cancer <- Get_Cancer( cancer = log_dicho_response )
 				seq <- Get_Seq( seq = log_dicho_response )
-				Get_LogReg_Forestplot( data = log_dicho_response , cancer = cancer , seq = seq , prefix = paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
+				Get_LogReg_Forestplot( data = log_dicho_response , cancer = cancer , seq = seq , prefix = paste( "~/Result/Per_TumorType/PredictIO/" , sigID , "/" , tumorID[l]  , sep = "") , 
 									label= paste( "Response_" , sigID , "_Dicho_LogReg" , sep = "" ) , dir = "Response" , 
 									height_1 = height_log_1 , width_1 = width_log_1 , height_2 = height_log_2 , width_2 = width_log_2 , 
 									height_3 = height_cox_3 , width_3 = width_cox_3 , height_4 = height_funnel_4 , width_4 = width_funnel_4 ) 

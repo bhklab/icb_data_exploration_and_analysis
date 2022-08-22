@@ -6,7 +6,7 @@ library(genefu)
 library(forestplot)
 
 
-load( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/denovo_Single_Gene/Single_Gene_COX_OS.RData" ) 
+load( "~/Result/denovo_Single_Gene/Single_Gene_COX_PFS.RData" ) 
 
 meta_res = NULL
 for(i in 1:nrow(hr)){
@@ -48,7 +48,7 @@ meta_res$I2_pval = as.numeric(as.character( meta_res$I2_pval ))
 
 meta_res$fdr <-  p.adjust( meta_res$pval , method= "fdr" ) 
 
-write.table(meta_res , file= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/denovo_Single_Gene/Meta-analysis_Single_Gene_OS.txt" , sep="\t" , quote=FALSE, row.names=FALSE )
-save( meta_res , file= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/denovo_Single_Gene/Meta-analysis_Single_Gene_OS.RData" ) 
+write.table(meta_res , file= "~/Result/denovo_Single_Gene/Meta-analysis_Single_Gene_PFS.txt" , sep="\t" , quote=FALSE, row.names=FALSE )
+save( meta_res , file= "~/Result/denovo_Single_Gene/Meta-analysis_Single_Gene_PFS.RData" ) 
 
 

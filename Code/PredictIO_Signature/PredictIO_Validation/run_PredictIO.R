@@ -1,18 +1,18 @@
 
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/PredictIO_Validation/IO_Resistance.R")
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/PredictIO_Validation/IO_Sensitive.R")
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/PredictIO_Validation/PredictIO.R")
+source("~/Code/PredictIO_Signature/PredictIO_Validation/IO_Resistance.R")
+source("~/Code/PredictIO_Signature/PredictIO_Validation/IO_Sensitive.R")
+source("~/Code/PredictIO_Signature/PredictIO_Validation/PredictIO.R")
 
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/PredictIO_Validation/Meta-Analysis_PredictIO.R")
+source("~/Code/PredictIO_Signature/PredictIO_Validation/Meta-Analysis_PredictIO.R")
 
 ########################################################################################################################
 ########################################################################################################################
 
-dir.create( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" )
+dir.create( "~/Result/PredictIO_Validation/" )
 
 get_Directory <- function( dir ){
 
-	file = paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , dir , sep="" )
+	file = paste( "~/Result/PredictIO_Validation/" , dir , sep="" )
 	
 	metascore = c("IO_Sensitive" , "IO_Resistance" , "PredictIO" ) 
 
@@ -39,7 +39,7 @@ for(z in 1:length( cohort ) ){
 
 	get_Directory( dir= cohort[z] )
 
-	load( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/denovo_Single_Gene/Meta-analysis_Single_Gene_Response.RData" )
+	load( "~/Result/denovo_Single_Gene/Meta-analysis_Single_Gene_Response.RData" )
 
 	m = meta_res[ meta_res$pval <= 0.05 & meta_res$I2_pval > 0.05 , ]
 	m = m[ rev( order( abs( m$coef) ) ) , ]
@@ -70,11 +70,11 @@ for(z in 1:length( cohort ) ){
 ########################################################################################################################
 ########################################################################################################################
 
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/PredictIO_Validation/Meta-Analysis_PredictIO.R")
+source("~/Code/PredictIO_Signature/PredictIO_Validation/Meta-Analysis_PredictIO.R")
 
 cohort = c( "Shiuan" , "VanDenEnde" , "Kim" , "Gide" , "Puch" ,  "Padron")
 
-file = "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/meta_analysis"
+file = "~/Result/PredictIO_Validation/meta_analysis"
 
 outcome = c("Response" , "OS" , "PFS") 
 

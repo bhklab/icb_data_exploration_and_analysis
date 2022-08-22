@@ -11,8 +11,8 @@ library(data.table)
 library(jsonlite)
 
 # Directory to download RDS files and create zip files.
-input_dir <- '~/Documents/ICBCuration/datasets_rds'
-output_dir <- '~/Documents/ICBCuration/datasets_tsv' 
+input_dir <- '~/Data/RDS'
+output_dir <- '~/Data/TSV' 
 
 # Get data object info from ORCESTRA and download the latest RDS data objects from Zenodo.
 icb_objects <- fromJSON(txt='https://www.orcestra.ca/api/clinical_icb/canonical')

@@ -1,6 +1,6 @@
 #################################################################
 #################################################################
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/meta/Meta-Analysis.R")
+source("~/Code/PredictIO_Signature/meta/Meta-Analysis.R")
 
 library(meta)
 library(metafor)
@@ -149,16 +149,12 @@ get_Meta_OR = function( data , signature , prefix , height , width ){
 
 ########################################################################################################################
 ########################################################################################################################
-
-
-##########################################
-##########################################
 ## OS
 
 get_Cox_OS = function( cohort , IO_MetaScoreID ){
 	out = NULL
 	for(i in 1:length( cohort ) ){
-		cox_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_COX_result.RData"  , sep="")
+		cox_RData= paste( "~/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_COX_result.RData"  , sep="")
 		load( cox_RData )
 
 		out = rbind( out , cox_os)
@@ -169,7 +165,7 @@ get_Cox_OS = function( cohort , IO_MetaScoreID ){
 get_Cox_Dicho_OS = function( cohort , IO_MetaScoreID ){
 	out = NULL
 	for(i in 1:length( cohort ) ){
-		cox_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_COX_result.RData"  , sep="")
+		cox_RData= paste( "~/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_COX_result.RData"  , sep="")
 		load( cox_RData )
 
 		out = rbind( out , cox_dicho_os)
@@ -184,7 +180,7 @@ get_Cox_Dicho_OS = function( cohort , IO_MetaScoreID ){
 get_Cox_PFS = function( cohort , IO_MetaScoreID ){
 	out = NULL
 	for(i in 1:length( cohort ) ){
-		cox_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_COX_result.RData"  , sep="")
+		cox_RData= paste( "~/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_COX_result.RData"  , sep="")
 		load( cox_RData )
 
 		out = rbind( out , cox_pfs)
@@ -195,7 +191,7 @@ get_Cox_PFS = function( cohort , IO_MetaScoreID ){
 get_Cox_Dicho_PFS = function( cohort , IO_MetaScoreID ){
 	out = NULL
 	for(i in 1:length( cohort ) ){
-		cox_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_COX_result.RData"  , sep="")
+		cox_RData= paste( "~/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_COX_result.RData"  , sep="")
 		load( cox_RData )
 
 		out = rbind( out , cox_dicho_pfs)
@@ -210,7 +206,7 @@ get_Cox_Dicho_PFS = function( cohort , IO_MetaScoreID ){
 get_LogReg_Response = function( cohort , IO_MetaScoreID ){
 	out = NULL
 	for(i in 1:length( cohort ) ){
-		log_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_LogReg_result.RData"  , sep="")
+		log_RData= paste( "~/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_LogReg_result.RData"  , sep="")
 		load( log_RData )
 
 		out = rbind( out , log_response)
@@ -221,7 +217,7 @@ get_LogReg_Response = function( cohort , IO_MetaScoreID ){
 get_LogReg_Dicho_Response = function( cohort , IO_MetaScoreID ){
 	out = NULL
 	for(i in 1:length( cohort ) ){
-		log_RData= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_LogReg_result.RData"  , sep="")
+		log_RData= paste( "~/Result/PredictIO_Validation/" , cohort[i] , "/" , IO_MetaScoreID , "/" , IO_MetaScoreID , "_LogReg_result.RData"  , sep="")
 		load( log_RData )
 
 		out = rbind( out , log_dicho_response)
@@ -243,14 +239,14 @@ Get_Meta_Analysis_PredictIO <- function( cohort , threshold ){
 		## Meta-analysis of the COX models (OS) Continous
 		cox_os = get_Cox_OS( cohort=cohort , IO_MetaScoreID= IO_MetaScoreID[k] )
 		get_Meta_HR( data=cox_os , signature= IO_MetaScoreID[k] ,
-					prefix=paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/meta_analysis/OS/Meta_analysis_" , IO_MetaScoreID[k] , "_OS_Continuous.pdf" , sep="") ,
+					prefix=paste( "~/Result/PredictIO_Validation/meta_analysis/OS/Meta_analysis_" , IO_MetaScoreID[k] , "_OS_Continuous.pdf" , sep="") ,
 					height= 6 ,
 					width= 7 )
 
 		## Meta-analysis of the COX models (OS) High vs Low
 		cox_dicho_os = get_Cox_Dicho_OS( cohort=cohort , IO_MetaScoreID= IO_MetaScoreID[k] )
 		get_Meta_HR( data=cox_dicho_os , signature= IO_MetaScoreID[k] , 
-					prefix=paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/meta_analysis/OS/Meta_analysis_" , IO_MetaScoreID[k] , "_OS_Dicho.pdf" , sep="") ,
+					prefix=paste( "~/Result/PredictIO_Validation/meta_analysis/OS/Meta_analysis_" , IO_MetaScoreID[k] , "_OS_Dicho.pdf" , sep="") ,
 					height= 6 ,
 					width= 7 )
 
@@ -259,14 +255,14 @@ Get_Meta_Analysis_PredictIO <- function( cohort , threshold ){
 		## Meta-analysis of the COX models (PFS) Continous
 		cox_pfs = get_Cox_PFS( cohort=cohort , IO_MetaScoreID= IO_MetaScoreID[k] )
 		get_Meta_HR( data=cox_pfs , signature= IO_MetaScoreID[k] , 
-					prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/meta_analysis/PFS/Meta_analysis_" , IO_MetaScoreID[k] , "_PFS_Continuous.pdf" , sep="") ,
+					prefix= paste( "~/Result/PredictIO_Validation/meta_analysis/PFS/Meta_analysis_" , IO_MetaScoreID[k] , "_PFS_Continuous.pdf" , sep="") ,
 					height= 6 ,
 					width= 7 )
 
 		## Meta-analysis of the COX models (PFS) High vs Low
 		cox_dicho_pfs = get_Cox_Dicho_PFS( cohort=cohort , IO_MetaScoreID= IO_MetaScoreID[k] )
 		get_Meta_HR( data= cox_dicho_pfs , signature= IO_MetaScoreID[k] , 
-					prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/meta_analysis/PFS/Meta_analysis_" , IO_MetaScoreID[k] , "_PFS_Dicho.pdf" , sep="") ,
+					prefix= paste( "~/Result/PredictIO_Validation/meta_analysis/PFS/Meta_analysis_" , IO_MetaScoreID[k] , "_PFS_Dicho.pdf" , sep="") ,
 					height= 6 ,
 					width= 7 )
 
@@ -275,14 +271,14 @@ Get_Meta_Analysis_PredictIO <- function( cohort , threshold ){
 		## Meta-analysis of the Log Regression models (Response) Continous
 		log_response = get_LogReg_Response( cohort=cohort , IO_MetaScoreID= IO_MetaScoreID[k] )
 		get_Meta_OR( data=log_response , signature= IO_MetaScoreID[k] , 
-					prefix=paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/meta_analysis/Response/Meta_analysis_" , IO_MetaScoreID[k] , "_Response_Continuous.pdf" , sep="") ,
+					prefix=paste( "~/Result/PredictIO_Validation/meta_analysis/Response/Meta_analysis_" , IO_MetaScoreID[k] , "_Response_Continuous.pdf" , sep="") ,
 					height= 6 ,
 					width= 7 )
 
 		## Meta-analysis of the Log Regression models (Response) High vs Low
 		log_dicho_response = get_LogReg_Dicho_Response( cohort=cohort , IO_MetaScoreID= IO_MetaScoreID[k] )
 		get_Meta_OR( data=log_dicho_response , signature= IO_MetaScoreID[k] , 
-					prefix= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/meta_analysis/Response/Meta_analysis_" , IO_MetaScoreID[k] , "_Response_Dicho.pdf" , sep="") ,
+					prefix= paste( "~/Result/PredictIO_Validation/meta_analysis/Response/Meta_analysis_" , IO_MetaScoreID[k] , "_Response_Dicho.pdf" , sep="") ,
 					height= 6 ,
 					width= 7 )
 

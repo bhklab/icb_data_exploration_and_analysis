@@ -1,13 +1,13 @@
 
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/PredictIO/IO_Resistance.R")
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/PredictIO/IO_Sensitive.R")
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/PredictIO/PredictIO.R")
-source("/home/bioinf/bhklab/farnoosh/PredictIO/Prog/PredictIO/Meta-Analysis_PredictIO.R")
+source("~/Code/PredictIO_Signature/PredictIO/IO_Resistance.R")
+source("~/Code/PredictIO_Signature/PredictIO/IO_Sensitive.R")
+source("~/Code/PredictIO_Signature/PredictIO/PredictIO.R")
+source("~/Code/PredictIO_Signature/PredictIO/Meta-Analysis_PredictIO.R")
 
 #################################################################################
 #################################################################################
 
-file = "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO"
+file = "~/Result/PredictIO"
 	
 metascore = c( "IO_Sensitive" , "IO_Resistance", "PredictIO" ) 
 
@@ -53,9 +53,9 @@ for( i in 1:length(metascore) ){
 metascore = c( "IO_Sensitive" , "IO_Resistance", "PredictIO" ) 
 tumorID = c( "Melanoma" , "Lung" , "Kidney"  )
 
-dir.create( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType" )
+dir.create( "~/Result/Per_TumorType" )
 
-file = "/home/bioinf/bhklab/farnoosh/PredictIO/Result/Per_TumorType/PredictIO"
+file = "~/Result/Per_TumorType/PredictIO"
 
 if( dir.exists( file ) ) {
 	unlink( file , recursive = TRUE )
@@ -96,7 +96,7 @@ for( i in 1:length(metascore) ){
 #################################################################################
 
 
-load( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/denovo_Single_Gene/Meta-analysis_Single_Gene_Response.RData" )
+load( "~/Result/denovo_Single_Gene/Meta-analysis_Single_Gene_Response.RData" )
 
 meta_res = as.data.frame(meta_res)
 #colnames(meta_res) = c( "gene" , "coef" , "se" , "pval")

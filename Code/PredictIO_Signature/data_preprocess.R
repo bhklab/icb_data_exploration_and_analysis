@@ -5,11 +5,12 @@ library(PharmacoGx)
 library(matrixcalc)
 library(ggplot2)
 
-##################################################################
-## convert BHK curated data into ExpressionSet obj
-##################################################################
-## EXP
-dir0 <- "/home/bioinf/bhklab/farnoosh/PredictIO/Data"
+############################################################################
+## convert MultiAssayExperiment obj curated data into ExpressionSet obj
+############################################################################
+## Consider the RDS downloaded data
+
+dir0 <- "~/Data/RDS"
 dat_files <- list.files(dir0)[-1]
 dat_files_no_exp <- dat_files[!(dat_files %in% c("ICB_Miao2.rds", "ICB_Rizvi15.rds",
                                           "ICB_Rizvi18.rds", "ICB_Roh.rds",
@@ -72,14 +73,14 @@ expr_rawrnaseq <- lapply(1:length(dat_files_rawrnaseq), function(k){
 names(expr_rawrnaseq) <- substr(dat_files_rawrnaseq, 5, nchar(dat_files_rawrnaseq) - 4)
 
 expr <- c(expr_no_rawrnaseq, expr_rawrnaseq)
-save(expr, file= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/ICB_exp.RData")
+save(expr, file= "~/Result/ICB_exp.RData")
 
 
-################################################################################
-## Remove the validation cohort from the ICB data and only keep cohort data
-################################################################################
+#########################################################################################################
+## Remove the validation cohort from the ICB ExpressionSet objects and only keep discovery cohort data
+#########################################################################################################
 
-load("/home/bioinf/bhklab/farnoosh/PredictIO/Result/ICB_exp.RData")
+load("~/Result/ICB_exp.RData")
 
 study = names(expr)
 study = study[!(study %in% c("Padron", "Puch", "Shiuan", "VanDenEnde", "Kim", "Gide"))]
@@ -88,13 +89,13 @@ study
 expr <- expr[study]
 
 
-save(expr, file="/home/bioinf/bhklab/farnoosh/PredictIO/Result/ICB_exp_filtered.RData")
+save(expr, file="~/Result/ICB_exp_filtered.RData")
 
-################################################################################
-## save validation cohorts as RData
-################################################################################
+##########################################
+## save validation cohorts as RData files
+##########################################
 
-load("/home/bioinf/bhklab/farnoosh/PredictIO/Result/ICB_exp.RData")
+load("~/Result/ICB_exp.RData")
 
 study = names(expr)
 study = study[(study %in% c("Padron", "Puch", "Shiuan", "VanDenEnde", "Kim", "Gide"))]
@@ -102,7 +103,7 @@ study
 
 valid_expr <- expr
 
-dir0 <- "/home/bioinf/bhklab/farnoosh/PredictIO/Data/validation_cohort/"
+dir0 <- "~/Data/validation_cohort/"
 
 for(i in 1:length(study)){
   

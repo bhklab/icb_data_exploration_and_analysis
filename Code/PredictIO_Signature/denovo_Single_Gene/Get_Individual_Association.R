@@ -1,5 +1,5 @@
 
-file = "/home/bioinf/bhklab/farnoosh/PredictIO/Result/denovo_Single_Gene"
+file = "~/Result/denovo_Single_Gene"
 
 if( dir.exists( file ) ) {
 	unlink( file , recursive = TRUE )
@@ -19,7 +19,7 @@ rem <- function(x){
 ##################################################################################
 ##################################################################################
 
-load("/home/bioinf/bhklab/farnoosh/PredictIO/Result/ICB_exp_filtered.RData")
+load("~/Result/ICB_exp_filtered.RData")
 
 library(genefu)
 
@@ -116,13 +116,13 @@ for( i in 1:length(study)){
 
 fdr <- matrix( p.adjust( pval , method= "fdr" ) , ncol= ncol( pval ) , nrow= nrow( pval ) , dimnames= dimnames( pval ) )
 
-save( pval , coef , se , fdr , file= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/denovo_Single_Gene/Single_Gene_LogReg_Response.RData" ) 
+save( pval , coef , se , fdr , file= "~/Result/denovo_Single_Gene/Single_Gene_LogReg_Response.RData" ) 
 
 
 ####################################################################################
 ####################################################################################
 
-source('/home/bioinf/bhklab/farnoosh/PredictIO/Prog/meta/Get_HR.R')
+source('~/Code/PredictIO_Signature/meta/Get_HR.R')
 
 pval = matrix( NA , nrow=length(genes) , ncol=length(tumor) )
 colnames(pval) = tumor
@@ -176,12 +176,12 @@ for( i in 1:length(study)){
 
 fdr <- matrix( p.adjust( pval , method= "fdr" ) , ncol= ncol( pval ) , nrow= nrow( pval ) , dimnames= dimnames( pval ) )
 
-save( pval , hr , se , fdr , file= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/denovo_Single_Gene/Single_Gene_COX_OS.RData" ) 
+save( pval , hr , se , fdr , file= "~/Result/denovo_Single_Gene/Single_Gene_COX_OS.RData" ) 
 
 ############################################################################################################
 ############################################################################################################
 
-source('/home/bioinf/bhklab/farnoosh/PredictIO/Prog/meta/Get_HR.R')
+source('~/Code/PredictIO_Signature/meta/Get_HR.R')
 
 pval = matrix( NA , nrow=length(genes) , ncol=length(tumor) )
 colnames(pval) = tumor
@@ -235,7 +235,7 @@ for( i in 1:length(study)){
 
 fdr <- matrix( p.adjust( pval , method= "fdr" ) , ncol= ncol( pval ) , nrow= nrow( pval ) , dimnames= dimnames( pval ) )
 
-save( pval , hr , se , fdr , file= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/denovo_Single_Gene/Single_Gene_COX_PFS.RData" ) 
+save( pval , hr , se , fdr , file= "~/Result/denovo_Single_Gene/Single_Gene_COX_PFS.RData" ) 
 
 
 ############################################################################################################

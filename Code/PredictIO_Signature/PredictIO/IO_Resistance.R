@@ -19,11 +19,11 @@ rem <- function(x){
 Get_IO_resistance <- function( meta_res ){
 	sig = meta_res[ meta_res$coef > 0 & meta_res$include %in% 1 , ]$gene
 
-	source('/home/bioinf/bhklab/farnoosh/PredictIO/Prog/meta/Get_HR.R')
-	source('/home/bioinf/bhklab/farnoosh/PredictIO/Prog/meta/Get_DI.R')
+	source('~/Code/PredictIO_Signature/meta/Get_HR.R')
+	source('~/Code/PredictIO_Signature/meta/Get_DI.R')
 
 
-	load("/home/bioinf/bhklab/farnoosh/PredictIO/Result/ICB_exp_filtered.RData")
+	load("~/Result/ICB_exp_filtered.RData")
 
 	expr
 	study = names(expr)
@@ -65,7 +65,7 @@ Get_IO_resistance <- function( meta_res ){
 						## Compute the association IO_Resistance signature (HIGH vs LOW) with OS (36 month cutoff) using Cox Regression Model
 						hr = Get_HR_dicho( surv=phenoData(expr[[i]])$os[ phenoData(expr[[i]])$cancer_type %in% tumor[j] ] , time=phenoData(expr[[i]])$t.os[ phenoData(expr[[i]])$cancer_type %in% tumor[j] ] ,
 												 time_censor=36 , variable= geneSig , cutoff= median( geneSig , na.rm=TRUE ) ,
-												 title = paste( study[i] , tumor[j] , 36 , "OS_Overall" , sep="_" ) , ylab="Overall Survival" , dir= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/IO_Resistance/KMPlot/OS" )
+												 title = paste( study[i] , tumor[j] , 36 , "OS_Overall" , sep="_" ) , ylab="Overall Survival" , dir= "~/Result/PredictIO/IO_Resistance/KMPlot/OS" )
 						cox_dicho_os = rbind( cox_dicho_os , 
 								c( study[i] , tumor[j] , toupper( phenoData(expr[[i]])$rna[1] ) , length( geneSig[ !is.na( phenoData(expr[[i]])$os ) & phenoData(expr[[i]])$cancer_type %in% tumor[j] ] ) ,  hr ) )
 
@@ -73,7 +73,7 @@ Get_IO_resistance <- function( meta_res ){
 						## Compute the association IO_Resistance signature (HIGH vs LOW) with OS (36 month cutoff) using Cox Regression Model
 						hr = Get_HR_dicho( surv=phenoData(expr[[i]])$os[ phenoData(expr[[i]])$cancer_type %in% tumor[j] ] , time=phenoData(expr[[i]])$t.os[ phenoData(expr[[i]])$cancer_type %in% tumor[j] ] ,
 												 time_censor=36 , variable= geneSig , cutoff= quantile(geneSig, probs=.66) ,
-												 title = paste( study[i] , tumor[j] , 36 , "OS_Overall" , sep="_" ) , ylab="Overall Survival" , dir= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/IO_Resistance/KMPlot/OS" )
+												 title = paste( study[i] , tumor[j] , 36 , "OS_Overall" , sep="_" ) , ylab="Overall Survival" , dir= "~/Result/PredictIO/IO_Resistance/KMPlot/OS" )
 						cox_tertile_os = rbind( cox_tertile_os , 
 								c( study[i] , tumor[j] , toupper( phenoData(expr[[i]])$rna[1] ) , length( geneSig[ !is.na( phenoData(expr[[i]])$os ) & phenoData(expr[[i]])$cancer_type %in% tumor[j] ] ) ,  hr ) )
 
@@ -98,14 +98,14 @@ Get_IO_resistance <- function( meta_res ){
 						## Compute the association of IO_Resistance signature (HIGH vs LOW) with PFS using Cox Regression Model
 						hr = Get_HR_dicho( surv=phenoData(expr[[i]])$event_occured[ phenoData(expr[[i]])$cancer_type %in% tumor[j] ] , time=phenoData(expr[[i]])$survival_time[ phenoData(expr[[i]])$cancer_type %in% tumor[j] ] ,
 												 time_censor=24 , variable= geneSig , cutoff= median( geneSig , na.rm=TRUE ) ,
-												 title = paste( study[i] , tumor[j] , 36 , "PFS_Overall" , sep="_" ) , ylab="Progression-Free Survival" , dir= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/IO_Resistance/KMPlot/PFS" )
+												 title = paste( study[i] , tumor[j] , 36 , "PFS_Overall" , sep="_" ) , ylab="Progression-Free Survival" , dir= "~/Result/PredictIO/IO_Resistance/KMPlot/PFS" )
 						cox_dicho_pfs = rbind( cox_dicho_pfs , 
 								c( study[i] , tumor[j] , toupper( phenoData(expr[[i]])$rna[1] ) , length( geneSig[ !is.na( phenoData(expr[[i]])$event_occured ) & phenoData(expr[[i]])$cancer_type %in% tumor[j] ] ) ,  hr ) )
 	
 						## Compute the association of IO_Resistance signature (HIGH vs LOW) with PFS using Cox Regression Model
 						hr = Get_HR_dicho( surv=phenoData(expr[[i]])$event_occured[ phenoData(expr[[i]])$cancer_type %in% tumor[j] ] , time=phenoData(expr[[i]])$survival_time[ phenoData(expr[[i]])$cancer_type %in% tumor[j] ] ,
 												 time_censor=24 , variable= geneSig , cutoff= quantile(geneSig, probs=.66) ,
-												 title = paste( study[i] , tumor[j] , 36 , "PFS_Overall" , sep="_" ) , ylab="Progression-Free Survival" , dir= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/IO_Resistance/KMPlot/PFS" )
+												 title = paste( study[i] , tumor[j] , 36 , "PFS_Overall" , sep="_" ) , ylab="Progression-Free Survival" , dir= "~/Result/PredictIO/IO_Resistance/KMPlot/PFS" )
 						cox_tertile_pfs = rbind( cox_tertile_pfs , 
 								c( study[i] , tumor[j] , toupper( phenoData(expr[[i]])$rna[1] ) , length( geneSig[ !is.na( phenoData(expr[[i]])$event_occured ) & phenoData(expr[[i]])$cancer_type %in% tumor[j] ] ) ,  hr ) )
 
@@ -192,7 +192,7 @@ Get_IO_resistance <- function( meta_res ){
 	log_dicho_response = as.data.frame( log_dicho_response )
 	log_tertile_response = as.data.frame( log_tertile_response )
 
-	save( log_response , log_dicho_response , log_tertile_response , file= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/IO_Resistance/IO_Resistance_LogReg_result.RData" )
-	save( cox_os , cox_pfs , cox_dicho_os , cox_dicho_pfs , cox_tertile_os , cox_tertile_pfs , file= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/IO_Resistance/IO_Resistance_COX_result.RData" ) 
-	save(  di_os , di_pfs , file= "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO/IO_Resistance/IO_Resistance_DI_result.RData" ) 
+	save( log_response , log_dicho_response , log_tertile_response , file= "~/Result/PredictIO/IO_Resistance/IO_Resistance_LogReg_result.RData" )
+	save( cox_os , cox_pfs , cox_dicho_os , cox_dicho_pfs , cox_tertile_os , cox_tertile_pfs , file= "~/Result/PredictIO/IO_Resistance/IO_Resistance_COX_result.RData" ) 
+	save(  di_os , di_pfs , file= "~/Result/PredictIO/IO_Resistance/IO_Resistance_DI_result.RData" ) 
 }

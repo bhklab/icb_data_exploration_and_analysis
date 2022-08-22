@@ -32,15 +32,15 @@ Note the expression data is log2(TPM + 0.001), where TPM represents transcripts 
 ```{r load ICB braun data}
 
 # clinicopathological characteristics  
-dat_sample_braun = read.table('C:/IOProject/Roche/ICB_Braun_coldata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_braun = read.table('~/Data/TSV/ICB_Braun_coldata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_braun)
 
 # gene meta data
-dat_gene_braun = read.table('C:/IOProject/Roche/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_braun = read.table('~/Data/TSV/Roche/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_braun)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table('C:/IOProject/Roche/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_braun = read.table('~/Data/TSV/Roche/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_braun)
 
 # Get the subset of data with both clinical and expression data.
@@ -59,15 +59,15 @@ dat_exp_braun <- dat_exp_braun[, order(colnames(dat_exp_braun))]
 ```{r load ICB nathanson data}
 
 # clinicopathological characteristics  
-dat_sample_nathanson = read.table('C:/IOProject/Roche/ICB_Nathanson_coldata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_nathanson = read.table('~/Data/TSV/ICB_Nathanson_coldata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_nathanson)
 
 # gene meta data
-dat_gene_nathanson = read.table('C:/IOProject/Roche/ICB_Nathanson_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_nathanson = read.table('~/Data/TSV/ICB_Nathanson_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_nathanson)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_nathanson = read.table('C:/IOProject/Roche/ICB_Nathanson_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_nathanson = read.table('~/Data/TSV/ICB_Nathanson_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_nathanson)
 
 # Get the subset of data with both clinical and expression data.
@@ -86,15 +86,15 @@ dat_exp_nathanson <- dat_exp_nathanson[, order(colnames(dat_exp_nathanson))]
 ```{r load ICB snyder data}
 
 # clinicopathological characteristics  
-dat_sample_snyder = read.table('C:/IOProject/Roche/ICB_Snyder_coldata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_snyder = read.table('~/Data/TSV/ICB_Snyder_coldata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_snyder)
 
 # gene meta data
-dat_gene_snyder = read.table('C:/IOProject/Roche/ICB_Snyder_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_snyder = read.table('~/Data/TSV/ICB_Snyder_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_snyder)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_snyder = read.table('C:/IOProject/Roche/ICB_Snyder_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_snyder = read.table('~/Data/TSV/ICB_Snyder_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_snyder)
 
 # Get the subset of data with both clinical and expression data.
@@ -114,15 +114,15 @@ dat_exp_snyder <- dat_exp_snyder[, order(colnames(dat_exp_snyder))]
 ```{r load ICB van allen data}
 
 # clinicopathological characteristics  
-dat_sample_van_allen = read.table('C:/IOProject/Roche/ICB_Van_Allen_coldata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_van_allen = read.table('~/Data/TSV/ICB_Van_Allen_coldata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_van_allen)
 
 # gene meta data
-dat_gene_van_allen = read.table('C:/IOProject/Roche/ICB_Van_Allen_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_van_allen = read.table('~/Data/TSV/ICB_Van_Allen_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_van_allen)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_van_allen = read.table('C:/IOProject/Roche/ICB_Van_Allen_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_van_allen = read.table('~/Data/TSV/ICB_Van_Allen_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_van_allen)
 
 # Get the subset of data with both clinical and expression data.

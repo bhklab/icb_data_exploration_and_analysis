@@ -37,18 +37,18 @@ if_NULL = function( x , colnames , study ){
 }
 
 
-Get_IO_Resistance <- function( exprID , meta_res ){
-	sig = meta_res[ meta_res$coef > 0 & meta_res$include %in% 1 , ]$gene
+Get_IO_Sensitive <- function( exprID , meta_res ){
+	sig = meta_res[ meta_res$coef < 0 & meta_res$include %in% 1 , ]$gene
 
-	source('/home/bioinf/bhklab/farnoosh/PredictIO/Prog/meta/Get_HR.R')
-	source('/home/bioinf/bhklab/farnoosh/PredictIO/Prog/meta/Get_DI.R')
+	source('~/Code/PredictIO_Signature/meta/Get_HR.R')
+	source('~/Code/PredictIO_Signature/meta/Get_DI.R')
 
-	load( paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Data/validation_cohort/" , exprID , ".RData" , sep="" ) )
+	load( paste( "~/Data/validation_cohort/" , exprID , ".RData" , sep="" ) )
 
 	cox_os = cox_pfs = cox_dicho_os = cox_dicho_pfs = NULL
 	di_os = di_pfs = NULL
 	log_response = log_dicho_response = NULL
-	auc = NULL
+	auc= NULL
 
 	remove <- rem(expr)
 	if( length(remove) ){
@@ -56,7 +56,7 @@ Get_IO_Resistance <- function( exprID , meta_res ){
 	}
 	data = expr
 
-	cancer_type = unique( clin$cancer_type )
+	cancer_type = unique( clin$cancer_type)
 	cancer_type = ifelse( length( cancer_type ) > 1 , "Pan-Cancer" , cancer_type )
 
 	if( ifelse( is.null( nrow(data[ rownames(data) %in% sig,]) ) , 1 , nrow(data[ rownames(data) %in% sig,]) ) / length( sig ) > 0.7 & ncol(data) > 10 ){
@@ -78,33 +78,32 @@ Get_IO_Resistance <- function( exprID , meta_res ){
 			## Compute the association signature (HIGH vs LOW) with OS (36 month cutoff) using Cox Regression Model
 			hr = Get_HR_dicho( surv=clin$os , time=clin$t.os ,
 									 time_censor=36 , variable= geneSig , cutoff= median( geneSig , na.rm=TRUE ) ,
-									 title = paste( exprID , 36 , "OS_Median" , sep="_" ) , ylab="Overall Survival" , dir= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , exprID , "/IO_Resistance" , sep="" ) )
+									 title = paste( exprID , 36 , "OS_Median" , sep="_" ) , ylab="Overall Survival" , dir= paste( "~/Result/PredictIO_Validation/" , exprID , "/IO_Sensitive" , sep="" ) )
 			cox_dicho_os = rbind( cox_dicho_os , 
 					c( exprID , cancer_type , "TPM" , length( geneSig[ !is.na( clin$os ) ] ) ,  hr ) )
 
 		}
 
 		if( length( geneSig[ !is.na( clin$event_occured ) ]  ) >= 10 ){
-			## Compute the association of ADO signature with PFS using Cox Regression Model
+			## Compute the association of signature with PFS using Cox Regression Model
 			hr = Get_HR_continous( surv=clin$event_occured , time=clin$survival_time ,
 									 time_censor=24 , variable= geneSig )
 			cox_pfs = rbind( cox_pfs , 
 					c( exprID , cancer_type , "TPM" , length( geneSig[ !is.na( clin$event_occured ) ] ) ,  hr ) )
 
-			## Compute the association of ADO signature with PFS using Concordence Index
+			## Compute the association of signature with PFS using Concordence Index
 			cci = Get_DI_continous( surv=clin$event_occured , time=clin$survival_time ,
 									 time_censor=24 , variable= geneSig )
 			di_pfs = rbind( di_pfs , 
 					c( exprID , cancer_type , "TPM" , length( geneSig[ !is.na( clin$event_occured ) ] ) ,  cci ) )
 		
 			
-			## Compute the association of ADO signature (HIGH vs LOW) with PFS using Cox Regression Model
+			## Compute the association of signature (HIGH vs LOW) with PFS using Cox Regression Model
 			hr = Get_HR_dicho( surv=clin$event_occured , time=clin$survival_time ,
 									 time_censor=24 , variable= geneSig , cutoff= median( geneSig , na.rm=TRUE ) ,
-									 title = paste( exprID , 36 , "PFS_Median" , sep="_" ) , ylab="Progression-Free Survival" , dir= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , exprID , "/IO_Resistance" , sep="" ) )
+									 title = paste( exprID , 36 , "PFS_Median" , sep="_" ) , ylab="Progression-Free Survival" , dir= paste( "~/Result/PredictIO_Validation/" , exprID  , "/IO_Sensitive" , sep="" ) )
 			cox_dicho_pfs = rbind( cox_dicho_pfs , 
 					c( exprID , cancer_type , "TPM" , length( geneSig[ !is.na( clin$event_occured ) ] ) ,  hr ) )
-			
 		}
 
 		
@@ -122,20 +121,21 @@ Get_IO_Resistance <- function( exprID , meta_res ){
 						round( confint(fit)[ 2 , ] , 2 ) , 
 						summary(fit)$coefficients[ 2 , 4 ] ) )
 
-			################################################################
-			################################################################
 
+
+			################################################################
+			################################################################
 	  		d = as.data.frame( cbind( x , geneSig ) )
 	  		colnames(d) = c( "response" , "sig" )
 	  		d = d[ !is.na( d$response ) , ]
 	  		d$response = as.numeric( as.character( d$response ) )
 	  		d$sig = as.numeric( as.character( d$sig ) )
 
-			pdf( paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , exprID , "/IO_Resistance/ICB_Response.pdf" , sep="" ) , height=3.5,width=3,bg="transparent")
-
+			pdf( paste( "~/Result/PredictIO_Validation/" , exprID , "/IO_Sensitive/ICB_Response.pdf" , sep="" ) , height=3.5,width=3,bg="transparent")
+		  		
 		  		xLabels <- paste( c( "R" , "NR" ) , "\n(N=" , table(d$response) , ")" , sep = "" )
 			    yLabels <- seq( round( min( d$sig , na.rm=TRUE ) , 1 ) ,  round( max( d$sig , na.rm=TRUE ) , 1 ) , by=.25 ) 
-			    boxplot( sig ~ response , data=d , ylab= "IO_Resistance" , xlab="ICB Response" , main="" , 
+			    boxplot( sig ~ response , data=d , ylab= "IO_Sensitive" , xlab="ICB Response" , main="" , 
 			    	col=adjustcolor( c( "#00bcd4" , "#f44336" ), alpha.f = .4), 	    	 
 			    	boxlty = 1 ,outline=FALSE, axes=FALSE, ylim=c(min( d$sig ) ,  max( d$sig )))
 
@@ -144,36 +144,44 @@ Get_IO_Resistance <- function( exprID , meta_res ){
 				        col=adjustcolor( c( "#00bcd4" , "#f44336" ), alpha.f = .6), 
 				        add = TRUE)
 
-			    axis(side = 2, at=yLabels, labels= as.character( yLabels ), las= 2,
+			    axis(side = 2, at=yLabels, labels=yLabels, las= 2,
 			             cex.axis=1,tick=1,col="black")
 
-		    	axis(side = 1, at=seq( 1 , length(xLabels) , 1 ) , padj=.5, labels=xLabels, las= 1,
+		    	axis(side = 1, at=seq(1,length(xLabels),1) , padj=.5, labels=xLabels, las= 1,
 			      cex.axis=1,tick=1,col="black")
+
 
 				mtext( paste( "LogOR=" , round( summary(fit)$coefficients[ 2 , 1 ] , 2 ) , 
 						" (95CI= [" , round( confint(fit)[ 2 , 1 ] , 2 ) , "; " , 
 						round( confint(fit)[ 2 , 2 ] , 2 ) , "])\nP" , 
 						ifelse( summary(fit)$coefficients[ 2 , 4 ] <= .001 , "??? 0.001" , paste( "=" , format.pval( summary(fit)$coefficients[ 2 , 4 ] , 1 ) ) ) , sep="" ) , 
 						col="#6D6D6D" )
-			dev.off()
+				dev.off()
 
 
 
 			################################################################
 			################################################################
+
+			x = ifelse( clin$response %in% "NR" , 0 , ifelse( clin$response %in% "R" , 1 , NA ) )
+	  		d = as.data.frame( cbind( x , geneSig ) )
+	  		colnames(d) = c( "response" , "sig" )
+	  		d = d[ !is.na( d$response ) , ]
+	  		d$response = as.numeric( as.character( d$response ) )
+	  		d$sig = as.numeric( as.character( d$sig ) )
 
 			basicplot <- ggplot(d, aes(d = response, m = sig )) + geom_roc(n.cuts = 100, labels = FALSE)
 			ROCPlot = basicplot + 
 			  style_roc() +
 			  theme(axis.text = element_text(colour = "black")) +
-			  ggtitle( "IO_Resistance" ) + 
+			  ggtitle( "IO_Sensitive" ) + 
 			  annotate("text", x = .75, y = .25, 
 			           label = paste("AUC =", round(calc_auc(basicplot)$AUC, 2))) +
 			  scale_x_continuous("1 - Specificity", breaks = seq(0, 1, by = .1))
 
 			auc = calc_auc(basicplot)$AUC
 
-			ggsave(filename= paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , exprID , "/IO_Resistance/ICB_Response_ROC.pdf" , sep="" ), plot=ROCPlot, device="pdf", height=4 , width=4 )
+			ggsave(filename= paste( "~/Result/PredictIO_Validation/" , exprID , "/IO_Sensitive/ICB_Response_ROC.pdf" , sep="" ), plot=ROCPlot, device="pdf", height=4 , width=4 )
 
 
 			################################################################
@@ -209,6 +217,7 @@ Get_IO_Resistance <- function( exprID , meta_res ){
 	log_response = if_NULL( x= log_response , colnames= colnames , study= exprID )
 	log_dicho_response = if_NULL( x= log_dicho_response , colnames= colnames , study= exprID )
 
+
 	colnames(cox_os) = colnames(cox_pfs) = colnames(cox_dicho_os) = colnames(cox_dicho_pfs) = c( "study" , "Primary" , "Sequencing" , "N" , "HR" , "SE" , "95di_low" , "95di_high"  , "Pval" )
 	colnames(di_os) = colnames(di_pfs) = c( "study" , "Primary" , "Sequencing" , "N" , "DI" , "SE" , "95di_low" , "95di_high"  , "Pval" )
 	colnames(log_response) = colnames(log_dicho_response) = c( "study" , "Primary" , "Sequencing" , "N", "coef" , "SE" , "95di_low" , "95di_high" , "Pval" )
@@ -226,8 +235,8 @@ Get_IO_Resistance <- function( exprID , meta_res ){
 	log_response = as.data.frame( log_response )
 	log_dicho_response = as.data.frame( log_dicho_response )
 
-	save( log_response , log_dicho_response , file=paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , exprID , "/IO_Resistance/IO_Resistance_LogReg_result.RData" , sep="" ) )
-	save( cox_os , cox_pfs , cox_dicho_os , cox_dicho_pfs , file=paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , exprID , "/IO_Resistance/IO_Resistance_COX_result.RData" , sep="" ) ) 
-	save(  di_os , di_pfs , file=paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , exprID , "/IO_Resistance/IO_Resistance_DI_result.RData" , sep="" ) ) 
-	save(  auc , file=paste( "/home/bioinf/bhklab/farnoosh/PredictIO/Result/PredictIO_Validation/" , exprID , "/IO_Resistance/IO_Resistance_AUC.RData" , sep="" ) ) 
+	save( log_response , log_dicho_response , file=paste( "~/Result/PredictIO_Validation/" , exprID , "/IO_Sensitive/IO_Sensitive_LogReg_result.RData" , sep="" ) )
+	save( cox_os , cox_pfs , cox_dicho_os , cox_dicho_pfs , file=paste( "~/Result/PredictIO_Validation/" , exprID , "/IO_Sensitive/IO_Sensitive_COX_result.RData" , sep="" ) ) 
+	save(  di_os , di_pfs , file=paste( "~/Result/PredictIO_Validation/" , exprID , "/IO_Sensitive/IO_Sensitive_DI_result.RData" , sep="" ) ) 
+	save(  auc , file=paste( "~/Result/PredictIO_Validation/" , exprID , "/IO_Sensitive/IO_Sensitive_AUC.RData" , sep="" ) ) 
 }
