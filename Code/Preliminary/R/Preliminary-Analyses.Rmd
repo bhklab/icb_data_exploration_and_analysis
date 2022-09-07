@@ -1,0 +1,319 @@
+---
+title: "Preliminary Analyses: Immune-checkpoint blockade (ICB) data"
+#author: "BHK lab"
+date: '2022-09-07'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(survival)
+library(survminer)
+library(readr)
+library(magrittr)
+library(summarytools)
+library(ggrepel)
+
+```
+
+## Load data
+
+To download and extract TSV version of ICB data from Zenodo (https://zenodo.org/record/7058399/files/), follow the script named download_tsv_data R file at "~/Code/Download_Data".  
+
+As an example, we consider the ICB Braun data with PMID 32472114 and read RNA-seq expression, clinicopathological characteristics, and gene meta data. The Braun study includes 319 patients with clinical data and 40,994 genes. While only 181 patients have both clinical data and RNA-seq expression data. 
+
+Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represents transcripts per million. 
+
+```{r load braun data}
+
+# clinicopathological characteristics  
+dat_sample = read.table('~/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample)
+
+# gene meta data
+dat_gene = read.table('~/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp = read.table('~/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp)
+
+# Get the subset of data with both clinical and expression data
+
+dat_sample = dat_sample[rownames(dat_sample) %in% colnames(dat_exp), ]
+
+dim(dat_sample)
+
+# Order the samples in both clinical and expression data
+
+dat_sample <- dat_sample[order(rownames(dat_sample)), ]
+dat_exp <- dat_exp[, order(colnames(dat_exp))]
+
+```
+
+## Clinical data summary
+
+The detailed clinicopathological characteristics of the Braun cohort including cancer type, age, sex, respose, overall survival (OS, "t.os"), and progression-free survival (PFS, "survival_time").
+
+```{r clinical data, results='asis'}
+dat_sample_sub <- dat_sample[, c("age","sex", "response","t.os", "survival_time")]
+
+#view(dfSummary(dat_sample_sub))
+
+print(dfSummary(dat_sample_sub, 
+                style = "grid", 
+                plain.ascii = FALSE, 
+                graph.col = FALSE), 
+      method = 'render')
+
+```
+
+
+We assess under the null hypothesis that the sex and response is independent using the Chi-squared test. The p-value = 0.96 shows we don't have enough evidence to reject the null hypothesis.
+
+```{r sex response, results='asis'}
+
+dat_sample_sub <- dat_sample_sub[!is.na(dat_sample_sub$response), ]
+dat_sample_sub %$%  
+  ctable(x = sex, y = response,
+         chisq = TRUE,
+         OR    = TRUE,
+         RR    = TRUE,
+         headings = FALSE) %>%
+  print(method = "render")
+
+```
+
+## Logistic regression analysis
+
+To assess the association between a gene and response (R vs. NR) variable, we fit the logistic regression model. The structural form of the logistic regression model is given as
+
+$$\textit{logit}(E(Y|X)) = \textit{logit}(p) = \textit{ln} (\frac{p}{1-p}) = \beta_0 + \beta_1 X + \epsilon$$
+where
+
+* $Y$  denotes the outcome or dependent variable (e.g., response variable); this is a binary variable $X$  denotes the predictor of interest or the independent variable (e.g., expression data)
+* $p$ denotes the probability of the event occurring, and $\frac{p}{1-p}$ shows the odds ratio (OR)
+* $\beta_0$ denotes the Y-intercept when X is zero; this is not informative for logistic regression models
+* $\beta_1$ denotes the slope or the expected change in log odds per unit change in X
+* $\epsilon$ denotes the errors
+
+The logistic regression model has several assumptions such as observations are independent of each other, no multi-collinearity across independent variables, and linearity of log odds. 
+
+For a given gene ENSG00000065491.8 (TBC1D22B), the boxplot shows 22\% of responses are missing. After removing the missing values, the fitted logistic model represents that there is significant association between gene and response ($log\text{OR} = 0.98$ and $p = 0.003$).
+
+
+```{r logit single gene}
+
+# for a given gene: ENSG00000065491.8
+
+df <- data.frame(x = as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000065491.8",]),
+                 t.os = dat_sample$t.os,
+                 os = dat_sample$os,
+                 sex = dat_sample$sex,
+                 y = dat_sample$response)
+
+
+# boxplot to show the distribution of expression across response groups (R vs. NR)
+
+p <- ggplot(data=df, aes(x= y, y= x, 
+                          fill=y)) + 
+  geom_boxplot() + 
+  ylab("gene expression") +
+  xlab("") +
+  theme(axis.text.x=element_text(size=12,  face="bold"),
+        axis.title=element_text(size=14,face="bold"),
+        axis.text.y=element_text(size=12, face = "bold"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        plot.background = element_blank(), 
+        axis.line = element_line(colour = "black"),
+        legend.position="bottom",
+        legend.text = element_text(size = 8, face="bold"),
+        legend.title = element_blank())
+
+p
+
+# Before fitting the logistic regression model, the missing values are removed
+
+df <- df[!is.na(df$y),]
+df$y <- factor(df$y)
+df$y <- ifelse(df$y == "R", 0, 1)
+
+fit <- glm( y ~ x, 
+              data = df, 
+              family = "binomial")
+
+fit_summary <- summary(fit)
+fit_summary
+
+data.frame(gene_id = "ENSG00000065491.8",
+           "logOR" = fit_summary$coefficients["x", "Estimate"],
+           "SE" = fit_summary$coefficients["x", "Std. Error"],
+           "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+
+```
+
+
+## Survival analysis
+
+### Part I
+
+We consider the Kaplan-Meier (KM) and log-rank test to assess if there is any statistically difference in survival rate (e.g., OS) if we divide our data based on sex (F vs. M).
+
+The log-rank test $p = 0.11$ shows there is not any significant difference in survival rate across two group of sex (F vs. M).  
+
+```{r KM sex}
+
+df <- data.frame(x = as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000065491.8",]),
+                 t.os = dat_sample$t.os,
+                 os = dat_sample$os,
+                 sex = dat_sample$sex,
+                 y = dat_sample$response)
+
+surv_object <- Surv(time = df$t.os, event = df$os)
+fit <- survfit(surv_object ~ sex, data = df)
+
+ggsurvplot(fit, data = df, pval = TRUE, risk.table = TRUE)
+
+```
+
+We consider the KM and log-rank test to assess if there is any statistically difference in survival rate (e.g., OS) if we divide our data based on response (R vs. NR).
+
+The log-rank test $p < 0.0001$ shows there is considerable difference in survival rate across two group of response (R vs. NR).  		
+
+
+```{r KM response}
+
+
+surv_object <- Surv(time = df$t.os, event = df$os)
+fit <- survfit(surv_object ~ y, data = df)
+
+ggsurvplot(fit, data = df, pval = TRUE, risk.table = TRUE)
+
+```
+
+
+### Part II
+
+To assess the association between genes and time-to-event variables (e.g., OS), we fit the Cox proportional hazards model. The semi-parametric Cox PH model is given as 
+
+$$h(t) = h_0(t) \times \text{exp}(\beta X)$$
+where 
+
+* $t$ represents the survival time.
+* $h(t)$ is the hazard function determined by a set of covariate (e.g., X)
+* The coefficient $\beta$ measures the impact of covariate.
+* The term $h_0$ is called the baseline hazard. It corresponds to the value of the hazard if the covariate is equal to zero. The $t$ in $h(t)$ reminds us that the hazard may vary over time.
+* The quantity $\text{e}^\beta$ is called hazard ratios (HR).
+
+The fitted Cox model with $p = 0.52$ shows no statistically significant association between OS and gene expression. 
+
+
+```{r coxph}
+
+fit <- coxph(Surv(t.os, os) ~ x, data = df)
+fit_summary <- summary(fit)
+
+fit_summary
+
+data.frame(gene_id = "ENSG00000065491.8",
+           "logHR" = fit_summary$coefficients["x", "coef"],
+           "SE" = fit_summary$coefficients["x", "se(coef)"],
+           "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+
+
+```
+
+
+### Part III: All genes survival analyses
+
+We assess the association of gene and overall survival (OS) across 18808 protein coding genes. The Benjamini-Hochberg approach is considered to adjust for multiple testing and control false discovery rate (FDR).   
+
+The results after adjusting multiple test show 24 genes associated with survival outcome with $\text{FDR} < 0.05$. The following volcano plot demonstrates the distribution of significant genes.  
+
+```{r cox all genes, warning=FALSE, message=FALSE}
+
+sub_dat_gene <- dat_gene[dat_gene$gene_type == "protein_coding", ]
+sub_dat_gene <- sub_dat_gene[order(sub_dat_gene$gene_id), ]
+sub_dat_exp <- dat_exp[rownames(dat_exp) %in% sub_dat_gene$gene_id, ]
+
+res <- lapply(1:nrow(sub_dat_exp), function(k){
+  
+  df <- data.frame(x = as.numeric(sub_dat_exp[k,]),
+                   t.os = dat_sample$t.os,
+                   os = dat_sample$os)
+
+fit <- coxph(Surv(t.os, os) ~ x, data = df)
+fit_summary <- summary(fit)
+
+
+data.frame(gene_id = rownames(sub_dat_exp)[k],
+           gene_name = sub_dat_gene[k, "gene_name"],
+           "logHR" = fit_summary$coefficients["x", "coef"],
+           "SE" = fit_summary$coefficients["x", "se(coef)"],
+           "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+  
+})
+
+res <- do.call(rbind, res)
+res$padj <- p.adjust(res$pvals, method = "BH")
+
+
+## volcano plot 
+
+res$diffexpressed <- "NO"
+res$diffexpressed[res$logHR > 0 & res$padj < 0.05] <- "FDR < 0.05, logHR > 0"
+res$diffexpressed[res$logHR < 0 & res$padj < 0.05] <- "FDR < 0.05, logHR < 0"
+
+mycolors <- c( "yellow3","deepskyblue1", "grey50")
+names(mycolors) <- c("FDR < 0.05, logHR > 0", 
+                     "FDR < 0.05, logHR < 0", 
+                     "NO")
+
+res$delabel <- NA
+mod_res <- res[abs(res$logHR) > 0 & res$padj < 0.05, ]
+mod_res <- mod_res[order(mod_res$padj, decreasing = FALSE),]
+id <- c(mod_res$gene_name[1:9], mod_res[mod_res$logHR < 0 & 
+                                        mod_res$padj < 0.05, "gene_name"][1:7])
+
+
+for(i in 1:length(id)){
+  
+  k <- which(res$gene_name == id[i])
+  res$delabel[k] <- res[k, ]$gene_name
+  
+}
+
+p <- ggplot(data=res, aes(x=logHR, y=-log10(pvals), 
+                          col=diffexpressed)) + 
+  geom_point(size = 2) + theme_minimal() +
+  ylab("-log10 P value, Braun") +
+  xlab("logHR") +
+  scale_colour_manual(values = mycolors) +
+  theme(axis.text.x=element_text(size=12,  face="bold"),
+        axis.title=element_text(size=14,face="bold"),
+        axis.text.y=element_text(size=12, face = "bold"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        plot.background = element_blank(), 
+        axis.line = element_line(colour = "black"),
+        legend.position="bottom",
+        legend.text = element_text(size = 8, face="bold"),
+        legend.title = element_blank()) +
+  geom_text_repel(aes(label=delabel),
+                  size = 3,
+                  color = "black",
+                  min.segment.length = 0,
+                  na.rm = TRUE, direction = "both", 
+                  seed = 23561,
+                  fontface= "bold")
+
+
+p
+```
+
+
