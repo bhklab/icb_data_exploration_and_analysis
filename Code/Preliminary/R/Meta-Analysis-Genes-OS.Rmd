@@ -47,15 +47,15 @@ Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represent
 ```{r load ICB data Braun}
 
 # clinicopathological characteristics  
-dat_sample_braun = read.table('~/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_braun = read.table('C:/IOProject/Data/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_braun)
 
 # gene meta data
-dat_gene_braun = read.table('~/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_braun = read.table('C:/IOProject/Data/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_braun)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table('~/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_braun = read.table('C:/IOProject/Data/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_braun)
 
 # Get the subset of data with both clinical and expression data.
@@ -83,15 +83,15 @@ sub_dat_exp_braun <- dat_exp_braun[rownames(dat_exp_braun) %in% sub_dat_gene_bra
 ##################################
 
 # clinicopathological characteristics  
-dat_sample_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_nathanson = read.table('C:/IOProject/Data/ICB_Nathanson/ICB_Nathanson_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_nathanson)
 
 # gene meta data
-dat_gene_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_nathanson = read.table('C:/IOProject/Data/ICB_Nathanson/ICB_Nathanson_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_nathanson)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_nathanson = read.table('C:/IOProject/Data/ICB_Nathanson/ICB_Nathanson_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_nathanson)
 
 # Get the subset of data with both clinical and expression data.
@@ -112,15 +112,15 @@ sub_dat_exp_nathanson <- dat_exp_nathanson[rownames(dat_exp_nathanson) %in% sub_
 ####################################
 
 # clinicopathological characteristics  
-dat_sample_snyder = read.table('~/ICB_Snyder/ICB_Snyder_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_snyder = read.table('C:/IOProject/Data/ICB_Snyder/ICB_Snyder_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_snyder)
 
 # gene meta data
-dat_gene_snyder = read.table('~/ICB_Snyder/ICB_Snyder_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_snyder = read.table('C:/IOProject/Data/ICB_Snyder/ICB_Snyder_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_snyder)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_snyder = read.table('~/ICB_Snyder/ICB_Snyder_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_snyder = read.table('C:/IOProject/Data/ICB_Snyder/ICB_Snyder_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_snyder)
 
 # Get the subset of data with both clinical and expression data.
@@ -142,15 +142,15 @@ sub_dat_exp_snyder <- dat_exp_snyder[rownames(dat_exp_snyder) %in% sub_dat_gene_
 #######################################
 
 # clinicopathological characteristics  
-dat_sample_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_van_allen = read.table('C:/IOProject/Data/ICB_Van_Allen/ICB_Van_Allen_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_van_allen)
 
 # gene meta data
-dat_gene_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_van_allen = read.table('C:/IOProject/Data/ICB_Van_Allen/ICB_Van_Allen_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_van_allen)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_van_allen = read.table('C:/IOProject/Data/ICB_Van_Allen/ICB_Van_Allen_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_van_allen)
 
 # Get the subset of data with both clinical and expression data.
@@ -174,15 +174,15 @@ sub_dat_exp_van_allen <- dat_exp_van_allen[rownames(dat_exp_van_allen) %in% sub_
 ################################
 
 # clinicopathological characteristics  
-dat_sample_hugo = read.table('~/ICB_Hugo/ICB_Hugo_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_hugo = read.table('C:/IOProject/Data/ICB_Hugo/ICB_Hugo_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_hugo)
 
 # gene meta data
-dat_gene_hugo = read.table('~/ICB_Hugo/ICB_Hugo_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_hugo = read.table('C:/IOProject/Data/ICB_Hugo/ICB_Hugo_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_hugo)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_hugo = read.table('~/ICB_Hugo/ICB_Hugo_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dat_exp_hugo = read.table('C:/IOProject/Data/ICB_Hugo/ICB_Hugo_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_hugo)
 
 # Get the subset of data with both clinical and expression data.
@@ -206,15 +206,15 @@ sub_dat_exp_hugo <- dat_exp_hugo[rownames(dat_exp_hugo) %in% sub_dat_gene_hugo$g
 ##########################
 
 # clinicopathological characteristics  
-dat_sample_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_miao1 = read.table('C:/IOProject/Data/ICB_Miao1/ICB_Miao1_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_miao1)
 
 # gene meta data
-dat_gene_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_miao1 = read.table('C:/IOProject/Data/ICB_Miao1/ICB_Miao1_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_miao1)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_miao1 = read.table('C:/IOProject/Data/ICB_Miao1/ICB_Miao1_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_miao1)
 
 # Get the subset of data with both clinical and expression data.
@@ -238,15 +238,15 @@ sub_dat_exp_miao1 <- dat_exp_miao1[rownames(dat_exp_miao1) %in% sub_dat_gene_mia
 #########################
 
 # clinicopathological characteristics  
-dat_sample_riaz = read.table('~/ICB_Riaz/ICB_Riaz_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_riaz = read.table('C:/IOProject/Data/ICB_Riaz/ICB_Riaz_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_riaz)
 
 # gene meta data
-dat_gene_riaz = read.table('~/ICB_Riaz/ICB_Riaz_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_riaz = read.table('C:/IOProject/Data/ICB_Riaz/ICB_Riaz_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_riaz)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_riaz = read.table('~/ICB_Riaz/ICB_Riaz_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dat_exp_riaz = read.table('C:/IOProject/Data/ICB_Riaz/ICB_Riaz_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_riaz)
 
 # Get the subset of data with both clinical and expression data.
@@ -270,15 +270,15 @@ sub_dat_exp_riaz <- dat_exp_riaz[rownames(dat_exp_riaz) %in% sub_dat_gene_riaz$g
 #########################
 
 # clinicopathological characteristics  
-dat_sample_gide = read.table('~/ICB_Gide/ICB_Gide_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_gide = read.table('C:/IOProject/Data/ICB_Gide/ICB_Gide_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_gide)
 
 # gene meta data
-dat_gene_gide = read.table('~/ICB_Gide/ICB_Gide_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_gide = read.table('C:/IOProject/Data/ICB_Gide/ICB_Gide_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_gide)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_gide = read.table('~/ICB_Gide/ICB_Gide_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dat_exp_gide = read.table('C:/IOProject/Data/ICB_Gide/ICB_Gide_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_gide)
 
 # Get the subset of data with both clinical and expression data.
@@ -329,14 +329,14 @@ pdata <- list(Braun = dat_sample_braun,
               Gide = dat_sample_gide)
 
 
-dat_gene <- list(Braun = dat_gene_braun[dat_gene_braun$gene_id %in% int, ], 
-                Hugo = dat_gene_hugo[dat_gene_hugo$gene_id %in% int, ],
-                Van_allen = dat_gene_van_allen[dat_gene_van_allen$gene_id %in% int, ],
-                Miao1 = dat_gene_miao1[dat_gene_miao1$gene_id %in% int, ],
-                Nathanson = dat_gene_nathanson[dat_gene_nathanson$gene_id %in% int, ],
-                Riaz = dat_gene_riaz[dat_gene_riaz$gene_id %in% int, ],
-                Snyder = dat_gene_snyder[dat_gene_snyder$gene_id %in% int, ],
-                Gide = dat_gene_gide[dat_gene_gide$gene_id %in% int, ])
+dat_gene <- list(Braun = sub_dat_gene_braun[sub_dat_gene_braun$gene_id %in% int, ], 
+                Hugo = sub_dat_gene_hugo[sub_dat_gene_hugo$gene_id %in% int, ],
+                Van_allen = sub_dat_gene_van_allen[sub_dat_gene_van_allen$gene_id %in% int, ],
+                Miao1 = sub_dat_gene_miao1[sub_dat_gene_miao1$gene_id %in% int, ],
+                Nathanson = sub_dat_gene_nathanson[sub_dat_gene_nathanson$gene_id %in% int, ],
+                Riaz = sub_dat_gene_riaz[sub_dat_gene_riaz$gene_id %in% int, ],
+                Snyder = sub_dat_gene_snyder[sub_dat_gene_snyder$gene_id %in% int, ],
+                Gide = sub_dat_gene_gide[sub_dat_gene_gide$gene_id %in% int, ])
 
 
 ```
