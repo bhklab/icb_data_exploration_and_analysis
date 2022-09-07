@@ -20,7 +20,7 @@ library(ggrepel)
 
 ## Load data
 
-To download and extract TSV version of ICB data from Zenodo (https://zenodo.org/record/7007756/files/), follow the script named download_tsv_data R file at "~/Code/Download_Data".  
+To download and extract TSV version of ICB data from Zenodo (https://zenodo.org/record/7058399/files/), follow the script named download_tsv_data R file at "~/Code/Download_Data".  
 
 As an example, we consider the ICB Braun data with PMID 32472114 and read RNA-seq expression, clinicopathological characteristics, and gene meta data. The Braun study includes 319 patients with clinical data and 40,994 genes. While only 181 patients have both clinical data and RNA-seq expression data. 
 

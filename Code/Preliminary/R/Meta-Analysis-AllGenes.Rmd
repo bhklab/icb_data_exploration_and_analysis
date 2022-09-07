@@ -1,7 +1,7 @@
 ---
 title: "Meta-analysis: Immune-checkpoint blockade (ICB) data"
 author: "Farnoosh"
-date: '2022-08-16'
+date: '2022-09-07'
 output: html_document
 ---
 
@@ -17,6 +17,7 @@ library(survminer)
 library(readr)
 library(magrittr)
 library(forestplot)
+library(ggrepel)
 
 ```
 
@@ -31,13 +32,11 @@ We read RNA-seq expression, clinicopathological characteristics, and gene meta d
 1. Braun (PMID 32472114)
 2. Gide (PMID 30753825)
 3. Hugo (PMID 26997480)
-4. Kim (PMID 30013197)
-5. Miao1 (PMID 29301960)
-6. Nathanson (PMID 27956380) 
-7. Riaz (PMID 29301960)
-8. Snyder (PMID 28552987) 
-9. Van Allen (PMID 26359337)
-10. VanDenEnde (PMID 33504550)
+4. Miao1 (PMID 29301960)
+5. Nathanson (PMID 27956380) 
+6. Riaz (PMID 29301960)
+7. Snyder (PMID 28552987) 
+8. Van Allen (PMID 26359337)
 
 As an example, we share the codes to get read the RNA-seq expression, clinicopathological characteristics, and gene meta data usign ICB Braun data. The Braun study includes 319 patients with clinical data and 40,994 genes. While only 181 patients have both clinical data and RNA-seq expression data. 
 
@@ -68,6 +67,13 @@ dim(dat_sample_braun)
 dat_sample_braun <- dat_sample_braun[order(rownames(dat_sample_braun)), ]
 dat_exp_braun <- dat_exp_braun[, order(colnames(dat_exp_braun))]
 
+# get protein coding genes
+
+sub_dat_gene_braun <- dat_gene_braun[dat_gene_braun$gene_type == "protein_coding", ]
+sub_dat_gene_braun <- sub_dat_gene_braun[order(sub_dat_gene_braun$gene_id), ]
+sub_dat_exp_braun <- dat_exp_braun[rownames(dat_exp_braun) %in% sub_dat_gene_braun$gene_id, ]
+
+
 ```
 
 ```{r load ICB data, include=FALSE}
@@ -95,6 +101,11 @@ dim(dat_sample_nathanson)
 dat_sample_nathanson <- dat_sample_nathanson[order(rownames(dat_sample_nathanson)), ]
 dat_exp_nathanson <- dat_exp_nathanson[, order(colnames(dat_exp_nathanson))]
 
+# get protein coding genes
+
+sub_dat_gene_nathanson <- dat_gene_nathanson[dat_gene_nathanson$gene_type == "protein_coding", ]
+sub_dat_gene_nathanson <- sub_dat_gene_nathanson[order(sub_dat_gene_nathanson$gene_id), ]
+sub_dat_exp_nathanson <- dat_exp_nathanson[rownames(dat_exp_nathanson) %in% sub_dat_gene_nathanson$gene_id, ]
 
 ####################################
 ### Snyder study
@@ -120,6 +131,11 @@ dim(dat_sample_snyder)
 dat_sample_snyder <- dat_sample_snyder[order(rownames(dat_sample_snyder)), ]
 dat_exp_snyder <- dat_exp_snyder[, order(colnames(dat_exp_snyder))]
 
+# get protein coding genes
+
+sub_dat_gene_snyder <- dat_gene_snyder[dat_gene_snyder$gene_type == "protein_coding", ]
+sub_dat_gene_snyder <- sub_dat_gene_snyder[order(sub_dat_gene_snyder$gene_id), ]
+sub_dat_exp_snyder <- dat_exp_snyder[rownames(dat_exp_snyder) %in% sub_dat_gene_snyder$gene_id, ]
 
 #######################################
 ### Van Allen study
@@ -145,6 +161,13 @@ dim(dat_sample_van_allen)
 
 dat_sample_van_allen <- dat_sample_van_allen[order(rownames(dat_sample_van_allen)), ]
 dat_exp_van_allen <- dat_exp_van_allen[, order(colnames(dat_exp_van_allen))]
+
+
+# get protein coding genes
+
+sub_dat_gene_van_allen <- dat_gene_van_allen[dat_gene_van_allen$gene_type == "protein_coding", ]
+sub_dat_gene_van_allen <- sub_dat_gene_van_allen[order(sub_dat_gene_van_allen$gene_id), ]
+sub_dat_exp_van_allen <- dat_exp_van_allen[rownames(dat_exp_van_allen) %in% sub_dat_gene_van_allen$gene_id, ]
 
 ################################
 ### Hugo study
@@ -172,6 +195,12 @@ dat_sample_hugo <- dat_sample_hugo[order(rownames(dat_sample_hugo)), ]
 dat_exp_hugo <- dat_exp_hugo[, order(colnames(dat_exp_hugo))]
 
 
+# get protein coding genes
+
+sub_dat_gene_hugo <- dat_gene_hugo[dat_gene_hugo$gene_type == "protein_coding", ]
+sub_dat_gene_hugo <- sub_dat_gene_hugo[order(sub_dat_gene_hugo$gene_id), ]
+sub_dat_exp_hugo <- dat_exp_hugo[rownames(dat_exp_hugo) %in% sub_dat_gene_hugo$gene_id, ]
+
 ##########################
 ### Miao1 study
 ##########################
@@ -196,6 +225,13 @@ dim(dat_sample_miao1)
 
 dat_sample_miao1 <- dat_sample_miao1[order(rownames(dat_sample_miao1)), ]
 dat_exp_miao1 <- dat_exp_miao1[, order(colnames(dat_exp_miao1))]
+
+
+# get protein coding genes
+
+sub_dat_gene_miao1 <- dat_gene_miao1[dat_gene_miao1$gene_type == "protein_coding", ]
+sub_dat_gene_miao1 <- sub_dat_gene_miao1[order(sub_dat_gene_miao1$gene_id), ]
+sub_dat_exp_miao1 <- dat_exp_miao1[rownames(dat_exp_miao1) %in% sub_dat_gene_miao1$gene_id, ]
 
 #########################
 ### Riaz study
@@ -223,6 +259,12 @@ dat_sample_riaz <- dat_sample_riaz[order(rownames(dat_sample_riaz)), ]
 dat_exp_riaz <- dat_exp_riaz[, order(colnames(dat_exp_riaz))]
 
 
+# get protein coding genes
+
+sub_dat_gene_riaz <- dat_gene_riaz[dat_gene_riaz$gene_type == "protein_coding", ]
+sub_dat_gene_riaz <- sub_dat_gene_riaz[order(sub_dat_gene_riaz$gene_id), ]
+sub_dat_exp_riaz <- dat_exp_riaz[rownames(dat_exp_riaz) %in% sub_dat_gene_riaz$gene_id, ]
+
 #########################
 ### Gide study
 #########################
@@ -248,81 +290,33 @@ dim(dat_sample_gide)
 dat_sample_gide <- dat_sample_gide[order(rownames(dat_sample_gide)), ]
 dat_exp_gide <- dat_exp_gide[, order(colnames(dat_exp_gide))]
 
+# get protein coding genes
 
-#########################
-### Kim study
-#########################
+sub_dat_gene_gide <- dat_gene_gide[dat_gene_gide$gene_type == "protein_coding", ]
+sub_dat_gene_gide <- sub_dat_gene_gide[order(sub_dat_gene_gide$gene_id), ]
+sub_dat_exp_gide <- dat_exp_gide[rownames(dat_exp_gide) %in% sub_dat_gene_gide$gene_id, ]
 
-# clinicopathological characteristics  
-dat_sample_kim = read.table('~/ICB_Kim/ICB_Kim_metadata.tsv', sep="\t") %>% as.data.frame()
-dim(dat_sample_kim)
-
-# gene meta data
-dat_gene_kim = read.table('~/ICB_Kim/ICB_Kim_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
-dim(dat_gene_kim)
-
-# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_kim = read.table('~/ICB_Kim/ICB_Kim_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
-dim(dat_exp_kim)
-
-# Get the subset of data with both clinical and expression data.
-
-dat_sample_kim = dat_sample_kim[rownames(dat_sample_kim) %in% colnames(dat_exp_kim), ]
-
-dim(dat_sample_kim)
-
-dat_sample_kim <- dat_sample_kim[order(rownames(dat_sample_kim)), ]
-dat_exp_kim <- dat_exp_kim[, order(colnames(dat_exp_kim))]
-
-
-##########################
-### VanDenEnde study
-##########################
-
-# clinicopathological characteristics  
-dat_sample_vanDenEnde = read.table('~/ICB_VanDenEnde/ICB_VanDenEnde_metadata.tsv', sep="\t") %>% as.data.frame()
-dim(dat_sample_vanDenEnde)
-
-# gene meta data
-dat_gene_vanDenEnde = read.table('~/ICB_VanDenEnde/ICB_VanDenEnde_expr_genes.tsv', sep="\t") %>% as.data.frame()
-dim(dat_gene_vanDenEnde)
-
-# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_vanDenEnde = read.table('~/ICB_VanDenEnde/ICB_VanDenEnde_expr.tsv', sep="\t") %>% as.data.frame()
-dim(dat_exp_vanDenEnde)
-
-# Get the subset of data with both clinical and expression data.
-
-dat_sample_vanDenEnde = dat_sample_vanDenEnde[rownames(dat_sample_vanDenEnde) %in% colnames(dat_exp_vanDenEnde), ]
-
-dim(dat_sample_vanDenEnde)
-
-dat_sample_vanDenEnde <- dat_sample_vanDenEnde[order(rownames(dat_sample_vanDenEnde)), ]
-dat_exp_vanDenEnde <- dat_exp_vanDenEnde[, order(colnames(dat_exp_vanDenEnde))]
 
 
 #############################################################################################
-## find genes in common across following subset of studies including response outcome
+## find genes in common across following subset of studies including OS outcome
 #############################################################################################
 
-int <- intersect(intersect(intersect(intersect(intersect(intersect(intersect(intersect(intersect(rownames(dat_exp_braun), 
-                 rownames(dat_exp_hugo)), rownames(dat_exp_van_allen)),
-                 rownames(dat_exp_miao1)), rownames(dat_exp_nathanson)), 
-                 rownames(dat_exp_riaz)), rownames(dat_exp_snyder)),
-                 rownames(dat_exp_gide)), rownames(dat_exp_kim)),
-                 rownames(dat_exp_vanDenEnde))
+int <- intersect(intersect(intersect(intersect(intersect(intersect(intersect(rownames(sub_dat_exp_braun), 
+                 rownames(sub_dat_exp_hugo)), rownames(sub_dat_exp_van_allen)),
+                 rownames(sub_dat_exp_miao1)), rownames(sub_dat_exp_nathanson)), 
+                 rownames(sub_dat_exp_riaz)), rownames(sub_dat_exp_snyder)),
+                 rownames(sub_dat_exp_gide))
 
 
-dat_exp <- list(Braun = dat_exp_braun[rownames(dat_exp_braun) %in% int, ], 
-                Hugo = dat_exp_hugo[rownames(dat_exp_hugo) %in% int, ],
-                Van_allen = dat_exp_van_allen[rownames(dat_exp_van_allen) %in% int, ],
-                Miao1 = dat_exp_miao1[rownames(dat_exp_miao1) %in% int, ],
-                Nathanson = dat_exp_nathanson[rownames(dat_exp_nathanson) %in% int, ],
-                Riaz = dat_exp_riaz[rownames(dat_exp_riaz) %in% int, ],
-                Snyder = dat_exp_snyder[rownames(dat_exp_snyder) %in% int, ],
-                Gide = dat_exp_gide[rownames(dat_exp_gide) %in% int, ],
-                Kim = dat_exp_kim[rownames(dat_exp_kim) %in% int, ],
-                VanDenEnde = dat_exp_vanDenEnde[rownames(dat_exp_vanDenEnde) %in% int, ])
+dat_exp <- list(Braun = sub_dat_exp_braun[rownames(sub_dat_exp_braun) %in% int, ], 
+                Hugo = sub_dat_exp_hugo[rownames(sub_dat_exp_hugo) %in% int, ],
+                Van_allen = sub_dat_exp_van_allen[rownames(sub_dat_exp_van_allen) %in% int, ],
+                Miao1 = sub_dat_exp_miao1[rownames(sub_dat_exp_miao1) %in% int, ],
+                Nathanson = sub_dat_exp_nathanson[rownames(sub_dat_exp_nathanson) %in% int, ],
+                Riaz = sub_dat_exp_riaz[rownames(sub_dat_exp_riaz) %in% int, ],
+                Snyder = sub_dat_exp_snyder[rownames(sub_dat_exp_snyder) %in% int, ],
+                Gide = sub_dat_exp_gide[rownames(sub_dat_exp_gide) %in% int, ])
 
 
 pdata <- list(Braun = dat_sample_braun, 
@@ -332,60 +326,59 @@ pdata <- list(Braun = dat_sample_braun,
               Nathanson = dat_sample_nathanson,
               Riaz = dat_sample_riaz,
               Snyder = dat_sample_snyder,
-              Gide = dat_sample_gide,
-              Kim = dat_sample_kim,
-              VanDenEnde = dat_sample_vanDenEnde)
+              Gide = dat_sample_gide)
 
 
 dat_gene <- list(Braun = dat_gene_braun[dat_gene_braun$gene_id %in% int, ], 
-                Hugo = dat_gene_hugo,
-                Van_allen = dat_gene_van_allen,
-                Miao1 = dat_gene_miao1,
-                Nathanson = dat_gene_nathanson,
-                Riaz = dat_gene_riaz,
-                Snyder = dat_gene_snyder,
-                Gide = dat_gene_gide,
-                Kim = dat_gene_kim,
-                VanDenEnde = dat_gene_vanDenEnde)
+                Hugo = dat_gene_hugo[dat_gene_hugo$gene_id %in% int, ],
+                Van_allen = dat_gene_van_allen[dat_gene_van_allen$gene_id %in% int, ],
+                Miao1 = dat_gene_miao1[dat_gene_miao1$gene_id %in% int, ],
+                Nathanson = dat_gene_nathanson[dat_gene_nathanson$gene_id %in% int, ],
+                Riaz = dat_gene_riaz[dat_gene_riaz$gene_id %in% int, ],
+                Snyder = dat_gene_snyder[dat_gene_snyder$gene_id %in% int, ],
+                Gide = dat_gene_gide[dat_gene_gide$gene_id %in% int, ])
 
 
 ```
 
+## Survival analysis (OS) 
 
-## Logistic regression analysis 
+For common protein coding genes across selected ICB studies, we assess the association of genes and overall survival (OS) by fitting the Cox model per study. Then, the meta-analysis is applied to integrate the results (i.e., logHR and SE) across ICB studies. The volcano plot is considered to show the   
 
-For each study, we assess the association between genes and response variable (R vs NR) by fitting the logistic regression model. For a given gene, we fit the model under each study to identify the log(OR) and its standard error (SE). We consider a gene (e.g., ENSG00000065491.8 or TBC1D22B) that is in common across selected ICB studies.
+```{r cox all genes, warning=FALSE, message=FALSE}
 
-```{r logistic regression}
-
-logit_res <- lapply(1:length(dat_exp), function(k){
+cox_res <- lapply(1:length(dat_exp), function(k){
   
-  print(k)
   sub_dat_exp <- dat_exp[[k]]
   sub_pdata <- pdata[[k]]
+  sub_dat_gene <- dat_gene[[k]]
   
-  df <- data.frame(x = as.numeric(sub_dat_exp[rownames(sub_dat_exp) == "ENSG00000065491.8",]),
-                   y = sub_pdata$response)
+  res <- lapply(1:nrow(sub_dat_exp), function(j){
+    
+    df <- data.frame(x = as.numeric(sub_dat_exp[j,]),
+                     t.os = sub_pdata$t.os,
+                     os = sub_pdata$os)
+    
+    fit <- coxph(Surv(t.os, os) ~ x, data = df)
+    fit_summary <- summary(fit)
+    
+    data.frame(study = names(dat_exp)[k],
+               gene_id = rownames(sub_dat_exp)[j],
+               gene_name = sub_dat_gene[sub_dat_gene$gene_id == rownames(sub_dat_exp)[j], "gene_name"],
+               "logHR" = fit_summary$coefficients["x", "coef"],
+               "SE" = fit_summary$coefficients["x", "se(coef)"],
+               "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+    
+  })
+  
+ res <- do.call(rbind, res)
+ res$padj <- p.adjust(res$pvals, method = "BH")  
+ res
+ 
+})
 
-  df <- df[!is.na(df$y),]
-  df$y <- factor(df$y)
-  df$y <- ifelse(df$y == "R", 0, 1)
+cox_res <- do.call(rbind, cox_res)
 
-  fit <- glm( y ~ x, 
-            data = df, 
-            family = "binomial")
-
-fit_summary <- summary(fit)
-
- data.frame(gene_id = "ENSG00000065491.8",
-           "logOR" = fit_summary$coefficients["x", "Estimate"],
-           "SE" = fit_summary$coefficients["x", "Std. Error"],
-           "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
- })
-
-
-logit_res <- do.call(rbind, logit_res)
-rownames(logit_res) <- names(dat_exp)
   
 ```
 
@@ -400,60 +393,85 @@ observed effects are due to sampling error. In contrast, the RE model incorporat
 
 Assessing heterogeneity is a critical issue in meta-analysis because different models may lead to different estimates of overall effect and different standard errors.Several approaches have been suggested over the years for how best to assess homogeneity across studies, and the corresponding research is ongoing. DerSimonian and Laird (DL) (or chi2) is widely used to assess the heterogeneity. 
 
-### Part I: response (R vs. NR)
+### Part I: Overall survival (OS)
 
-The forest plot demonstrates the fitted logistic regression model under each study including  the logOR, SE and p-value. Then, the meta-analysis was applied to integrate the results across studies using DL method to estimate heterogeneity (i.e., $I^2 = 45\%$ and $p = 6.07e-02$). Both FE ($p = 0.56$) and RE ($p=0.81$) model show no statistically significant p-values after integration.      
+The meta-analysis was applied to integrate the results (logHR, SE) across studies using DL method to estimate heterogeneity. We consider the multiple test correction (Benjamini-Hochberg) and genes TMEM140 (logHR = -0.22, p = 5.4e-04, FDR = 0.12) and GOLGA8S (logHR = 0.08, p = 4.7e-05, FDR = 0.02) with FDR < 0.15 are associated with OS. The volcano plot shows the genes associated with OS with p < 0.05.    
 
-```{r meta analysis logistic resgression, fig.width = 7}
+```{r meta analysis logistic resgression, fig.width = 7, warning=FALSE, message=FALSE, echo=FALSE}
 
-dat_meta <- logit_res
+meta_res <- lapply(1:length(int), function(k){
+  
+  dat_meta <- cox_res[cox_res$gene_id == int[k], ]
+  x <-  dat_meta$logHR
+  y <- dat_meta$SE
+  pvalue <- dat_meta$pvals
 
-x <-  dat_meta$logOR
-y <- dat_meta$SE
-pvalue <- dat_meta$pvals
-
-dat.xy <- data.frame(x, y, pvalue)
-rownames(dat.xy) <- rownames(dat_meta)
-res <- metagen(x, y, studlab = rownames(dat.xy), 
+  dat.xy <- data.frame(x, y, pvalue)
+  rownames(dat.xy) <- rownames(dat_meta)
+  res <- metagen(x, y, studlab = rownames(dat.xy), 
                     method.tau = "DL")
 
+ data.frame(gene_id = dat_meta$gene_id[1],
+            gene_name = dat_meta$gene_name[1], 
+            TE_RE = res$TE.random,
+            pval_RE = res$pval.random,
+            I2 = res$I2,
+            Q_pval = res$pval.Q)
 
-forest.meta(res,
-            leftcols = c("studlab", "TE", "seTE", "pval"),
-            leftlabs = c("ICB study/TBC1D22B", "logOR", "SE", "P value"),
-            xlab = "logOR", 
-            label.e = "Intervention",
-            sortvar = TE, 
-            #pooled.totals = TRUE,
-            smlab = " ",
-            text.random = "Random effect",
-            print.I2.ci = FALSE,
-            print.Q = TRUE,
-            print.pval.Q = TRUE,
-            digits.sd = 2,
-            print.I2 = TRUE,
-            print.tau2 = TRUE,
-            comb.random =TRUE,
-            comb.fixed = TRUE,
-            text.fixed.w = TRUE,
-            colgap.forest.left = "2cm",
-            layout = "RevMan5", 
-            test.overall.random = TRUE,
-            test.overall.fixed = TRUE,
-            xlim = "symmetric",
-            col.square = "grey70",
-            col.inside = "grey70",
-            col.square.lines = "grey30",
-            col.diamond.random = "blue2",
-            col.diamond.fixed  = "red2",
-            ff.xlab = "bold",
-            fontsize = 11,
-            fs.heading = 11.5,
-            squaresize = 0.55,
-            scientific.pval = TRUE,
-            lty.random = NULL,
-            lty.fixed  = NULL)
+})
 
+meta_res  <- do.call(rbind, meta_res )
+meta_res$padj <- p.adjust(meta_res$pval_RE, method = "BH")
+
+## volcano plot 
+
+meta_res$diffexpressed <- "NO"
+meta_res$diffexpressed[meta_res$TE_RE > 0 & meta_res$pval_RE < 0.05] <- "p < 0.05, logHR > 0"
+meta_res$diffexpressed[meta_res$TE_RE < 0 & meta_res$pval_RE < 0.05] <- "p < 0.05, logHR < 0"
+
+mycolors <- c( "yellow3","deepskyblue1", "grey50")
+names(mycolors) <- c("p < 0.05, logHR > 0", 
+                     "p < 0.05, logHR < 0", 
+                     "NO")
+
+meta_res$delabel <- NA
+id <- meta_res[meta_res$pval_RE < 0.05, "gene_name"]
+
+
+for(i in 1:length(id)){
+  
+  k <- which(meta_res$gene_name == id[i])
+  meta_res$delabel[k] <- meta_res[k, ]$gene_name
+  
+}
+
+p <- ggplot(data=meta_res, aes(x=TE_RE, y=-log10(pval_RE), 
+                          col=diffexpressed)) + 
+  geom_point(size = 2) + theme_minimal() +
+  ylab("-log10 P value, RE meta-analysis") +
+  xlab("logHR") +
+  scale_colour_manual(values = mycolors) +
+  theme(axis.text.x=element_text(size=12,  face="bold"),
+        axis.title=element_text(size=14,face="bold"),
+        axis.text.y=element_text(size=12, face = "bold"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        plot.background = element_blank(), 
+        axis.line = element_line(colour = "black"),
+        legend.position="bottom",
+        legend.text = element_text(size = 8, face="bold"),
+        legend.title = element_blank()) +
+  geom_text_repel(aes(label=delabel),
+                  size = 3,
+                  color = "black",
+                  min.segment.length = 0,
+                  na.rm = TRUE, direction = "both", 
+                  seed = 23561,
+                  fontface= "bold")
+
+
+p
 
 ```
 
