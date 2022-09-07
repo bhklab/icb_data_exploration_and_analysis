@@ -219,6 +219,9 @@ dat_sample_riaz = dat_sample_riaz[rownames(dat_sample_riaz) %in% colnames(dat_ex
 
 dim(dat_sample_riaz)
 
+dat_sample_riaz <- dat_sample_riaz[order(rownames(dat_sample_riaz)), ]
+dat_exp_riaz <- dat_exp_riaz[, order(colnames(dat_exp_riaz))]
+
 
 #########################
 ### Gide study
