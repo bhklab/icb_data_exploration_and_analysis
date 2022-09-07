@@ -28,20 +28,16 @@ Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represent
 ```{r load ICB data}
 
 # clinicopathological characteristics  
-<<<<<<< HEAD
 #dat_sample = read.table('C:/IOProject/Roche/ICB_Braun_coldata.tsv', sep="\t") %>% as.data.frame()
-dat_sample = read.table('C:/IOProject/Data/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
-=======
-dat_sample = read.table('~/Data/TSV/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
->>>>>>> 493ff94be5ee93dd3e798b46ae4a803eb5534ce3
+dat_sample = read.table('~/Data/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample)
 
 # gene meta data
-dat_gene = read.table('C:/IOProject/Data/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene = read.table('~/Data/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp = read.table('C:/IOProject/Data/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp = read.table('~/Data/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp)
 
 # Get the subset of data with both clinical and expression data
