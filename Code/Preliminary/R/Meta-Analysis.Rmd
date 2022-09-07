@@ -48,7 +48,11 @@ Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represent
 ```{r load ICB data Braun}
 
 # clinicopathological characteristics  
+<<<<<<< HEAD
 dat_sample_braun = read.table('C:/IOProject/Data/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+=======
+dat_sample_braun = read.table('~/Data/TSV/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+>>>>>>> 493ff94be5ee93dd3e798b46ae4a803eb5534ce3
 dim(dat_sample_braun)
 
 # gene meta data
@@ -77,7 +81,11 @@ dat_exp_braun <- dat_exp_braun[, order(colnames(dat_exp_braun))]
 ##################################
 
 # clinicopathological characteristics  
+<<<<<<< HEAD
 dat_sample_nathanson = read.table('C:/IOProject/Data/ICB_Nathanson/ICB_Nathanson_metadata.tsv', sep="\t") %>% as.data.frame()
+=======
+dat_sample_nathanson = read.table('~/Data/TSV/ICB_Nathanson_metadata.tsv', sep="\t") %>% as.data.frame()
+>>>>>>> 493ff94be5ee93dd3e798b46ae4a803eb5534ce3
 dim(dat_sample_nathanson)
 
 # gene meta data
@@ -101,7 +109,11 @@ dat_exp_nathanson <- dat_exp_nathanson[, order(colnames(dat_exp_nathanson))]
 ####################################
 
 # clinicopathological characteristics  
+<<<<<<< HEAD
 dat_sample_snyder = read.table('C:/IOProject/Data/ICB_Snyder/ICB_Snyder_metadata.tsv', sep="\t") %>% as.data.frame()
+=======
+dat_sample_snyder = read.table('~/Data/TSV/ICB_Snyder_metadata.tsv', sep="\t") %>% as.data.frame()
+>>>>>>> 493ff94be5ee93dd3e798b46ae4a803eb5534ce3
 dim(dat_sample_snyder)
 
 # gene meta data
@@ -126,7 +138,11 @@ dat_exp_snyder <- dat_exp_snyder[, order(colnames(dat_exp_snyder))]
 #######################################
 
 # clinicopathological characteristics  
+<<<<<<< HEAD
 dat_sample_van_allen = read.table('C:/IOProject/Data/ICB_Van_Allen/ICB_Van_Allen_metadata.tsv', sep="\t") %>% as.data.frame()
+=======
+dat_sample_van_allen = read.table('~/Data/TSV/ICB_Van_Allen_metadata.tsv', sep="\t") %>% as.data.frame()
+>>>>>>> 493ff94be5ee93dd3e798b46ae4a803eb5534ce3
 dim(dat_sample_van_allen)
 
 # gene meta data

@@ -4,19 +4,15 @@ This repo contains code associated with the PredictIO signature computation alon
 
 ## Data
 
-The data associated with this analysis is available from ....
+The data associated with this analysis downloaded from ORCESTRA's API. The discovery-validation-cohorts XLSX file represents the subset of discovery and validation cohorts for PredictIO signature computation.  
 
 ## Organization of repo
 
-The code can be organized into downloading data, preprocessing data, preliminary analyses, and PredictIO signature computation scripts. 
+The code can be organized into downloading data, preliminary analyses, and PredictIO signature computation scripts. 
 
 ### Download data
 
-rds_to_tsv.R: Fetch download links from ORCESTRA's API. Download RDS data objects from Zenodo. Extract all the data and parse them into TSV files, and compress them into a zip file. (Feel free to ddo changes!!)
-
-### Data preprocessing
-
-preprocess.R: Convert the MultiAssayExperiment object data into ExpressionSet object for the PredictIO signature analyses using RDS files. 
+rds_to_tsv.R: Fetch download links from ORCESTRA's API. Download RDS data objects from Zenodo. Extract all the data and parse them into TSV files, and compress them into a zip file.
 
 ### Preliminary 
 
@@ -35,6 +31,8 @@ Meta-analyses.Rmd/Meta-analyses.ipynb: Consider the ICB studies including Braun 
 ### PredictIO signature
 
 meta: Include the scripts to integrate the association of the genes with ICB response across ICB studies using the meta-analyses, Egger test, and subgroup analyses along with the visualization plots such as forest plot and funnel plot. 
+
+preprocess.R: Convert the MultiAssayExperiment object data into ExpressionSet object for the PredictIO signature analyses using RDS files. 
 
 denovo_Single_Gene/run_denovo_SG.R: Contain the meta-analysis of the association of these genes with ICB response such as OS, PFS, and response. 
 
