@@ -4,7 +4,7 @@
 # 3. Extract all he data and parse them into TSV files, and
 # 4. Compress them into a zip file.
 
-options(timeout=600)
+options(timeout=1000)
 
 library(stringr)
 library(data.table)
@@ -19,7 +19,9 @@ icb_objects <- fromJSON(txt='https://www.orcestra.ca/api/clinical_icb/canonical'
 for(obj_name in icb_objects$name){
   link <- icb_objects$downloadLink[icb_objects$name == obj_name]
   filename <- paste0(obj_name, '.rds')
-  download.file(url=link, destfile=file.path(input_dir, filename))
+  if(!file.exists(file.path(input_dir, filename))){
+    download.file(url=link, destfile=file.path(input_dir, filename))
+  }
 }
 
 # For each data object, extract metadata, assay data and gene metadata, parse the data into TSV files, and compress them into a Zip file.
