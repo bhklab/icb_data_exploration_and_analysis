@@ -1,6 +1,6 @@
 ---
 title: "Meta-analysis: Immune-checkpoint blockade (ICB) data"
-author: "Farnoosh"
+#author: "BHK lab"
 date: '2022-09-07'
 output: html_document
 ---
