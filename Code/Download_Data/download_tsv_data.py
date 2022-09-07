@@ -1,6 +1,6 @@
 import requests, zipfile, io, os
 
-zenodo_repo = 'https://zenodo.org/record/7007756/files/'
+zenodo_repo = 'https://zenodo.org/record/7058399/files/'
 studies = [] # empty or specify studies to download. exmaple: ICB_Braun, ICB_Gide...
 dir = '~/Data/TSV'
 
