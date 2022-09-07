@@ -14,6 +14,7 @@ library(survminer)
 library(readr)
 library(magrittr)
 library(summarytools)
+library(ggrepel)
 
 ```
 
@@ -28,16 +29,15 @@ Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represent
 ```{r load ICB data}
 
 # clinicopathological characteristics  
-#dat_sample = read.table('C:/IOProject/Roche/ICB_Braun_coldata.tsv', sep="\t") %>% as.data.frame()
-dat_sample = read.table('~/Data/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample = read.table('~/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample)
 
 # gene meta data
-dat_gene = read.table('~/Data/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene = read.table('~/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp = read.table('~/Data/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp = read.table('~/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp)
 
 # Get the subset of data with both clinical and expression data
@@ -207,7 +207,7 @@ where
 * $h(t)$ is the hazard function determined by a set of covariate (e.g., X)
 * The coefficient $\beta$ measures the impact of covariate.
 * The term $h_0$ is called the baseline hazard. It corresponds to the value of the hazard if the covariate is equal to zero. The $t$ in $h(t)$ reminds us that the hazard may vary over time.
-* The quantities $\text{e}^\beta$ are called hazard ratios (HR).
+* The quantity $\text{e}^\beta$ is called hazard ratios (HR).
 
 The fitted Cox model with $p = 0.52$ shows no statistically significant association between OS and gene expression. 
 
@@ -226,4 +226,94 @@ data.frame(gene_id = "ENSG00000065491.8",
 
 
 ```
+
+
+### Part III: All genes survival analyses
+
+We assess the association of gene and overall survival (OS) across 18808 protein coding genes. The Benjamini-Hochberg approach is considered to adjust for multiple testing and control false discovery rate (FDR).   
+
+The results after adjusting multiple test show 24 genes associated with survival outcome with $\text{FDR} < 0.05$. The following volcano plot demonstrates the distribution of significant genes.  
+
+```{r cox all genes, warning=FALSE, message=FALSE}
+
+sub_dat_gene <- dat_gene[dat_gene$gene_type == "protein_coding", ]
+sub_dat_gene <- sub_dat_gene[order(sub_dat_gene$gene_id), ]
+sub_dat_exp <- dat_exp[rownames(dat_exp) %in% sub_dat_gene$gene_id, ]
+
+res <- lapply(1:nrow(sub_dat_exp), function(k){
+  
+  df <- data.frame(x = as.numeric(sub_dat_exp[k,]),
+                   t.os = dat_sample$t.os,
+                   os = dat_sample$os)
+
+fit <- coxph(Surv(t.os, os) ~ x, data = df)
+fit_summary <- summary(fit)
+
+
+data.frame(gene_id = rownames(sub_dat_exp)[k],
+           gene_name = sub_dat_gene[k, "gene_name"],
+           "logHR" = fit_summary$coefficients["x", "coef"],
+           "SE" = fit_summary$coefficients["x", "se(coef)"],
+           "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+  
+})
+
+res <- do.call(rbind, res)
+res$padj <- p.adjust(res$pvals, method = "BH")
+
+
+## volcano plot 
+
+res$diffexpressed <- "NO"
+res$diffexpressed[res$logHR > 0 & res$padj < 0.05] <- "FDR < 0.05, logHR > 0"
+res$diffexpressed[res$logHR < 0 & res$padj < 0.05] <- "FDR < 0.05, logHR < 0"
+
+mycolors <- c( "yellow3","deepskyblue1", "grey50")
+names(mycolors) <- c("FDR < 0.05, logHR > 0", 
+                     "FDR < 0.05, logHR < 0", 
+                     "NO")
+
+res$delabel <- NA
+mod_res <- res[abs(res$logHR) > 0 & res$padj < 0.05, ]
+mod_res <- mod_res[order(mod_res$padj, decreasing = FALSE),]
+id <- c(mod_res$gene_name[1:9], mod_res[mod_res$logHR < 0 & 
+                                        mod_res$padj < 0.05, "gene_name"][1:7])
+
+
+for(i in 1:length(id)){
+  
+  k <- which(res$gene_name == id[i])
+  res$delabel[k] <- res[k, ]$gene_name
+  
+}
+
+p <- ggplot(data=res, aes(x=logHR, y=-log10(pvals), 
+                          col=diffexpressed)) + 
+  geom_point(size = 2) + theme_minimal() +
+  ylab("-log10 P value, Braun") +
+  xlab("logHR") +
+  scale_colour_manual(values = mycolors) +
+  theme(axis.text.x=element_text(size=12,  face="bold"),
+        axis.title=element_text(size=14,face="bold"),
+        axis.text.y=element_text(size=12, face = "bold"),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        plot.background = element_blank(), 
+        axis.line = element_line(colour = "black"),
+        legend.position="bottom",
+        legend.text = element_text(size = 8, face="bold"),
+        legend.title = element_blank()) +
+  geom_text_repel(aes(label=delabel),
+                  size = 3,
+                  color = "black",
+                  min.segment.length = 0,
+                  na.rm = TRUE, direction = "both", 
+                  seed = 23561,
+                  fontface= "bold")
+
+
+p
+```
+
 
