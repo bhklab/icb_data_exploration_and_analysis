@@ -23,24 +23,40 @@ library(forestplot)
 
 ## Load data
 
-Read RNA-seq expression, clinicopathological characteristics, and gene meta data for ICB Braun (PMID 32472114), Nathanson (PMID 27956380), Snyder (PMID 28552987), and Van Allen (PMID 26359337) data.
 
-Note the expression data is log2(TPM + 0.001), where TPM represents transcripts per million.
+To download and extract TSV version of ICB data from Zenodo (https://zenodo.org/record/7007756/files/), follow the script named download_tsv_data R file at "~/Code/Download_Data".  
+
+We read RNA-seq expression, clinicopathological characteristics, and gene meta data for the following selected ICB studies to include in meta-analysis. 
+
+1. Braun (PMID 32472114)
+2. Gide (PMID 30753825)
+3. Hugo (PMID 26997480)
+4. Kim (PMID 30013197)
+5. Miao1 (PMID 29301960)
+6. Nathanson (PMID 27956380) 
+7. Riaz (PMID 29301960)
+8. Snyder (PMID 28552987) 
+9. Van Allen (PMID 26359337)
+10. VanDenEnde (PMID 33504550)
+
+As an example, we share the codes to get read the RNA-seq expression, clinicopathological characteristics, and gene meta data usign ICB Braun data. The Braun study includes 319 patients with clinical data and 40,994 genes. While only 181 patients have both clinical data and RNA-seq expression data. 
+
+Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represents transcripts per million. 
 
 ### Braun study
 
-```{r load ICB braun data}
+```{r load ICB data Braun}
 
 # clinicopathological characteristics  
-dat_sample_braun = read.table('~/Data/TSV/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_braun = read.table('~/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_braun)
 
 # gene meta data
-dat_gene_braun = read.table('~/Data/TSV/Roche/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_braun = read.table('~/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_braun)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table('~/Data/TSV/Roche/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_braun = read.table('~/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_braun)
 
 # Get the subset of data with both clinical and expression data.
@@ -54,51 +70,49 @@ dat_exp_braun <- dat_exp_braun[, order(colnames(dat_exp_braun))]
 
 ```
 
-### Nathanson study
+```{r load ICB data, include=FALSE}
 
-```{r load ICB nathanson data}
+##################################
+### Nathanson study
+##################################
 
 # clinicopathological characteristics  
-dat_sample_nathanson = read.table('~/Data/TSV/ICB_Nathanson_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_nathanson)
 
 # gene meta data
-dat_gene_nathanson = read.table('~/Data/TSV/ICB_Nathanson_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_nathanson)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_nathanson = read.table('~/Data/TSV/ICB_Nathanson_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_nathanson)
 
 # Get the subset of data with both clinical and expression data.
-
 dat_sample_nathanson = dat_sample_nathanson[rownames(dat_sample_nathanson) %in% colnames(dat_exp_nathanson), ]
 
 dim(dat_sample_nathanson)
 dat_sample_nathanson <- dat_sample_nathanson[order(rownames(dat_sample_nathanson)), ]
 dat_exp_nathanson <- dat_exp_nathanson[, order(colnames(dat_exp_nathanson))]
 
-```
 
-
+####################################
 ### Snyder study
-
-```{r load ICB snyder data}
+####################################
 
 # clinicopathological characteristics  
-dat_sample_snyder = read.table('~/Data/TSV/ICB_Snyder_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_snyder = read.table('~/ICB_Snyder/ICB_Snyder_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_snyder)
 
 # gene meta data
-dat_gene_snyder = read.table('~/Data/TSV/ICB_Snyder_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_snyder = read.table('~/ICB_Snyder/ICB_Snyder_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_snyder)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_snyder = read.table('~/Data/TSV/ICB_Snyder_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_snyder = read.table('~/ICB_Snyder/ICB_Snyder_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_snyder)
 
 # Get the subset of data with both clinical and expression data.
-
 dat_sample_snyder = dat_sample_snyder[rownames(dat_sample_snyder) %in% colnames(dat_exp_snyder), ]
 
 dim(dat_sample_snyder)
@@ -106,23 +120,21 @@ dim(dat_sample_snyder)
 dat_sample_snyder <- dat_sample_snyder[order(rownames(dat_sample_snyder)), ]
 dat_exp_snyder <- dat_exp_snyder[, order(colnames(dat_exp_snyder))]
 
-```
 
-
+#######################################
 ### Van Allen study
-
-```{r load ICB van allen data}
+#######################################
 
 # clinicopathological characteristics  
-dat_sample_van_allen = read.table('~/Data/TSV/ICB_Van_Allen_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_van_allen)
 
 # gene meta data
-dat_gene_van_allen = read.table('~/Data/TSV/ICB_Van_Allen_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_van_allen)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_van_allen = read.table('~/Data/TSV/ICB_Van_Allen_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_van_allen)
 
 # Get the subset of data with both clinical and expression data.
@@ -134,83 +146,238 @@ dim(dat_sample_van_allen)
 dat_sample_van_allen <- dat_sample_van_allen[order(rownames(dat_sample_van_allen)), ]
 dat_exp_van_allen <- dat_exp_van_allen[, order(colnames(dat_exp_van_allen))]
 
+################################
+### Hugo study
+################################
+
+# clinicopathological characteristics  
+dat_sample_hugo = read.table('~/ICB_Hugo/ICB_Hugo_metadata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_hugo)
+
+# gene meta data
+dat_gene_hugo = read.table('~/ICB_Hugo/ICB_Hugo_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_hugo)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_hugo = read.table('~/ICB_Hugo/ICB_Hugo_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_hugo)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_hugo = dat_sample_hugo[rownames(dat_sample_hugo) %in% colnames(dat_exp_hugo), ]
+
+dim(dat_sample_hugo)
+
+dat_sample_hugo <- dat_sample_hugo[order(rownames(dat_sample_hugo)), ]
+dat_exp_hugo <- dat_exp_hugo[, order(colnames(dat_exp_hugo))]
+
+
+##########################
+### Miao1 study
+##########################
+
+# clinicopathological characteristics  
+dat_sample_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_metadata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_miao1)
+
+# gene meta data
+dat_gene_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_miao1)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_expr.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_miao1)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_miao1 = dat_sample_miao1[rownames(dat_sample_miao1) %in% colnames(dat_exp_miao1), ]
+
+dim(dat_sample_miao1)
+
+dat_sample_miao1 <- dat_sample_miao1[order(rownames(dat_sample_miao1)), ]
+dat_exp_miao1 <- dat_exp_miao1[, order(colnames(dat_exp_miao1))]
+
+#########################
+### Riaz study
+#########################
+
+# clinicopathological characteristics  
+dat_sample_riaz = read.table('~/ICB_Riaz/ICB_Riaz_metadata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_riaz)
+
+# gene meta data
+dat_gene_riaz = read.table('~/ICB_Riaz/ICB_Riaz_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_riaz)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_riaz = read.table('~/ICB_Riaz/ICB_Riaz_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_riaz)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_riaz = dat_sample_riaz[rownames(dat_sample_riaz) %in% colnames(dat_exp_riaz), ]
+
+dim(dat_sample_riaz)
+
+dat_sample_riaz <- dat_sample_riaz[order(rownames(dat_sample_riaz)), ]
+dat_exp_riaz <- dat_exp_riaz[, order(colnames(dat_exp_riaz))]
+
+
+#########################
+### Gide study
+#########################
+
+# clinicopathological characteristics  
+dat_sample_gide = read.table('~/ICB_Gide/ICB_Gide_metadata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_gide)
+
+# gene meta data
+dat_gene_gide = read.table('~/ICB_Gide/ICB_Gide_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_gide)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_gide = read.table('~/ICB_Gide/ICB_Gide_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_gide)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_gide = dat_sample_gide[rownames(dat_sample_gide) %in% colnames(dat_exp_gide), ]
+
+dim(dat_sample_gide)
+
+dat_sample_gide <- dat_sample_gide[order(rownames(dat_sample_gide)), ]
+dat_exp_gide <- dat_exp_gide[, order(colnames(dat_exp_gide))]
+
+
+#########################
+### Kim study
+#########################
+
+# clinicopathological characteristics  
+dat_sample_kim = read.table('~/ICB_Kim/ICB_Kim_metadata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_kim)
+
+# gene meta data
+dat_gene_kim = read.table('~/ICB_Kim/ICB_Kim_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_kim)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_kim = read.table('~/ICB_Kim/ICB_Kim_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_kim)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_kim = dat_sample_kim[rownames(dat_sample_kim) %in% colnames(dat_exp_kim), ]
+
+dim(dat_sample_kim)
+
+dat_sample_kim <- dat_sample_kim[order(rownames(dat_sample_kim)), ]
+dat_exp_kim <- dat_exp_kim[, order(colnames(dat_exp_kim))]
+
+
+##########################
+### VanDenEnde study
+##########################
+
+# clinicopathological characteristics  
+dat_sample_vanDenEnde = read.table('~/ICB_VanDenEnde/ICB_VanDenEnde_metadata.tsv', sep="\t") %>% as.data.frame()
+dim(dat_sample_vanDenEnde)
+
+# gene meta data
+dat_gene_vanDenEnde = read.table('~/ICB_VanDenEnde/ICB_VanDenEnde_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dim(dat_gene_vanDenEnde)
+
+# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
+dat_exp_vanDenEnde = read.table('~/ICB_VanDenEnde/ICB_VanDenEnde_expr.tsv', sep="\t") %>% as.data.frame()
+dim(dat_exp_vanDenEnde)
+
+# Get the subset of data with both clinical and expression data.
+
+dat_sample_vanDenEnde = dat_sample_vanDenEnde[rownames(dat_sample_vanDenEnde) %in% colnames(dat_exp_vanDenEnde), ]
+
+dim(dat_sample_vanDenEnde)
+
+dat_sample_vanDenEnde <- dat_sample_vanDenEnde[order(rownames(dat_sample_vanDenEnde)), ]
+dat_exp_vanDenEnde <- dat_exp_vanDenEnde[, order(colnames(dat_exp_vanDenEnde))]
+
+
+#############################################################################################
+## find genes in common across following subset of studies including response outcome
+#############################################################################################
+
+int <- intersect(intersect(intersect(intersect(intersect(intersect(intersect(intersect(intersect(rownames(dat_exp_braun), 
+                 rownames(dat_exp_hugo)), rownames(dat_exp_van_allen)),
+                 rownames(dat_exp_miao1)), rownames(dat_exp_nathanson)), 
+                 rownames(dat_exp_riaz)), rownames(dat_exp_snyder)),
+                 rownames(dat_exp_gide)), rownames(dat_exp_kim)),
+                 rownames(dat_exp_vanDenEnde))
+
+
+
+dat_exp <- list(Braun = dat_exp_braun[rownames(dat_exp_braun) %in% int, ], 
+                Hugo = dat_exp_hugo[rownames(dat_exp_hugo) %in% int, ],
+                Van_allen = dat_exp_van_allen[rownames(dat_exp_van_allen) %in% int, ],
+                Miao1 = dat_exp_miao1[rownames(dat_exp_miao1) %in% int, ],
+                Nathanson = dat_exp_nathanson[rownames(dat_exp_nathanson) %in% int, ],
+                Riaz = dat_exp_riaz[rownames(dat_exp_riaz) %in% int, ],
+                Snyder = dat_exp_snyder[rownames(dat_exp_snyder) %in% int, ],
+                Gide = dat_exp_gide[rownames(dat_exp_gide) %in% int, ],
+                Kim = dat_exp_kim[rownames(dat_exp_kim) %in% int, ],
+                VanDenEnde = dat_exp_vanDenEnde[rownames(dat_exp_vanDenEnde) %in% int, ])
+
+
+pdata <- list(Braun = dat_sample_braun, 
+              Hugo = dat_sample_hugo,
+              Van_allen = dat_sample_van_allen,
+              Miao1 = dat_sample_miao1,
+              Nathanson = dat_sample_nathanson,
+              Riaz = dat_sample_riaz,
+              Snyder = dat_sample_snyder,
+              Gide = dat_sample_gide,
+              Kim = dat_sample_kim,
+              VanDenEnde = dat_sample_vanDenEnde)
+
+
 ```
 
-## Survival analysis
 
-To assess the association between genes and time-to-event variable (e.g., OS), we fit the Cox regression model. For a given gene, zwe fit the model under each study to identify the log(HR) and its standard error (SE). We consider a gene (e.g., ENSG00000019995.6) taht ios in common across studies.
+## Logistic regression analysis 
 
-```{r coxph}
+For each study, we assess the association between genes and response variable (R vs NR) by fitting the logistic regression model. For a given gene, we fit the model under each study to identify the log(OR) and its standard error (SE). We consider a gene (e.g., ENSG00000065491.8 or TBC1D22B) that is in common across selected ICB studies.
 
-# Braun study
+```{r logistic regression}
 
-df <- data.frame(x = as.numeric(dat_exp_braun[rownames(dat_exp_braun) == "ENSG00000019995.6",]),
-                 t.os = dat_sample_braun$t.os,
-                 os = dat_sample_braun$os)
+logit_res <- lapply(1:length(dat_exp), function(k){
+  
+  print(k)
+  sub_dat_exp <- dat_exp[[k]]
+  sub_pdata <- pdata[[k]]
+  
+  df <- data.frame(x = as.numeric(sub_dat_exp[rownames(sub_dat_exp) == "ENSG00000065491.8",]),
+                   y = sub_pdata$response)
 
-fit <- coxph(Surv(t.os, os) ~ x, data = df)
+  df <- df[!is.na(df$y),]
+  df$y <- factor(df$y)
+  df$y <- ifelse(df$y == "R", 0, 1)
+
+  fit <- glm( y ~ x, 
+            data = df, 
+            family = "binomial")
+
 fit_summary <- summary(fit)
 
-fit_summary
-
-cox_braun <- data.frame(gene_id = "ENSG00000019995.6",
-             "logHR" = fit_summary$coefficients["x", "coef"],
-             "SE" = fit_summary$coefficients["x", "se(coef)"],
-             "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
-
+ data.frame(gene_id = "ENSG00000065491.8",
+           "logOR" = fit_summary$coefficients["x", "Estimate"],
+           "SE" = fit_summary$coefficients["x", "Std. Error"],
+           "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
+ })
 
 
-# Nathanson study
-
-df <- data.frame(x = as.numeric(dat_exp_nathanson[rownames(dat_exp_nathanson) == "ENSG00000019995.6",]),
-                 t.os = dat_sample_nathanson$t.os,
-                 os = dat_sample_nathanson$os)
-
-fit <- coxph(Surv(t.os, os) ~ x, data = df)
-fit_summary <- summary(fit)
-
-fit_summary
-
-cox_nathanson <- data.frame(gene_id = "ENSG00000019995.6",
-             "logHR" = fit_summary$coefficients["x", "coef"],
-             "SE" = fit_summary$coefficients["x", "se(coef)"],
-             "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
-
-# Snyder study
-
-df <- data.frame(x = as.numeric(dat_exp_snyder[rownames(dat_exp_snyder) == "ENSG00000019995.6",]),
-                 t.os = dat_sample_snyder$t.os,
-                 os = dat_sample_snyder$os)
-
-fit <- coxph(Surv(t.os, os) ~ x, data = df)
-fit_summary <- summary(fit)
-
-fit_summary
-
-cox_snyder <- data.frame(gene_id = "ENSG00000019995.6",
-             "logHR" = fit_summary$coefficients["x", "coef"],
-             "SE" = fit_summary$coefficients["x", "se(coef)"],
-             "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
-
-# Van Allen  study
-
-df <- data.frame(x = as.numeric(dat_exp_van_allen[rownames(dat_exp_van_allen) == "ENSG00000019995.6",]),
-                 t.os = dat_sample_van_allen$t.os,
-                 os = dat_sample_van_allen$os)
-
-fit <- coxph(Surv(t.os, os) ~ x, data = df)
-fit_summary <- summary(fit)
-
-fit_summary
-
-cox_van_allen <- data.frame(gene_id = "ENSG00000019995.6",
-             "logHR" = fit_summary$coefficients["x", "coef"],
-             "SE" = fit_summary$coefficients["x", "se(coef)"],
-             "pvals" = fit_summary$coefficients["x", "Pr(>|z|)"])
-
-
-
+logit_res <- do.call(rbind, logit_res)
+rownames(logit_res) <- names(dat_exp)
+  
 ```
+
 
 ## Meta-analysis
 
@@ -222,25 +389,28 @@ observed effects are due to sampling error. In contrast, the RE model incorporat
 
 Assessing heterogeneity is a critical issue in meta-analysis because different models may lead to different estimates of overall effect and different standard errors.Several approaches have been suggested over the years for how best to assess homogeneity across studies, and the corresponding research is ongoing. DerSimonian and Laird (DL) (or chi2) is widely used to assess the heterogeneity. 
 
-```{r meta analysis, fig.width = 7}
+### Part I: response (R vs. NR)
 
-dat_meta <- rbind(cox_braun, cox_nathanson, 
-                  cox_snyder, cox_van_allen)
+The forest plot demonstrates the fitted logistic regression model under each study including  the logOR, SE and p-value. Then, the meta-analysis was applied to integrate the results across studies using DL method to estimate heterogeneity (i.e., $I^2 = 45\%$ and $p = 6.07e-02$). Both FE ($p = 0.56$) and RE ($p=0.81$) model show no statistically significant p-values after integration.      
 
-rownames(dat_meta) <- c("Braun", "Nathanson", "Snyder", "Van allen")
+```{r meta analysis logistic resgression, fig.width = 7}
 
-x <-  dat_meta$logHR
+dat_meta <- logit_res
+
+x <-  dat_meta$logOR
 y <- dat_meta$SE
-dat.xy <- data.frame(x, y)
+pvalue <- dat_meta$pvals
+
+dat.xy <- data.frame(x, y, pvalue)
 rownames(dat.xy) <- rownames(dat_meta)
 res <- metagen(x, y, studlab = rownames(dat.xy), 
                     method.tau = "DL")
 
 
 forest.meta(res,
-            leftcols = c("studlab", "TE", "seTE"),
-            leftlabs = c("ICB study", "Effect", "SE"),
-            xlab = "logHR", 
+            leftcols = c("studlab", "TE", "seTE", "pval"),
+            leftlabs = c("ICB study/TBC1D22B", "logOR", "SE", "P value"),
+            xlab = "logOR", 
             label.e = "Intervention",
             sortvar = TE, 
             #pooled.totals = TRUE,
