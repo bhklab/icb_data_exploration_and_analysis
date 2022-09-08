@@ -396,15 +396,15 @@ represents transcripts per million.</p>
 <div id="braun-study" class="section level3">
 <h3>Braun study</h3>
 <pre class="r"><code># clinicopathological characteristics  
-dat_sample_braun = read.table(&#39;C:/IOProject/Data/ICB_Braun/ICB_Braun_metadata.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_sample_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_metadata.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_sample_braun)</code></pre>
 <pre><code>## [1] 319 145</code></pre>
 <pre class="r"><code># gene meta data
-dat_gene_braun = read.table(&#39;C:/IOProject/Data/ICB_Braun/ICB_Braun_expr_genes.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_gene_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr_genes.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_gene_braun)</code></pre>
 <pre><code>## [1] 40994    17</code></pre>
 <pre class="r"><code># RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table(&#39;C:/IOProject/Data/ICB_Braun/ICB_Braun_expr.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_exp_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_exp_braun)</code></pre>
 <pre><code>## [1] 40994   181</code></pre>
 <pre class="r"><code># Get the subset of data with both clinical and expression data.
@@ -439,8 +439,8 @@ considered to show the</p>
   res &lt;- lapply(1:nrow(sub_dat_exp), function(j){
     
     df &lt;- data.frame(x = as.numeric(sub_dat_exp[j,]),
-                     t.os = sub_pdata$t.os,
-                     os = sub_pdata$os)
+                     t.os = sub_pdata$survival_time_os,
+                     os = sub_pdata$event_occurred_os)
     
     fit &lt;- coxph(Surv(t.os, os) ~ x, data = df)
     fit_summary &lt;- summary(fit)

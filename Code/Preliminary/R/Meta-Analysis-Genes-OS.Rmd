@@ -47,15 +47,15 @@ Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represent
 ```{r load ICB data Braun}
 
 # clinicopathological characteristics  
-dat_sample_braun = read.table('~/Data/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_braun = read.table('~/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
 dim(dat_sample_braun)
 
 # gene meta data
-dat_gene_braun = read.table('~/Data/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_braun = read.table('~/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
 dim(dat_gene_braun)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table('~/Data/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_braun = read.table('~/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
 dim(dat_exp_braun)
 
 # Get the subset of data with both clinical and expression data.
@@ -356,8 +356,8 @@ cox_res <- lapply(1:length(dat_exp), function(k){
   res <- lapply(1:nrow(sub_dat_exp), function(j){
     
     df <- data.frame(x = as.numeric(sub_dat_exp[j,]),
-                     t.os = sub_pdata$t.os,
-                     os = sub_pdata$os)
+                     t.os = sub_pdata$survival_time_os,
+                     os = sub_pdata$event_occurred_os)
     
     fit <- coxph(Surv(t.os, os) ~ x, data = df)
     fit_summary <- summary(fit)

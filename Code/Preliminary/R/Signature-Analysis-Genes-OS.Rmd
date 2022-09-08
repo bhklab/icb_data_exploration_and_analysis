@@ -20,15 +20,6 @@ library(forestplot)
 library(ggrepel)
 library(GSVA)
 
-rem <- function(x){
-  x <- as.matrix(x)
-  x <- t(apply(x,1,as.numeric))
-  r <- as.numeric(apply(x, 1, function(i) sum(round(i, 6) == round(log2(0.001), 6)) )) # chnage zero to -9.965784 due to changes in log2(x + 1) into log2(x+0.001)
-  remove <- which(r > dim(x)[2]*0.5)
-  return(remove)
-}
-
-
 ```
 
 
@@ -341,7 +332,7 @@ Under each study, we consider gene set variation analysis (GSVA) approach to com
 signature_names <- c("CD8_Jiang", "T_cell_inflamed", "Inflammatory", "CYT",
                      "STAT1", "IRG_Ayers", "TLS", "IFNG", "PDL1")
 
-dir0 <- "~/Data/Signature/"
+dir0 <- "C:/ICBRoche/Signature/"
 dir <- paste(dir0, paste(signature_names, "csv", sep="."), sep="")
 
 geneSets <- lapply(1:length(dir), function(k){
@@ -380,8 +371,8 @@ cox_res <- lapply(1:length(gsva_res), function(k){
   res <- lapply(1:nrow(sub_dat_exp), function(j){
     
     df <- data.frame(x = as.numeric(sub_dat_exp[j,]),
-                     t.os = sub_pdata$t.os,
-                     os = sub_pdata$os)
+                     t.os = sub_pdata$survival_time_os,
+                     os = sub_pdata$event_occurred_os)
     
     fit <- coxph(Surv(t.os, os) ~ x, data = df)
     fit_summary <- summary(fit)
@@ -416,7 +407,7 @@ Assessing heterogeneity is a critical issue in meta-analysis because different m
 
 ### Part I: Overall survival (OS)
 
-The meta-analysis was applied to integrate the results (logHR, SE) across studies using DL method to estimate heterogeneity. Signature CYT (logHR = -0.38, p = 0.04) and PDL1 (logHR = -0.42, p = 0.03) are associated with OS. The forestplots show significant heterogeneity across studies: CYT ($I^2 = 62\%$ and $p = 9.5e-03$) and PDL1 ($I^2 = 59\%$ and $p = 1.8e-02$).  
+The meta-analysis was applied to integrate the results (logHR, SE) across studies using DL method to estimate heterogeneity. Signature CYT (logHR = -0.38, p = 0.04) and PDL1 (logHR = -0.42, p = 0.03) are associated with OS. In addition, for the associated signatures with OS, the forestplots show significant heterogeneity across studies as well: CYT ($I^2 = 62\%$ and $p = 9.5e-03$) and PDL1 ($I^2 = 59\%$ and $p = 1.8e-02$).  
 
 ```{r meta analysis logistic resgression, fig.width = 7, warning=FALSE, message=FALSE, echo=FALSE}
 

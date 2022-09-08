@@ -43,7 +43,6 @@ dim(dat_exp)
 # Get the subset of data with both clinical and expression data
 
 dat_sample = dat_sample[rownames(dat_sample) %in% colnames(dat_exp), ]
-
 dim(dat_sample)
 
 # Order the samples in both clinical and expression data
@@ -55,12 +54,11 @@ dat_exp <- dat_exp[, order(colnames(dat_exp))]
 
 ## Clinical data summary
 
-The detailed clinicopathological characteristics of the Braun cohort including cancer type, age, sex, respose, overall survival (OS, "t.os"), and progression-free survival (PFS, "survival_time").
+The detailed clinicopathological characteristics of the Braun cohort including cancer type, age, sex, respose, overall survival (OS), and progression-free survival (PFS).
 
 ```{r clinical data, results='asis'}
-dat_sample_sub <- dat_sample[, c("age","sex", "response","t.os", "survival_time")]
 
-#view(dfSummary(dat_sample_sub))
+dat_sample_sub <- dat_sample[, c("age","sex", "response","survival_time_os", "survival_time_pfs")]
 
 print(dfSummary(dat_sample_sub, 
                 style = "grid", 
@@ -109,8 +107,8 @@ For a given gene ENSG00000065491.8 (TBC1D22B), the boxplot shows 22\% of respons
 # for a given gene: ENSG00000065491.8
 
 df <- data.frame(x = as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000065491.8",]),
-                 t.os = dat_sample$t.os,
-                 os = dat_sample$os,
+                 t.os = dat_sample$survival_time_os,
+                 os = dat_sample$event_occurred_os,
                  sex = dat_sample$sex,
                  y = dat_sample$response)
 
@@ -168,8 +166,8 @@ The log-rank test $p = 0.11$ shows there is not any significant difference in su
 ```{r KM sex}
 
 df <- data.frame(x = as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000065491.8",]),
-                 t.os = dat_sample$t.os,
-                 os = dat_sample$os,
+                 t.os = dat_sample$survival_time_os,
+                 os = dat_sample$event_occurred_os,
                  sex = dat_sample$sex,
                  y = dat_sample$response)
 
@@ -243,8 +241,8 @@ sub_dat_exp <- dat_exp[rownames(dat_exp) %in% sub_dat_gene$gene_id, ]
 res <- lapply(1:nrow(sub_dat_exp), function(k){
   
   df <- data.frame(x = as.numeric(sub_dat_exp[k,]),
-                   t.os = dat_sample$t.os,
-                   os = dat_sample$os)
+                   t.os = dat_sample$survival_time_os,
+                   os = dat_sample$event_occurred_os)
 
 fit <- coxph(Surv(t.os, os) ~ x, data = df)
 fit_summary <- summary(fit)

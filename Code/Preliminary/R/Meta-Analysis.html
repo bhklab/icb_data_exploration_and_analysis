@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2022-08-16" />
+<meta name="date" content="2022-09-07" />
 
 <title>Meta-analysis: Immune-checkpoint blockade (ICB) data</title>
 
@@ -364,7 +364,7 @@ pre code {
 
 <h1 class="title toc-ignore">Meta-analysis: Immune-checkpoint blockade
 (ICB) data</h1>
-<h4 class="date">2022-08-16</h4>
+<h4 class="date">2022-09-07</h4>
 
 </div>
 
@@ -398,15 +398,15 @@ represents transcripts per million.</p>
 <div id="braun-study" class="section level3">
 <h3>Braun study</h3>
 <pre class="r"><code># clinicopathological characteristics  
-dat_sample_braun = read.table(&#39;C:/IOProject/Data/ICB_Braun/ICB_Braun_metadata.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_sample_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_metadata.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_sample_braun)</code></pre>
 <pre><code>## [1] 319 145</code></pre>
 <pre class="r"><code># gene meta data
-dat_gene_braun = read.table(&#39;C:/IOProject/Data/ICB_Braun/ICB_Braun_expr_genes.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_gene_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr_genes.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_gene_braun)</code></pre>
 <pre><code>## [1] 40994    17</code></pre>
 <pre class="r"><code># RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table(&#39;C:/IOProject/Data/ICB_Braun/ICB_Braun_expr.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_exp_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_exp_braun)</code></pre>
 <pre><code>## [1] 40994   181</code></pre>
 <pre class="r"><code># Get the subset of data with both clinical and expression data.
@@ -428,7 +428,6 @@ standard error (SE). We consider a gene (e.g., ENSG00000065491.8 or
 TBC1D22B) that is in common across selected ICB studies.</p>
 <pre class="r"><code>logit_res &lt;- lapply(1:length(dat_exp), function(k){
   
-  print(k)
   sub_dat_exp &lt;- dat_exp[[k]]
   sub_pdata &lt;- pdata[[k]]
   
@@ -449,18 +448,10 @@ fit_summary &lt;- summary(fit)
            &quot;logOR&quot; = fit_summary$coefficients[&quot;x&quot;, &quot;Estimate&quot;],
            &quot;SE&quot; = fit_summary$coefficients[&quot;x&quot;, &quot;Std. Error&quot;],
            &quot;pvals&quot; = fit_summary$coefficients[&quot;x&quot;, &quot;Pr(&gt;|z|)&quot;])
- })</code></pre>
-<pre><code>## [1] 1
-## [1] 2
-## [1] 3
-## [1] 4
-## [1] 5
-## [1] 6
-## [1] 7
-## [1] 8
-## [1] 9
-## [1] 10</code></pre>
-<pre class="r"><code>logit_res &lt;- do.call(rbind, logit_res)
+ })
+
+
+logit_res &lt;- do.call(rbind, logit_res)
 rownames(logit_res) &lt;- names(dat_exp)</code></pre>
 </div>
 <div id="meta-analysis" class="section level2">
@@ -491,7 +482,7 @@ is widely used to assess the heterogeneity.</p>
 <p>The forest plot demonstrates the fitted logistic regression model
 under each study including the logOR, SE and p-value. Then, the
 meta-analysis was applied to integrate the results across studies using
-DL method to estimate heterogeneity (i.e., <span class="math inline">\(I^2 = 45\%\)</span> and <span class="math inline">\(p = 6.07e-02\)</span>). Both FE (<span class="math inline">\(p = 0.56\)</span>) and RE (<span class="math inline">\(p=0.81\)</span>) model show no statistically
+DL method to estimate heterogeneity (i.e., <span class="math inline">\(I^2 = 36\%\)</span> and <span class="math inline">\(p = 1.2e-01\)</span>). Both FE (<span class="math inline">\(p = 0.22\)</span>) and RE (<span class="math inline">\(p=0.61\)</span>) model show no statistically
 significant p-values after integration.</p>
 <pre class="r"><code>dat_meta &lt;- logit_res
 

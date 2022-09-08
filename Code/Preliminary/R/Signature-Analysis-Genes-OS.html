@@ -396,15 +396,15 @@ represents transcripts per million.</p>
 <div id="braun-study" class="section level3">
 <h3>Braun study</h3>
 <pre class="r"><code># clinicopathological characteristics  
-dat_sample_braun = read.table(&#39;C:/IOProject/Data/ICB_Braun/ICB_Braun_metadata.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_sample_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_metadata.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_sample_braun)</code></pre>
 <pre><code>## [1] 319 145</code></pre>
 <pre class="r"><code># gene meta data
-dat_gene_braun = read.table(&#39;C:/IOProject/Data/ICB_Braun/ICB_Braun_expr_genes.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_gene_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr_genes.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_gene_braun)</code></pre>
 <pre><code>## [1] 40994    17</code></pre>
 <pre class="r"><code># RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table(&#39;C:/IOProject/Data/ICB_Braun/ICB_Braun_expr.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_exp_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_exp_braun)</code></pre>
 <pre><code>## [1] 40994   181</code></pre>
 <pre class="r"><code># Get the subset of data with both clinical and expression data.
@@ -492,9 +492,9 @@ is widely used to assess the heterogeneity.</p>
 <p>The meta-analysis was applied to integrate the results (logHR, SE)
 across studies using DL method to estimate heterogeneity. Signature CYT
 (logHR = -0.38, p = 0.04) and PDL1 (logHR = -0.42, p = 0.03) are
-associated with OS. The forestplots show significant heterogeneity
-across studies: CYT (<span class="math inline">\(I^2 = 62\%\)</span> and
-<span class="math inline">\(p = 9.5e-03\)</span>) and PDL1 (<span class="math inline">\(I^2 = 59\%\)</span> and <span class="math inline">\(p = 1.8e-02\)</span>).</p>
+associated with OS. In addition, for the associated signatures with OS,
+the forestplots show significant heterogeneity across studies as well:
+CYT (<span class="math inline">\(I^2 = 62\%\)</span> and <span class="math inline">\(p = 9.5e-03\)</span>) and PDL1 (<span class="math inline">\(I^2 = 59\%\)</span> and <span class="math inline">\(p = 1.8e-02\)</span>).</p>
 <pre><code>##    signature_name      TE_RE    pval_RE        I2      Q_pval
 ## 1       CD8_Jiang -0.3572201 0.05540888 0.6318355 0.008145961
 ## 2 T_cell_inflamed -0.4423049 0.05273258 0.6409301 0.006770752
