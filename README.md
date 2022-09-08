@@ -4,7 +4,9 @@ This repo contains code associated with the PredictIO signature computation alon
 
 ## Data
 
-The data associated with this analysis downloaded from ORCESTRA's API. The discovery-validation-cohorts XLSX file represents the subset of discovery and validation cohorts for PredictIO signature computation.  
+* The data associated with this analysis downloaded from ORCESTRA's API. 
+* The discovery-validation-cohorts XLSX file represents the subset of discovery and validation cohorts for PredictIO signature computation. 
+* The list of signatures and their details.
 
 ## Organization of repo
 
@@ -14,19 +16,41 @@ The code can be organized into downloading data, preliminary analyses, and Predi
 
 rds_to_tsv.R: Fetch download links from ORCESTRA's API. Download RDS data objects from Zenodo. Extract all the data and parse them into TSV files, and compress them into a zip file.
 
+download_tsv_data.R: Script to download and extract TSV version of ICB data from Zenodo in R.
+
+download_tsv_data.py: Script to download and extract TSV version of ICB data from Zenodo in Python.
+
 ### Preliminary 
 
 #### Part 1: 
 
-Preliminary-Analyses.Rmd/Preliminary-Analyses.ipynb: Contains the descriptive statistics analyses, logistic regression model, and survival analyses including the Kaplan-Meier, log-rank test, and Cox regression. Note that only Braun (PMID 32472114) is applied. 
+Preliminary-AnalysIs.Rmd/Preliminary-AnalysIs.ipynb: Contains the descriptive statistics analyses, logistic regression model, and survival analyses including the Kaplan-Meier, log-rank test, and Cox regression. Note that only Braun stuy (PMID 32472114) is applied. 
 
 #### Part 2: 
 
-Meta-analyses.Rmd/Meta-analyses.ipynb: Consider the ICB studies including Braun (PMID 32472114), Nathanson (PMID 27956380), Snyder (PMID 28552987), and Van Allen (PMID 26359337). For a given gene across studies, we do the following steps 
+Meta-analyses.Rmd/Meta-analyses.ipynb: Consider the the subset of ICB studies to assess the association of a given gene with response ICB outcome (R vs NR). For a given gene across studies, we do the following steps 
 
-(1) Fit Cox model to assess the association between the gene expression and overall survival (OS) outcome.
+(1) Fit logistic regression model to assess the association between the gene expression and response outcome (R vs NR).
 
-(2) Integrate the association of a gene with ICB response (i.e., logHR) and their variances across studies using the random effect (RE) meta-analysis approach where the DerSimonian and Laird (DL) is applied to estimate the heterogeneity across studies. 
+(2) Integrate the association of a gene with ICB response (i.e., logOR) and their variances across studies using the random effect (RE) meta-analysis approach where the DerSimonian and Laird (DL) is applied to estimate the heterogeneity across studies. 
+
+#### Part 3: 
+
+Meta-Analyses-Genes.Rmd: Consider the the subset of ICB studies to assess the association of with overall survival (OS). For common genes across studies, we do the following steps 
+
+(1) Fit Cox model to assess the association between the gene expression and survival outcome (OS).
+
+(2) Integrate the association of gene with ICB response (i.e., logHR) and their variances across studies using the random effect (RE) meta-analysis approach where the DerSimonian and Laird (DL) is applied to estimate the heterogeneity across studies. 
+
+#### Part 4:
+
+Signature-Analysis-Genes-OS.Rmd: Consider the association between signatures and survival outcome (OS) including following steps:
+
+(1) Compute the signature score using the gene set variation analysis (GSVA).
+
+(2) Fit Cox model to assess the association between the signature and survival outcome (OS).
+
+(3) Integrate the association of signature with ICB response (i.e., logHR) and their variances across studies using the random effect (RE) meta-analysis approach where the DerSimonian and Laird (DL) is applied to estimate the heterogeneity across studies. 
 
 ### PredictIO signature
 
