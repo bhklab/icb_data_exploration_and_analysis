@@ -341,7 +341,7 @@ Under each study, we consider gene set variation analysis (GSVA) approach to com
 signature_names <- c("CD8_Jiang", "T_cell_inflamed", "Inflammatory", "CYT",
                      "STAT1", "IRG_Ayers", "TLS", "IFNG", "PDL1")
 
-dir0 <- "C:/ICBRoche/Signature/"
+dir0 <- "~/Data/Signature/"
 dir <- paste(dir0, paste(signature_names, "csv", sep="."), sep="")
 
 geneSets <- lapply(1:length(dir), function(k){
