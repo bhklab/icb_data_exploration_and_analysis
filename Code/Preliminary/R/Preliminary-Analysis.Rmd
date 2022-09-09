@@ -7,7 +7,6 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
 library(ggplot2)
 library(survival)
 library(survminer)
@@ -15,7 +14,7 @@ library(readr)
 library(magrittr)
 library(summarytools)
 library(ggrepel)
-
+library(rstudioapi)
 ```
 
 ## Load data
@@ -27,17 +26,18 @@ As an example, we consider the ICB Braun data with PMID 32472114 and read RNA-se
 Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represents transcripts per million. 
 
 ```{r load braun data}
-
-# clinicopathological characteristics  
-dat_sample = read.table('~/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'Code')[[1]][1]
+dir <- file.path(app_dir, '.local_data')
+# clinicopathological characteristics 
+dat_sample = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample)
 
 # gene meta data
-dat_gene = read.table('~/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp = read.table('~/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp)
 
 # Get the subset of data with both clinical and expression data
