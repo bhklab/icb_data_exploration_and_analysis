@@ -4,15 +4,17 @@ This repo contains code associated with the PredictIO signature computation alon
 
 ## Data
 
-* The data associated with this analysis downloaded from ORCESTRA's API. 
-* The discovery-validation-cohorts XLSX file represents the subset of discovery and validation cohorts for PredictIO signature computation. 
-* The list of signatures and their details.
+* The data associated with this analysis is downloaded using ORCESTRA's API. 
+* summary_tables.xlsx - The discovery-validation-cohorts XLSX file represents the subset of discovery and validation cohorts for PredictIO signature computation. 
+* Signature - The list of signatures and their details.
 
 ## Organization of repo
 
-The code can be organized into downloading data, preliminary analyses, and PredictIO signature computation scripts. 
+The code is organized into downloading data, preliminary analyses, and PredictIO signature computation scripts. 
 
 ### Download data
+
+A complete workflow starting from accessing data from source to creating MAE and extracting TSV files: ICB_Data_Curation_Example.Rmd
 
 rds_to_tsv.R: Fetch download links from ORCESTRA's API. Download RDS data objects from Zenodo. Extract all the data and parse them into TSV files, and compress them into a zip file.
 
