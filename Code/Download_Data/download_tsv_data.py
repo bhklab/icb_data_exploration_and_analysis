@@ -2,7 +2,7 @@ import requests, zipfile, io, os
 
 zenodo_repo = 'https://zenodo.org/record/7058399/files/'
 studies = [] # empty or specify studies to download. exmaple: ICB_Braun, ICB_Gide...
-dir = '~/Data/TSV'
+dir = '.'
 
 filenames = []
 # if no studies are specified, get available data object names from ORCESTRA

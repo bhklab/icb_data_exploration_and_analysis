@@ -7,7 +7,7 @@ library(stringr)
 
 zenodo_repo <- 'https://zenodo.org/record/7058399/files/'
 studies <- c() # empty or specify studies to download. exmaple: ICB_Braun, ICB_Gide...
-dir <- '~/Data/TSV'
+dir <- '.'
 
 filenames <- c()
 # if no studies are specified, get available data object names from ORCESTRA
