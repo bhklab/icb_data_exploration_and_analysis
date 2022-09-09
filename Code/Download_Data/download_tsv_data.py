@@ -2,7 +2,11 @@ import requests, zipfile, io, os
 
 zenodo_repo = 'https://zenodo.org/record/7058399/files/'
 studies = [] # empty or specify studies to download. exmaple: ICB_Braun, ICB_Gide...
-dir = '.'
+
+# Download datasets into local_data directory at the root of the repository directory.
+dir = '../../local_data'
+if not os.path.exists(dir):
+    os.makedirs(dir)
 
 filenames = []
 # if no studies are specified, get available data object names from ORCESTRA

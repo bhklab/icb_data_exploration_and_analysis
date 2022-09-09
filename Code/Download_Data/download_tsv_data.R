@@ -2,12 +2,17 @@ options(timeout=600)
 
 library(jsonlite)
 library(stringr)
+library(rstudioapi) 
 
 # Script to download and extract TSV version of ICB data from Zenodo
-
 zenodo_repo <- 'https://zenodo.org/record/7058399/files/'
 studies <- c() # empty or specify studies to download. exmaple: ICB_Braun, ICB_Gide...
-dir <- '.'
+
+# Create directory to download the datasets
+app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'Code')[[1]]
+setwd(app_dir)
+dir.create('./local_data', showWarnings = FALSE)
+dir <- './local_data'
 
 filenames <- c()
 # if no studies are specified, get available data object names from ORCESTRA
