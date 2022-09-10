@@ -1,7 +1,7 @@
 ---
 title: "Signature-analysis: Immune-checkpoint blockade (ICB) data"
-#author: "BHK lab"
-date: '2022-09-07'
+author: "Farnoosh Babazadeh, Minoru Nakano, Sisira Kadambat Nair, and Benjamin Haibe-Kains "
+date: ''
 output: html_document
 ---
 
@@ -19,9 +19,16 @@ library(magrittr)
 library(forestplot)
 library(ggrepel)
 library(GSVA)
+library(stringr)
 
 ```
 
+
+This RMarkdown script shows Meta-analysis of subset of ICB datasets. The script is organized as follows:
+
+1. Load ICB datasets
+2. Load signature data
+3. Meta-analysis
 
 ## Load data
 
@@ -47,16 +54,20 @@ Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represent
 
 ```{r load ICB data Braun}
 
+app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'Code')[[1]][1]
+dir <- file.path(app_dir, '.local_data')
+
 # clinicopathological characteristics  
-dat_sample_braun = read.table('~/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_braun = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_braun)
 
+
 # gene meta data
-dat_gene_braun = read.table('~/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_braun = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_braun)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table('~/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_braun = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_braun)
 
 # Get the subset of data with both clinical and expression data.
@@ -73,6 +84,7 @@ dat_gene_braun <- dat_gene_braun[order(dat_gene_braun$gene_id), ]
 dat_gene_braun <- dat_gene_braun[!duplicated(dat_gene_braun$gene_name), ]
 dat_exp_braun <- dat_exp_braun[rownames(dat_exp_braun) %in% dat_gene_braun$gene_id, ]
 
+
 ```
 
 ```{r load ICB data, include=FALSE}
@@ -80,16 +92,17 @@ dat_exp_braun <- dat_exp_braun[rownames(dat_exp_braun) %in% dat_gene_braun$gene_
 ##################################
 ### Nathanson study
 ##################################
+
 # clinicopathological characteristics  
-dat_sample_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_nathanson)
 
 # gene meta data
-dat_gene_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_nathanson)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_nathanson)
 
 # Get the subset of data with both clinical and expression data.
@@ -108,15 +121,15 @@ dat_exp_nathanson <- dat_exp_nathanson[rownames(dat_exp_nathanson) %in% dat_gene
 ####################################
 
 # clinicopathological characteristics  
-dat_sample_snyder = read.table('~/ICB_Snyder/ICB_Snyder_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_snyder = read.table(file.path(dir, 'ICB_Snyder/ICB_Snyder_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_snyder)
 
 # gene meta data
-dat_gene_snyder = read.table('~/ICB_Snyder/ICB_Snyder_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_snyder = read.table(file.path(dir, 'ICB_Snyder/ICB_Snyder_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_snyder)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_snyder = read.table('~/ICB_Snyder/ICB_Snyder_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_snyder = read.table(file.path(dir, 'ICB_Snyder/ICB_Snyder_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_snyder)
 
 # Get the subset of data with both clinical and expression data.
@@ -127,6 +140,7 @@ dim(dat_sample_snyder)
 dat_sample_snyder <- dat_sample_snyder[order(rownames(dat_sample_snyder)), ]
 dat_exp_snyder <- dat_exp_snyder[, order(colnames(dat_exp_snyder))]
 
+
 dat_gene_snyder <- dat_gene_snyder[order(dat_gene_snyder$gene_id), ]
 dat_gene_snyder <- dat_gene_snyder[!duplicated(dat_gene_snyder$gene_name), ]
 dat_exp_snyder <- dat_exp_snyder[rownames(dat_exp_snyder) %in% dat_gene_snyder$gene_id, ]
@@ -136,15 +150,15 @@ dat_exp_snyder <- dat_exp_snyder[rownames(dat_exp_snyder) %in% dat_gene_snyder$g
 #######################################
 
 # clinicopathological characteristics  
-dat_sample_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_van_allen = read.table(file.path(dir, 'ICB_Van_Allen/ICB_Van_Allen_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_van_allen)
 
 # gene meta data
-dat_gene_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_van_allen = read.table(file.path(dir, 'ICB_Van_Allen/ICB_Van_Allen_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_van_allen)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_van_allen = read.table(file.path(dir, 'ICB_Van_Allen/ICB_Van_Allen_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_van_allen)
 
 # Get the subset of data with both clinical and expression data.
@@ -156,6 +170,7 @@ dim(dat_sample_van_allen)
 dat_sample_van_allen <- dat_sample_van_allen[order(rownames(dat_sample_van_allen)), ]
 dat_exp_van_allen <- dat_exp_van_allen[, order(colnames(dat_exp_van_allen))]
 
+
 dat_gene_van_allen <- dat_gene_van_allen[order(dat_gene_van_allen$gene_id), ]
 dat_gene_van_allen <- dat_gene_van_allen[!duplicated(dat_gene_van_allen$gene_name), ]
 dat_exp_van_allen <- dat_exp_van_allen[rownames(dat_exp_van_allen) %in% dat_gene_van_allen$gene_id, ]
@@ -165,15 +180,15 @@ dat_exp_van_allen <- dat_exp_van_allen[rownames(dat_exp_van_allen) %in% dat_gene
 ################################
 
 # clinicopathological characteristics  
-dat_sample_hugo = read.table('~/ICB_Hugo/ICB_Hugo_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_hugo = read.table(file.path(dir, 'ICB_Hugo/ICB_Hugo_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_hugo)
 
 # gene meta data
-dat_gene_hugo = read.table('~/ICB_Hugo/ICB_Hugo_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_hugo = read.table(file.path(dir, 'ICB_Hugo/ICB_Hugo_expr_gene_tpm_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_hugo)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_hugo = read.table('~/ICB_Hugo/ICB_Hugo_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dat_exp_hugo = read.table(file.path(dir, 'ICB_Hugo/ICB_Hugo_expr_gene_tpm.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_hugo)
 
 # Get the subset of data with both clinical and expression data.
@@ -190,20 +205,21 @@ dat_gene_hugo <- dat_gene_hugo[order(dat_gene_hugo$gene_id), ]
 dat_gene_hugo <- dat_gene_hugo[!duplicated(dat_gene_hugo$gene_name), ]
 dat_exp_hugo <- dat_exp_hugo[rownames(dat_exp_hugo) %in% dat_gene_hugo$gene_id, ]
 
+
 ##########################
 ### Miao1 study
 ##########################
 
 # clinicopathological characteristics  
-dat_sample_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_miao1 = read.table(file.path(dir, 'ICB_Miao1/ICB_Miao1_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_miao1)
 
 # gene meta data
-dat_gene_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_miao1 = read.table(file.path(dir, 'ICB_Miao1/ICB_Miao1_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_miao1)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_miao1 = read.table(file.path(dir, 'ICB_Miao1/ICB_Miao1_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_miao1)
 
 # Get the subset of data with both clinical and expression data.
@@ -215,6 +231,7 @@ dim(dat_sample_miao1)
 dat_sample_miao1 <- dat_sample_miao1[order(rownames(dat_sample_miao1)), ]
 dat_exp_miao1 <- dat_exp_miao1[, order(colnames(dat_exp_miao1))]
 
+
 dat_gene_miao1 <- dat_gene_miao1[order(dat_gene_miao1$gene_id), ]
 dat_gene_miao1 <- dat_gene_miao1[!duplicated(dat_gene_miao1$gene_name), ]
 dat_exp_miao1 <- dat_exp_miao1[rownames(dat_exp_miao1) %in% dat_gene_miao1$gene_id, ]
@@ -224,15 +241,15 @@ dat_exp_miao1 <- dat_exp_miao1[rownames(dat_exp_miao1) %in% dat_gene_miao1$gene_
 #########################
 
 # clinicopathological characteristics  
-dat_sample_riaz = read.table('~/ICB_Riaz/ICB_Riaz_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_riaz = read.table(file.path(dir, 'ICB_Riaz/ICB_Riaz_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_riaz)
 
 # gene meta data
-dat_gene_riaz = read.table('~/ICB_Riaz/ICB_Riaz_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_riaz = read.table(file.path(dir, 'ICB_Riaz/ICB_Riaz_expr_gene_tpm_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_riaz)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_riaz = read.table('~/ICB_Riaz/ICB_Riaz_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dat_exp_riaz = read.table(file.path(dir, 'ICB_Riaz/ICB_Riaz_expr_gene_tpm.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_riaz)
 
 # Get the subset of data with both clinical and expression data.
@@ -244,6 +261,7 @@ dim(dat_sample_riaz)
 dat_sample_riaz <- dat_sample_riaz[order(rownames(dat_sample_riaz)), ]
 dat_exp_riaz <- dat_exp_riaz[, order(colnames(dat_exp_riaz))]
 
+
 dat_gene_riaz <- dat_gene_riaz[order(dat_gene_riaz$gene_id), ]
 dat_gene_riaz <- dat_gene_riaz[!duplicated(dat_gene_riaz$gene_name), ]
 dat_exp_riaz <- dat_exp_riaz[rownames(dat_exp_riaz) %in% dat_gene_riaz$gene_id, ]
@@ -253,15 +271,15 @@ dat_exp_riaz <- dat_exp_riaz[rownames(dat_exp_riaz) %in% dat_gene_riaz$gene_id, 
 #########################
 
 # clinicopathological characteristics  
-dat_sample_gide = read.table('~/ICB_Gide/ICB_Gide_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_gide = read.table(file.path(dir, 'ICB_Gide/ICB_Gide_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_gide)
 
 # gene meta data
-dat_gene_gide = read.table('~/ICB_Gide/ICB_Gide_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_gide = read.table(file.path(dir, 'ICB_Gide/ICB_Gide_expr_gene_tpm_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_gide)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_gide = read.table('~/ICB_Gide/ICB_Gide_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dat_exp_gide = read.table(file.path(dir, 'ICB_Gide/ICB_Gide_expr_gene_tpm.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_gide)
 
 # Get the subset of data with both clinical and expression data.
@@ -322,9 +340,27 @@ for(i in 1:length(dat_exp)){
 
 ## Signature data
 
-To download signatures, consider the "~/Data/Signature" folder at GitHub repo. We make a list of available signatures. 
+To download signatures, consider the "~/Data/Signature" folder at GitHub repo. We make a list of available signatures. The following signatures are included in the analyses. Under each study, we consider gene set variation analysis (GSVA) approach to compute the signature score. 
 
-Under each study, we consider gene set variation analysis (GSVA) approach to compute the signature score. Then, we assess the association between signature score and overall survival (OS) using the Cox model. The meta-analysis is applied to integrate results (logHR and SE) across studies. The heterogeneity across studies is evaluated using the DL method. 
+
+* CD8_Jiang (PMID 30127393): T cell dysfunction from large tumor cohorts by testing how the expression of each gene in tumors interacts with the cytotoxic T lymphocytes (CTL) infiltration level to influence patient survival. Gene expression level of CD8A + CD8B
+
+* T_cell_inflamed (PMID 30804515): A pretreatment immune signature (neoadjuvant response signature) that was associated with immunologic responses to anti-PD-1 therapy in melanoma patients
+
+* Inflammatory (PMID 31683225): The inflammatory state of the tumor and includes genes that identify T cells, T cell activation, interferon-responsive genes, chemokine expression and adaptive immune resistance
+
+* CYT (PMID 25594174): A simple and quantitative measure of immune cytolytic activity (CYT) based on transcript levels of two key cytolytic effectors, granzyme A (GZMA) and perforin (PRF1), which are dramatically upregulated upon CD8+ T cell activation
+
+* STAT1 (PMID 31316010, 26362649): Immune responses against carcinoma and melanoma converge on cytotoxic effectors and IFNγ-STAT1-IRF1 signalling
+
+* IRG_Ayers (PMID 28650338): Preliminary expanded immune related gene expression signature predict response to PD-1 checkpoint blockade in melanoma
+
+* TLS (PMID 31942071): Tertiary lymphoid structures improve immunotherapy and survival in melanoma
+
+* IFNG (PMID 28650338): IFN-γ–related gene expression signatures predict response to PD-1 checkpoint blockade in melanoma, (IFNγ: Interferon gamma) 
+
+* PDL1 (OMID 30127393): An immunohistochemistry (IHC) biomarker approved by FDA . In this study, we used the PD-L1 gene expression as the IHC surrogate
+
 
 
 ```{r signature analysis, warning=FALSE, message=FALSE}
@@ -332,12 +368,10 @@ Under each study, we consider gene set variation analysis (GSVA) approach to com
 signature_names <- c("CD8_Jiang", "T_cell_inflamed", "Inflammatory", "CYT",
                      "STAT1", "IRG_Ayers", "TLS", "IFNG", "PDL1")
 
-dir0 <- "C:/ICBRoche/Signature/"
-dir <- paste(dir0, paste(signature_names, "csv", sep="."), sep="")
-
-geneSets <- lapply(1:length(dir), function(k){
+geneSets <- lapply(1:length(signature_names), function(k){
   
-  dat <- read.csv(dir[k])
+  dat <- read.csv(file.path(dir, paste("Signature", paste(signature_names[k], "csv", sep="."), sep="/")))
+  
   dat[,1]
   
 })

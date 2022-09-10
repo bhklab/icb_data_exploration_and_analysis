@@ -19,6 +19,7 @@ library(readr)
 library(magrittr)
 library(forestplot)
 library(ggrepel)
+library(stringr)
 
 ```
 
