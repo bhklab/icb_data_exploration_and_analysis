@@ -38,9 +38,12 @@ As an example, we consider the ICB Braun data with PMID 32472114 and read RNA-se
 Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represents transcripts per million. 
 
 ```{r load braun data}
+
 app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'icb_data_exploration_and_analysis')[[1]][1]
 dir <- file.path(app_dir, 'icb_data_exploration_and_analysis', '.local_data')
+
 # clinicopathological characteristics 
+
 dat_sample = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample)
 
