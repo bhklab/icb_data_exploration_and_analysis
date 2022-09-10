@@ -14579,13 +14579,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Immune-checkpoint-blockade-(ICB)-data">Immune-checkpoint blockade (ICB) data<a class="anchor-link" href="#Immune-checkpoint-blockade-(ICB)-data">&#182;</a></h1><h2 id="Load-data">Load data<a class="anchor-link" href="#Load-data">&#182;</a></h2><p>To download and extract TSV version of ICB data from Zenodo (<a href="https://zenodo.org/record/7058399/files/">https://zenodo.org/record/7058399/files/</a>), follow the script named download_tsv_data.py file at "~/Code/Download_Data".</p>
+<h1 id="Immune-checkpoint-blockade-(ICB)-data">Immune-checkpoint blockade (ICB) data<a class="anchor-link" href="#Immune-checkpoint-blockade-(ICB)-data">&#182;</a></h1><h3 id="Farnoosh-Babazadeh,-Minoru-Nakano,-Sisira-Kadambat-Nair,-and-Benjamin-Haibe-Kains">Farnoosh Babazadeh, Minoru Nakano, Sisira Kadambat Nair, and Benjamin Haibe-Kains<a class="anchor-link" href="#Farnoosh-Babazadeh,-Minoru-Nakano,-Sisira-Kadambat-Nair,-and-Benjamin-Haibe-Kains">&#182;</a></h3><p>This script shows Meta-analysis of subset of ICB datasets. The script is organized as follows:</p>
+<ol>
+<li>Load ICB datasets</li>
+<li>Logistic regression analysis</li>
+<li>Meta-analysis</li>
+</ol>
+<h2 id="Load-data">Load data<a class="anchor-link" href="#Load-data">&#182;</a></h2><p>To download and extract TSV version of ICB data from Zenodo (<a href="https://zenodo.org/record/7058399/files/">https://zenodo.org/record/7058399/files/</a>), follow the script named download_tsv_data.R file at "~/Code/Download_Data".</p>
 <p>We read RNA-seq expression, clinicopathological characteristics, and gene meta data for the following selected ICB studies to include in meta-analysis.</p>
 <ol>
-<li>ICB Braun (PMID 32472114)</li>
-<li>Nathanson (PMID 27956380)</li>
-<li>Snyder (PMID 28552987)</li>
-<li>Van Allen (PMID 26359337) </li>
+<li>Braun (PMID 32472114)</li>
+<li>Gide (PMID 30753825)</li>
+<li>Hugo (PMID 26997480)</li>
+<li>Kim (PMID 30013197)</li>
+<li>Miao1 (PMID 29301960)</li>
+<li>Nathanson (PMID 27956380) </li>
+<li>Riaz (PMID 29301960)</li>
+<li>Snyder (PMID 28552987) </li>
+<li>Van Allen (PMID 26359337)</li>
+<li>VanDenEnde (PMID 33504550)</li>
 </ol>
 <p>As an example, we share the codes to get read the RNA-seq expression, clinicopathological characteristics, and gene meta data usign ICB Braun data. The Braun study includes 319 patients with clinical data and 40,994 genes. While only 181 patients have both clinical data and RNA-seq expression data.</p>
 <p>Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represents transcripts per million.</p>
@@ -14782,7 +14794,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Logistic-regression-analysis">Logistic regression analysis<a class="anchor-link" href="#Logistic-regression-analysis">&#182;</a></h2><p>For each study, we assess the association between genes and response variable (R vs NR) by fitting the logistic regression model. For a given gene, we fit the model under each study to identify the log(OR) and its standard error (SE). We consider a gene (e.g., ENSG00000065491.8 or TBC1D22B) that is in common across selected ICB studies.</p>
+<h2 id="Logistic-regression-analysis">Logistic regression analysis<a class="anchor-link" href="#Logistic-regression-analysis">&#182;</a></h2><p>For each study, we assess the association between TBC1D22B (ENSG00000065491.8) and ICB response (R vs NR) by fitting the logistic regression model. We fit the model under each study to identify the log(OR) and its standard error (SE).</p>
 
 </div>
 </div>
@@ -14949,8 +14961,10 @@ Optimization terminated successfully.
 evaluated particularly with respect to their ability to assess variation across studies or heterogeneity. Several meta-analysis methods have been proposed such as combining p-values, combining effect estimates, and rankings.</p>
 <p>Approaches that combine effects including fixed- and random-effects (FE &amp; RE) models are widely used to achieve a broad inferential basis for evaluations of effects. Under the FE model, we assume that there is one true effect that underlies all the studies in the analysis, and that all differences in
 observed effects are due to sampling error. In contrast, the RE model incorporates the variability of the effects across studies in addition to the within-study variability using a two-stage hierarchical process.</p>
-<p>Assessing heterogeneity is a critical issue in meta-analysis because different models may lead to different estimates of overall effect and different standard errors.Several approaches have been suggested over the years for how best to assess homogeneity across studies, and the corresponding research is ongoing. erSimonian and Laird (DL) (or chi2) is widely used to assess the hetergeneity.</p>
-<h3 id="Part-I:-response-(R-vs.-NR)">Part I: response (R vs. NR)<a class="anchor-link" href="#Part-I:-response-(R-vs.-NR)">&#182;</a></h3><p>The forest plot demonstrates the fitted logistic regression model under each study including  the logOR, SE and p-value. Then, the meta-analysis was applied to integrate the results across studies using DL method to estimate heterogeneity. Under the FE meta-analysis, the gene is associated with OS, while under the RE meta-analysis, the forestplot does not show any significant association.</p>
+<p>Assessing heterogeneity is a critical issue in meta-analysis because different models may lead to different estimates of overall effect and different standard errors.Several approaches have been suggested over the years for how best to assess homogeneity across studies, and the corresponding research is ongoing. DerSimonian and Laird (DL) (or chi2) is widely used to assess the heterogeneity.</p>
+<h3 id="Part-I:-response-(R-vs.-NR)">Part I: response (R vs. NR)<a class="anchor-link" href="#Part-I:-response-(R-vs.-NR)">&#182;</a></h3><p>The meta-analysis is applied to integrate the results (i.e., logOR and SE) across ICB studies.
+The forest plot demonstrates the fitted logistic regression model under each study including  the logOR, SE and p-value.</p>
+<p>The forest plot shows the estimate heterogeneity across studies $I^2 = 36\%$. In addition, both FE and RE models show no association between TBC1D22B and ICB response.</p>
 
 </div>
 </div>

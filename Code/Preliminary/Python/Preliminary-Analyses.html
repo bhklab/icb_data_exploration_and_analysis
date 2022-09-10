@@ -14579,7 +14579,19 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Immune-checkpoint-blockade-(ICB)-data">Immune-checkpoint blockade (ICB) data<a class="anchor-link" href="#Immune-checkpoint-blockade-(ICB)-data">&#182;</a></h1><h2 id="Load-data">Load data<a class="anchor-link" href="#Load-data">&#182;</a></h2><p>To download and extract TSV version of ICB data from Zenodo (<a href="https://zenodo.org/record/7058399/files/">https://zenodo.org/record/7058399/files/</a>), follow the script named download_tsv_data.py file at "~/Code/Download_Data".</p>
+<h1 id="Immune-checkpoint-blockade-(ICB)-data">Immune-checkpoint blockade (ICB) data<a class="anchor-link" href="#Immune-checkpoint-blockade-(ICB)-data">&#182;</a></h1><h3 id="Farnoosh-Babazadeh,-Minoru-Nakano,-Sisira-Kadambat-Nair,-and-Benjamin-Haibe-Kains">Farnoosh Babazadeh, Minoru Nakano, Sisira Kadambat Nair, and Benjamin Haibe-Kains<a class="anchor-link" href="#Farnoosh-Babazadeh,-Minoru-Nakano,-Sisira-Kadambat-Nair,-and-Benjamin-Haibe-Kains">&#182;</a></h3><p>This script shows preliminary analyses of downloaded ICB Braun dataset (PMID 32472114). The script is organized as follows:</p>
+<ol>
+<li>Load Braun dataset</li>
+<li>Clinical data summary</li>
+<li>Logistic regression analysis </li>
+<li>Survival analysis<ul>
+<li>Kaplan-Meier (KM) and log-rank test</li>
+<li>Cox proportional-hazards (PH) model using single gene</li>
+<li>Cox proportional-hazards (PH) model using protein coding genes</li>
+</ul>
+</li>
+</ol>
+<h2 id="Load-data">Load data<a class="anchor-link" href="#Load-data">&#182;</a></h2><p>To download and extract TSV version of ICB data from Zenodo (<a href="https://zenodo.org/record/7058399/files/">https://zenodo.org/record/7058399/files/</a>), follow the script named download_tsv_data.R file at "~/Code/Download_Data".</p>
 <p>As an example, we consider the ICB Braun data with PMID 32472114 and read RNA-seq expression, clinicopathological characteristics, and gene meta data. The Braun study includes 319 patients with clinical data and 40,994 genes. While only 181 patients have both clinical data and RNA-seq expression data.</p>
 <p>Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represents transcripts per million.</p>
 
@@ -14591,7 +14603,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># importing libraries</span>
@@ -14616,7 +14628,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># clinicopathological characteristics  </span>
@@ -14640,7 +14652,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
 
 
 
@@ -15385,6 +15397,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Clinical-data-summary">Clinical data summary<a class="anchor-link" href="#Clinical-data-summary">&#182;</a></h2><p>The detailed clinicopathological characteristics of the Braun cohort including cancer type, age, sex, respose, overall survival (OS), and progression-free survival (PFS).</p>
+<p>The summary table represents that in Braun study almost 22\% of ICB response data is missing and more than 80\% of patients are female.</p>
 
 </div>
 </div>
@@ -15504,7 +15517,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>We assess under the null hypothesis the sex and response is independent using the Chi-squared test. The p-value = 0.999 shows we don't have enough evidence to reject the null hypothesis.</p>
+<p>In addition, we assess whether there is any association between the sex and response using the Chi-squared test. The result shows that sex and ICB response are not associated (p=0.99)</p>
 
 </div>
 </div>
@@ -15655,16 +15668,17 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Logistic-regression-analysis">Logistic regression analysis<a class="anchor-link" href="#Logistic-regression-analysis">&#182;</a></h2><p>To assess the association between a gene and response (R vs. NR) variable, we fit the logistic regression model. The structural form of the logistic regression model is given as</p>
-$$\textit{logit}(E(Y|X)) = \textit{logit}(p) = \textit{ln} (\frac{p}{1-p}) = \beta_0 + \beta_1 X + \epsilon$$<p>where</p>
-<ul>
-<li>$Y$  denotes the outcome or dependent variable (e.g., response variable); this is a binary variable $X$  denotes the predictor of interest or the independent variable (e.g., expression data)</li>
+$$\textit{logit}(E(Y|X)) = \textit{logit}(p) = \textit{ln} (\frac{p}{1-p}) = \beta_0 + \beta_1 X + \epsilon$$<ul>
+<li>$Y$  denotes the outcome or dependent variable (e.g., ICB response); this is a binary variable</li>
+<li>$X$  denotes the predictor of interest or the independent variable (e.g., gene expression data)</li>
 <li>$p$ denotes the probability of the event occurring, and $\frac{p}{1-p}$ shows the odds ratio (OR)</li>
 <li>$\beta_0$ denotes the Y-intercept when X is zero; this is not informative for logistic regression models</li>
 <li>$\beta_1$ denotes the slope or the expected change in log odds per unit change in X</li>
 <li>$\epsilon$ denotes the errors</li>
 </ul>
 <p>The logistic regression model has several assumptions such as observations are independent of each other, no multi-collinearity across independent variables, and linearity of log odds.</p>
-<p>For a given gene ENSG00000065491.8 (TBC1D22B), the boxplot shows 22\% of responses are missing. After removing the missing values, the fitted logistic model represents that there is significant association between gene and response ($log\text{OR} = 0.98$ and $p = 0.003$).</p>
+<p>For a given gene ENSG00000065491.8 (TBC1D22B), the boxplot shows the distribution of expression data across the ICB response where almost 22\% of ICB response is missing.</p>
+<p>After removing the missing values, the fitted logistic model demonstrates that TBC1D22B is associated with improved ICB response ($log\text{OR} = 0.98$ and $p = 0.003$).</p>
 
 </div>
 </div>
@@ -15830,8 +15844,8 @@ $$\textit{logit}(E(Y|X)) = \textit{logit}(p) = \textit{ln} (\frac{p}{1-p}) = \be
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Survival-analysis">Survival analysis<a class="anchor-link" href="#Survival-analysis">&#182;</a></h2><h3 id="Part-I">Part I<a class="anchor-link" href="#Part-I">&#182;</a></h3><p>We consider the Kaplan-Meier (KM) and log-rank test to assess if there is any statistically difference in survival rate (e.g., OS) if we divide our data based on sex (F vs. M).</p>
-<p>The log-rank test $p = 0.11$ shows there is not any significant difference in survival rate across two group of sex (F vs. M).</p>
+<h2 id="Survival-analysis">Survival analysis<a class="anchor-link" href="#Survival-analysis">&#182;</a></h2><h3 id="Part-I:-Kaplan-Meier-(KM)-and-log-rank-test">Part I: Kaplan-Meier (KM) and log-rank test<a class="anchor-link" href="#Part-I:-Kaplan-Meier-(KM)-and-log-rank-test">&#182;</a></h3><p>We consider the Kaplan-Meier (KM) and log-rank test to assess the impact of sex (F vs. M) and ICB response (R vs. NR) on overall survival rate (OS).</p>
+<p>The KM plot and log-rank test shows that there is not any significant difference in survival rate across two group of sex (F vs. M) ($p = 0.11$). However, using the ICB response (R vs. NR) and OS data, there is considerable difference in survival rate across two group of response ($p &lt; 0.0001$)</p>
 
 </div>
 </div>
@@ -15841,77 +15855,13 @@ $$\textit{logit}(E(Y|X)) = \textit{logit}(p) = \textit{ln} (\frac{p}{1-p}) = \be
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="n">dat_sample</span><span class="p">[</span><span class="s2">&quot;survival_time_os&quot;</span><span class="p">]</span>
 <span class="n">E</span> <span class="o">=</span> <span class="n">dat_sample</span><span class="p">[</span><span class="s2">&quot;event_occurred_os&quot;</span><span class="p">]</span>
 
-<span class="n">kmf</span> <span class="o">=</span> <span class="n">KaplanMeierFitter</span><span class="p">()</span>
-<span class="n">kmf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">durations</span> <span class="o">=</span> <span class="n">T</span><span class="p">,</span> 
-        <span class="n">event_observed</span> <span class="o">=</span> <span class="n">E</span><span class="p">)</span>
-<span class="n">kmf</span><span class="o">.</span><span class="n">plot_survival_function</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Overall Survival function&#39;</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[21]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>Text(0.5, 1.0, &#39;Overall Survival function&#39;)</pre>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-<div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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WPZ578vu/jWwG+gSkd4Cz90G/Ffgx9hvCmux75uoGiO6wIVSStUHbaErpVSd0ISulFJ1QhO6UkrVCU3oSilVJypWprSlpcWsXr26UpdXSqma9MILL/QaYwrOT6hYQl+9ejU7duyY/UCllFITROTodPu0y0UppeqEJnSllKoTmtCVUqpOVHztRqVU9Ugmk3R2dhKLxSodyqLn9Xrp6OjA5XIV/RxN6EqpCZ2dnYRCIVavXo0uSlQ5xhj6+vro7OxkzZo1RT9v1i4XEblfRLpFZNc0+0VE/jG7fNVLuWW5lFK1JxaL0dzcrMm8wkSE5ubmOX9SKqYP/dvAdTPsvx67Kt867OW9/nlOESilqoom8+own/+HWbtcjDFPTlmKaqqbgH/JLoDwjIhERGRpttxoyX3+X3ez5+SwfeFNy7n18pXluIxSStWcUvShL2dyfevO7LazErqIfBS7Fc/KlfNPxOPJNC91DvHs4X56RmJ84Ko1NPiLv3GglFL1qBTDFgt9LihYZN0Yc48xZrMxZnNra7Era0322Xdt5Id/eSV/9Za1AHzlV6/yxUf28PKJQdIZre2uVK0LBs8sV/rII4+wbt06jh07xuc+9zlEhAMHDkzs/8pXvoKIlGzW+c9+9jP27Nkz8fgzn/kMv/rVr875vIODg3zjG9845/PMphQJvRN7gdqcDuw1CsvG63LwwS1reN/mDgD+z45O7vvdYY72jZbzskqpBbRt2zY+8YlP8Oijj058or/kkkt44IEHJo558MEHueiii0p2zakJ/c477+Saa6455/MuVEIvRZfLQ8DHReQB7CXChsrVfz7VlvNbCHld3PvUYXafHOblziGclrCyObAQl1eqruXfryqVi5aF+ey7Ns563O9+9zs+8pGP8Mgjj7B27dqJ7e9+97v5+c9/zt///d9z6NAhGhoaZh2n/fjjj/PZz36WeDzO2rVr+da3vkUwGOT222/noYcewul08va3v533vOc9PPTQQ/z2t7/lrrvu4sc//jFf+MIXuOGGG/izP/szVq9eza233soTTzxBMpnknnvu4Y477uDAgQN88pOf5LbbbiMajXLTTTcxMDBAMpnkrrvu4qabbuL222/n4MGDbNq0iWuvvZa7776bu+++mx/+8IfE43H+9E//lM9//vPn/POdNaGLyA+At2Cvjt4JfBZwARhjvgk8ArwT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
-"
-class="
-jp-needs-light-background
-"
->
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 
 <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">dat_sample</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span><span class="p">)</span>
 <span class="n">kmf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">durations</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">event_observed</span> <span class="o">=</span> <span class="n">E</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Male&quot;</span><span class="p">)</span>
@@ -15936,7 +15886,7 @@ jp-needs-light-background
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
 
 
 
@@ -15975,7 +15925,7 @@ jp-needs-light-background
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># log-rank test</span>
@@ -16103,7 +16053,7 @@ jp-needs-light-background
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
@@ -16131,7 +16081,7 @@ jp-needs-light-background
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[29]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
 
 
 
@@ -16287,7 +16237,7 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Part-II">Part II<a class="anchor-link" href="#Part-II">&#182;</a></h3><p>To assess the association between genes and time-to-event variables (e.g., OS), we fit the Cox proportional hazards model. The semi-parametric Cox PH model is given as</p>
+<h3 id="Part-II:-Cox-proportional-hazards-(PH)-model-using-single-gene">Part II: Cox proportional-hazards (PH) model using single gene<a class="anchor-link" href="#Part-II:-Cox-proportional-hazards-(PH)-model-using-single-gene">&#182;</a></h3><p>To assess the association between genes and time-to-event variables (e.g., OS), we fit the Cox proportional hazards model. The semi-parametric Cox PH model is given as</p>
 $$h(t) = h_0(t) \times \text{exp}(\beta X)$$<p>where</p>
 <ul>
 <li>$t$ represents the survival time.</li>
@@ -16296,7 +16246,7 @@ $$h(t) = h_0(t) \times \text{exp}(\beta X)$$<p>where</p>
 <li>The term $h_0$ is called the baseline hazard. It corresponds to the value of the hazard if the covariate is equal to zero. The $t$ in $h(t)$ reminds us that the hazard may vary over time.</li>
 <li>The quantity $\text{e}^\beta$ is called hazard ratios (HR).</li>
 </ul>
-<p>The fitted Cox model with $p = 0.52$ shows no statistically significant association between OS and gene expression.</p>
+<p>The fitted Cox model demonstrates that TBC1D22B is not associated with OS ($logHR = 0.08$, $p = 0.52$).</p>
 
 </div>
 </div>
