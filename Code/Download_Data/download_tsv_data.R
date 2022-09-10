@@ -10,10 +10,11 @@ download_missing_file <- function(url, destfile) {
 
 # Script to download and extract TSV version of ICB data from Zenodo
 zenodo_repo <- 'https://zenodo.org/record/7058399/files/'
-studies <- c('ICB_Braun') # empty or specify studies to download. exmaple: ICB_Braun, ICB_Gide...
+studies <- c() # empty or specify studies to download. exmaple: ICB_Braun, ICB_Gide...
 
 # Create directory to download the datasets
-app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'Code')[[1]]
+app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, '/icb_data_exploration_and_analysis')[[1]][1]
+app_dir <- paste0(app_dir, 'icb_data_exploration_and_analysis')
 setwd(app_dir)
 dir <- '.local_data'
 dir.create(dir, showWarnings = FALSE)
