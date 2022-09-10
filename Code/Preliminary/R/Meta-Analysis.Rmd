@@ -391,7 +391,7 @@ Assessing heterogeneity is a critical issue in meta-analysis because different m
 The meta-analysis is applied to integrate the results (i.e., logOR and SE) across ICB studies.
 The forest plot demonstrates the fitted logistic regression model under each study including  the logOR, SE and p-value. 
 
-The forest plot shows the estimate heterogeneity across studies $I^2 = 36\%$. In addition, both FE ($p = 0.22$) and RE ($p=0.61$) models show no association between TBC1D22B and ICB response.      
+The forest plot shows the estimate heterogeneity across studies $I^2 = 36\%$. In addition, both FE ($p = 0.21$) and RE ($p=0.65$) models show no association between TBC1D22B and ICB response.      
 
 ```{r meta analysis logistic resgression, fig.width = 7}
 
