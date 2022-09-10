@@ -1,11 +1,12 @@
 ---
 title: "Meta-analysis: Immune-checkpoint blockade (ICB) data"
-#author: "BHK lab"
-date: '2022-09-07'
+author: "Farnoosh Babazadeh, Minoru Nakano, Sisira Kadambat Nair, and Benjamin Haibe-Kains "
+date: ''
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
 
 library(ggplot2)
@@ -21,11 +22,15 @@ library(ggrepel)
 
 ```
 
+This RMarkdown script shows Meta-analysis of subset of ICB datasets using protein coding genes. The script is organized as follows:
 
+1. Load ICB datasets
+2. Survival analysis (Cox model)
+3. Meta-analysis
+ 
 ## Load data
 
-
-To download and extract TSV version of ICB data from Zenodo (https://zenodo.org/record/7058399/files/), follow the script named download_tsv_data R file at "~/Code/Download_Data".  
+To download and extract TSV version of ICB data from Zenodo (https://zenodo.org/record/7058399/files/), follow the script named download_tsv_data.R file at "~/Code/Download_Data".  
 
 We read RNA-seq expression, clinicopathological characteristics, and gene meta data for the following selected ICB studies to include in meta-analysis. 
 
@@ -46,16 +51,20 @@ Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represent
 
 ```{r load ICB data Braun}
 
+app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'Code')[[1]][1]
+dir <- file.path(app_dir, '.local_data')
+
 # clinicopathological characteristics  
-dat_sample_braun = read.table('~/ICB_Braun/ICB_Braun_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_braun = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_braun)
 
+
 # gene meta data
-dat_gene_braun = read.table('~/ICB_Braun/ICB_Braun_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_braun = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_braun)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table('~/ICB_Braun/ICB_Braun_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_braun = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_braun)
 
 # Get the subset of data with both clinical and expression data.
@@ -83,15 +92,15 @@ sub_dat_exp_braun <- dat_exp_braun[rownames(dat_exp_braun) %in% sub_dat_gene_bra
 ##################################
 
 # clinicopathological characteristics  
-dat_sample_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_nathanson)
 
 # gene meta data
-dat_gene_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_nathanson)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_nathanson = read.table('~/ICB_Nathanson/ICB_Nathanson_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_nathanson)
 
 # Get the subset of data with both clinical and expression data.
@@ -112,15 +121,15 @@ sub_dat_exp_nathanson <- dat_exp_nathanson[rownames(dat_exp_nathanson) %in% sub_
 ####################################
 
 # clinicopathological characteristics  
-dat_sample_snyder = read.table('~/ICB_Snyder/ICB_Snyder_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_snyder = read.table(file.path(dir, 'ICB_Snyder/ICB_Snyder_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_snyder)
 
 # gene meta data
-dat_gene_snyder = read.table('~/ICB_Snyder/ICB_Snyder_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_snyder = read.table(file.path(dir, 'ICB_Snyder/ICB_Snyder_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_snyder)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_snyder = read.table('~/ICB_Snyder/ICB_Snyder_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_snyder = read.table(file.path(dir, 'ICB_Snyder/ICB_Snyder_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_snyder)
 
 # Get the subset of data with both clinical and expression data.
@@ -142,15 +151,15 @@ sub_dat_exp_snyder <- dat_exp_snyder[rownames(dat_exp_snyder) %in% sub_dat_gene_
 #######################################
 
 # clinicopathological characteristics  
-dat_sample_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_van_allen = read.table(file.path(dir, 'ICB_Van_Allen/ICB_Van_Allen_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_van_allen)
 
 # gene meta data
-dat_gene_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_van_allen = read.table(file.path(dir, 'ICB_Van_Allen/ICB_Van_Allen_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_van_allen)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_van_allen = read.table('~/ICB_Van_Allen/ICB_Van_Allen_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_van_allen = read.table(file.path(dir, 'ICB_Van_Allen/ICB_Van_Allen_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_van_allen)
 
 # Get the subset of data with both clinical and expression data.
@@ -174,15 +183,15 @@ sub_dat_exp_van_allen <- dat_exp_van_allen[rownames(dat_exp_van_allen) %in% sub_
 ################################
 
 # clinicopathological characteristics  
-dat_sample_hugo = read.table('~/ICB_Hugo/ICB_Hugo_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_hugo = read.table(file.path(dir, 'ICB_Hugo/ICB_Hugo_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_hugo)
 
 # gene meta data
-dat_gene_hugo = read.table('~/ICB_Hugo/ICB_Hugo_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_hugo = read.table(file.path(dir, 'ICB_Hugo/ICB_Hugo_expr_gene_tpm_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_hugo)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_hugo = read.table('~/ICB_Hugo/ICB_Hugo_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dat_exp_hugo = read.table(file.path(dir, 'ICB_Hugo/ICB_Hugo_expr_gene_tpm.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_hugo)
 
 # Get the subset of data with both clinical and expression data.
@@ -206,15 +215,15 @@ sub_dat_exp_hugo <- dat_exp_hugo[rownames(dat_exp_hugo) %in% sub_dat_gene_hugo$g
 ##########################
 
 # clinicopathological characteristics  
-dat_sample_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_miao1 = read.table(file.path(dir, 'ICB_Miao1/ICB_Miao1_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_miao1)
 
 # gene meta data
-dat_gene_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_expr_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_miao1 = read.table(file.path(dir, 'ICB_Miao1/ICB_Miao1_expr_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_miao1)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_miao1 = read.table('~/ICB_Miao1/ICB_Miao1_expr.tsv', sep="\t") %>% as.data.frame()
+dat_exp_miao1 = read.table(file.path(dir, 'ICB_Miao1/ICB_Miao1_expr.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_miao1)
 
 # Get the subset of data with both clinical and expression data.
@@ -238,15 +247,15 @@ sub_dat_exp_miao1 <- dat_exp_miao1[rownames(dat_exp_miao1) %in% sub_dat_gene_mia
 #########################
 
 # clinicopathological characteristics  
-dat_sample_riaz = read.table('~/ICB_Riaz/ICB_Riaz_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_riaz = read.table(file.path(dir, 'ICB_Riaz/ICB_Riaz_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_riaz)
 
 # gene meta data
-dat_gene_riaz = read.table('~/ICB_Riaz/ICB_Riaz_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_riaz = read.table(file.path(dir, 'ICB_Riaz/ICB_Riaz_expr_gene_tpm_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_riaz)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_riaz = read.table('~/ICB_Riaz/ICB_Riaz_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dat_exp_riaz = read.table(file.path(dir, 'ICB_Riaz/ICB_Riaz_expr_gene_tpm.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_riaz)
 
 # Get the subset of data with both clinical and expression data.
@@ -270,15 +279,15 @@ sub_dat_exp_riaz <- dat_exp_riaz[rownames(dat_exp_riaz) %in% sub_dat_gene_riaz$g
 #########################
 
 # clinicopathological characteristics  
-dat_sample_gide = read.table('~/ICB_Gide/ICB_Gide_metadata.tsv', sep="\t") %>% as.data.frame()
+dat_sample_gide = read.table(file.path(dir, 'ICB_Gide/ICB_Gide_metadata.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_sample_gide)
 
 # gene meta data
-dat_gene_gide = read.table('~/ICB_Gide/ICB_Gide_expr_gene_tpm_genes.tsv', sep="\t") %>% as.data.frame()
+dat_gene_gide = read.table(file.path(dir, 'ICB_Gide/ICB_Gide_expr_gene_tpm_genes.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_gene_gide)
 
 # RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_gide = read.table('~/ICB_Gide/ICB_Gide_expr_gene_tpm.tsv', sep="\t") %>% as.data.frame()
+dat_exp_gide = read.table(file.path(dir, 'ICB_Gide/ICB_Gide_expr_gene_tpm.tsv'), sep="\t") %>% as.data.frame()
 dim(dat_exp_gide)
 
 # Get the subset of data with both clinical and expression data.
@@ -341,9 +350,11 @@ dat_gene <- list(Braun = sub_dat_gene_braun[sub_dat_gene_braun$gene_id %in% int,
 
 ```
 
+
+
 ## Survival analysis (OS) 
 
-For common protein coding genes across selected ICB studies, we assess the association of genes and overall survival (OS) by fitting the Cox model per study. Then, the meta-analysis is applied to integrate the results (i.e., logHR and SE) across ICB studies. The volcano plot is considered to show the   
+For common protein coding genes across selected ICB studies, we assess the association of genes and overall survival (OS) by fitting the Cox model per study. Then, the meta-analysis is applied to integrate the results (i.e., logHR and SE) across ICB studies. 
 
 ```{r cox all genes, warning=FALSE, message=FALSE}
 
@@ -378,7 +389,6 @@ cox_res <- lapply(1:length(dat_exp), function(k){
 })
 
 cox_res <- do.call(rbind, cox_res)
-
   
 ```
 
@@ -395,7 +405,10 @@ Assessing heterogeneity is a critical issue in meta-analysis because different m
 
 ### Part I: Overall survival (OS)
 
-The meta-analysis was applied to integrate the results (logHR, SE) across studies using DL method to estimate heterogeneity. We consider the multiple test correction (Benjamini-Hochberg) and genes TMEM140 (logHR = -0.22, p = 5.4e-04, FDR = 0.12) and GOLGA8S (logHR = 0.08, p = 4.7e-05, FDR = 0.02) with FDR < 0.15 are associated with OS. The volcano plot shows the genes associated with OS with p < 0.05.    
+The meta-analysis was applied to integrate the results (logHR, SE) across studies using DL method to estimate heterogeneity. We consider the multiple test correction (Benjamini-Hochberg).
+
+The gene TMEM140 is associated with better survival ($logHR = -0.22$, $p = 5.4e-04$), while GOLGA8S is associated with worse survival ($logHR = 0.08$, $p = 4.7e-05$) with FDR < 0.15. The volcano plot shows the genes associated with OS with p < 0.05. 
+
 
 ```{r meta analysis logistic resgression, fig.width = 7, warning=FALSE, message=FALSE, echo=FALSE}
 

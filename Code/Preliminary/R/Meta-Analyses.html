@@ -9,8 +9,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Farnoosh Babazadeh, Minoru Nakano, Sisira Kadambat Nair, and Benjamin Haibe-Kains" />
 
-<meta name="date" content="2022-09-07" />
 
 <title>Meta-analysis: Immune-checkpoint blockade (ICB) data</title>
 
@@ -364,15 +364,23 @@ pre code {
 
 <h1 class="title toc-ignore">Meta-analysis: Immune-checkpoint blockade
 (ICB) data</h1>
-<h4 class="date">2022-09-07</h4>
+<h4 class="author">Farnoosh Babazadeh, Minoru Nakano, Sisira Kadambat
+Nair, and Benjamin Haibe-Kains</h4>
 
 </div>
 
 
+<p>This RMarkdown script shows Meta-analysis of subset of ICB datasets.
+The script is organized as follows:</p>
+<ol style="list-style-type: decimal">
+<li>Load ICB datasets</li>
+<li>Logistic regression analysis</li>
+<li>Meta-analysis</li>
+</ol>
 <div id="load-data" class="section level2">
 <h2>Load data</h2>
 <p>To download and extract TSV version of ICB data from Zenodo (<a href="https://zenodo.org/record/7058399/files/" class="uri">https://zenodo.org/record/7058399/files/</a>), follow the
-script named download_tsv_data R file at “~/Code/Download_Data”.</p>
+script named download_tsv_data.R file at “~/Code/Download_Data”.</p>
 <p>We read RNA-seq expression, clinicopathological characteristics, and
 gene meta data for the following selected ICB studies to include in
 meta-analysis.</p>
@@ -397,16 +405,19 @@ RNA-seq expression data.</p>
 represents transcripts per million.</p>
 <div id="braun-study" class="section level3">
 <h3>Braun study</h3>
-<pre class="r"><code># clinicopathological characteristics  
-dat_sample_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_metadata.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+<pre class="r"><code>app_dir &lt;- str_split(rstudioapi::getActiveDocumentContext()$path, &#39;Code&#39;)[[1]][1]
+dir &lt;- file.path(app_dir, &#39;.local_data&#39;)
+
+# clinicopathological characteristics  
+dat_sample_braun = read.table(file.path(dir, &#39;ICB_Braun/ICB_Braun_metadata.tsv&#39;), sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_sample_braun)</code></pre>
 <pre><code>## [1] 319 145</code></pre>
 <pre class="r"><code># gene meta data
-dat_gene_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr_genes.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_gene_braun = read.table(file.path(dir, &#39;ICB_Braun/ICB_Braun_expr_genes.tsv&#39;), sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_gene_braun)</code></pre>
 <pre><code>## [1] 40994    17</code></pre>
 <pre class="r"><code># RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_exp_braun = read.table(file.path(dir, &#39;ICB_Braun/ICB_Braun_expr.tsv&#39;), sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_exp_braun)</code></pre>
 <pre><code>## [1] 40994   181</code></pre>
 <pre class="r"><code># Get the subset of data with both clinical and expression data.
@@ -421,11 +432,10 @@ dat_exp_braun &lt;- dat_exp_braun[, order(colnames(dat_exp_braun))]</code></pre>
 </div>
 <div id="logistic-regression-analysis" class="section level2">
 <h2>Logistic regression analysis</h2>
-<p>For each study, we assess the association between genes and response
-variable (R vs NR) by fitting the logistic regression model. For a given
-gene, we fit the model under each study to identify the log(OR) and its
-standard error (SE). We consider a gene (e.g., ENSG00000065491.8 or
-TBC1D22B) that is in common across selected ICB studies.</p>
+<p>For each study, we assess the association between TBC1D22B
+(ENSG00000065491.8) and ICB response (R vs NR) by fitting the logistic
+regression model. We fit the model under each study to identify the
+log(OR) and its standard error (SE).</p>
 <pre class="r"><code>logit_res &lt;- lapply(1:length(dat_exp), function(k){
   
   sub_dat_exp &lt;- dat_exp[[k]]
@@ -479,11 +489,12 @@ corresponding research is ongoing. DerSimonian and Laird (DL) (or chi2)
 is widely used to assess the heterogeneity.</p>
 <div id="part-i-response-r-vs.-nr" class="section level3">
 <h3>Part I: response (R vs. NR)</h3>
-<p>The forest plot demonstrates the fitted logistic regression model
-under each study including the logOR, SE and p-value. Then, the
-meta-analysis was applied to integrate the results across studies using
-DL method to estimate heterogeneity (i.e., <span class="math inline">\(I^2 = 36\%\)</span> and <span class="math inline">\(p = 1.2e-01\)</span>). Both FE (<span class="math inline">\(p = 0.22\)</span>) and RE (<span class="math inline">\(p=0.61\)</span>) model show no statistically
-significant p-values after integration.</p>
+<p>The meta-analysis is applied to integrate the results (i.e., logOR
+and SE) across ICB studies. The forest plot demonstrates the fitted
+logistic regression model under each study including the logOR, SE and
+p-value.</p>
+<p>The forest plot shows the estimate heterogeneity across studies <span class="math inline">\(I^2 = 36\%\)</span>. In addition, both FE (<span class="math inline">\(p = 0.22\)</span>) and RE (<span class="math inline">\(p=0.61\)</span>) models show no association
+between TBC1D22B and ICB response.</p>
 <pre class="r"><code>dat_meta &lt;- logit_res
 
 x &lt;-  dat_meta$logOR
