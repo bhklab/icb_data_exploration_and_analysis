@@ -405,8 +405,8 @@ RNA-seq expression data.</p>
 represents transcripts per million.</p>
 <div id="braun-study" class="section level3">
 <h3>Braun study</h3>
-<pre class="r"><code>app_dir &lt;- str_split(rstudioapi::getActiveDocumentContext()$path, &#39;Code&#39;)[[1]][1]
-dir &lt;- file.path(app_dir, &#39;.local_data&#39;)
+<pre class="r"><code>app_dir &lt;- str_split(rstudioapi::getActiveDocumentContext()$path, &#39;icb_data_exploration_and_analysis&#39;)[[1]][1]
+dir &lt;- file.path(app_dir, &#39;icb_data_exploration_and_analysis&#39;, &#39;.local_data&#39;)
 
 # clinicopathological characteristics  
 dat_sample_braun = read.table(file.path(dir, &#39;ICB_Braun/ICB_Braun_metadata.tsv&#39;), sep=&quot;\t&quot;) %&gt;% as.data.frame()
