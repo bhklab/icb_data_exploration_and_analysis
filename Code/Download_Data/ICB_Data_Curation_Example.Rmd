@@ -27,15 +27,17 @@ The standardized data are integrated into MultiAssayExperiment object:\
 knitr::include_graphics("images/P2 - 30 min Workshop - Research camp.jpg")
 ```
 
-MultiAssayExperiment offers:\
+MultiAssayExperiment:\
 
-1. item 1
-2. item 2
-3. item 3
-4. item 4
+1. An R data object structure designed to hold multiple assay data for a set of patients/samples.
+2. Assay data can be in other R data structures such as SummarizedExperiment.
+3. Flexible: The data structure can handle assays with different number of observations.
+4. Comes with functions to work with the data.
 
 ### Data Curation Process
-
+```{r echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/data_curation_steps.png")
+```
 
 ### ORCESTRA: Transparent and Reproducible Data Curation Pipeline Platform
 

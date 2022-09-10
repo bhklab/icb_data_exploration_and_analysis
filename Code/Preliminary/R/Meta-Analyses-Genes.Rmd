@@ -52,8 +52,8 @@ Note that the expression data is $log2(\text{TPM} + 0.001)$, where TPM represent
 
 ```{r load ICB data Braun}
 
-app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'Code')[[1]][1]
-dir <- file.path(app_dir, '.local_data')
+app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'icb_data_exploration_and_analysis')[[1]][1]
+dir <- file.path(app_dir, 'icb_data_exploration_and_analysis', '.local_data')
 
 # clinicopathological characteristics  
 dat_sample_braun = read.table(file.path(dir, 'ICB_Braun/ICB_Braun_metadata.tsv'), sep="\t") %>% as.data.frame()
