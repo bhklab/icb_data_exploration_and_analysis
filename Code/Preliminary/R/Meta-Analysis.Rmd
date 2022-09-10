@@ -351,7 +351,7 @@ logit_res <- lapply(1:length(dat_exp), function(k){
   sub_dat_exp <- dat_exp[[k]]
   sub_pdata <- pdata[[k]]
   
-  df <- data.frame(x = as.numeric(sub_dat_exp[rownames(sub_dat_exp) == "ENSG00000065491.8",]),
+  df <- data.frame(x = scale(as.numeric(sub_dat_exp[rownames(sub_dat_exp) == "ENSG00000065491.8",]))[,1],
                    y = sub_pdata$response)
 
   df <- df[!is.na(df$y),]

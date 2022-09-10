@@ -120,14 +120,14 @@ The logistic regression model has several assumptions such as observations are i
 
 For a given gene ENSG00000065491.8 (TBC1D22B), the boxplot shows the distribution of expression data across the ICB response where almost 22\% of ICB response is missing. 
 
-After removing the missing values, the fitted logistic model demonstrates that TBC1D22B is associated with improved ICB response ($log\text{OR} = 0.98$ and $p = 0.003$).
+After removing the missing values, the fitted logistic model demonstrates that TBC1D22B is associated with improved ICB response ($log\text{OR} = 0.63$ and $p = 0.003$).
 
 
 ```{r logit single gene}
 
 # for a given gene: ENSG00000065491.8
 
-df <- data.frame(x = as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000065491.8",]),
+df <- data.frame(x = scale(as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000065491.8",]))[,1],
                  t.os = dat_sample$survival_time_os,
                  os = dat_sample$event_occurred_os,
                  sex = dat_sample$sex,
@@ -186,7 +186,7 @@ The KM plot and log-rank test shows that there is not any significant difference
 
 ```{r KM sex}
 
-df <- data.frame(x = as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000065491.8",]),
+df <- data.frame(x = scale(as.numeric(dat_exp[rownames(dat_exp) == "ENSG00000065491.8",]))[,1],
                  t.os = dat_sample$survival_time_os,
                  os = dat_sample$event_occurred_os,
                  sex = dat_sample$sex,
@@ -258,7 +258,7 @@ sub_dat_exp <- dat_exp[rownames(dat_exp) %in% sub_dat_gene$gene_id, ]
 
 ## remove outlier genes: 
 
-outliers <- c("ENSG00000206106.2", "ENSG00000262543.1")
+outliers <- c("ENSG00000206106.2", "ENSG00000187082.2")
 sub_dat_exp <- sub_dat_exp[!(rownames(sub_dat_exp) %in% outliers), ]
 
 ```
@@ -268,7 +268,7 @@ sub_dat_exp <- sub_dat_exp[!(rownames(sub_dat_exp) %in% outliers), ]
 
 res <- lapply(1:nrow(sub_dat_exp), function(k){
   
-  df <- data.frame(x = as.numeric(sub_dat_exp[k,]),
+  df <- data.frame(x = scale(as.numeric(sub_dat_exp[k,]))[,1],
                    t.os = dat_sample$survival_time_os,
                    os = dat_sample$event_occurred_os)
   
