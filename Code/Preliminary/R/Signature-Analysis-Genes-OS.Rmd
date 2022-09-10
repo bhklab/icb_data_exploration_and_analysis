@@ -458,8 +458,8 @@ meta_res <- lapply(1:length(signature_names), function(k){
                     method.tau = "DL")
 
  data.frame(signature_name = dat_meta$signature_name[1],
-            TE_RE = res$TE.random,
-            pval_RE = res$pval.random,
+            logHR = res$TE.random,
+            pval = res$pval.random,
             I2 = res$I2,
             Q_pval = res$pval.Q)
 

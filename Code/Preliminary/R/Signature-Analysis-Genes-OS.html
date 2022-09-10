@@ -9,8 +9,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Farnoosh Babazadeh, Minoru Nakano, Sisira Kadambat Nair, and Benjamin Haibe-Kains" />
 
-<meta name="date" content="2022-09-07" />
 
 <title>Signature-analysis: Immune-checkpoint blockade (ICB) data</title>
 
@@ -364,11 +364,19 @@ pre code {
 
 <h1 class="title toc-ignore">Signature-analysis: Immune-checkpoint
 blockade (ICB) data</h1>
-<h4 class="date">2022-09-07</h4>
+<h4 class="author">Farnoosh Babazadeh, Minoru Nakano, Sisira Kadambat
+Nair, and Benjamin Haibe-Kains</h4>
 
 </div>
 
 
+<p>This RMarkdown script shows Meta-analysis of subset of ICB datasets.
+The script is organized as follows:</p>
+<ol style="list-style-type: decimal">
+<li>Load ICB datasets</li>
+<li>Load signature data</li>
+<li>Meta-analysis</li>
+</ol>
 <div id="load-data" class="section level2">
 <h2>Load data</h2>
 <p>To download and extract TSV version of ICB data from Zenodo (<a href="https://zenodo.org/record/7058399/files/" class="uri">https://zenodo.org/record/7058399/files/</a>), follow the
@@ -395,16 +403,19 @@ RNA-seq expression data.</p>
 represents transcripts per million.</p>
 <div id="braun-study" class="section level3">
 <h3>Braun study</h3>
-<pre class="r"><code># clinicopathological characteristics  
-dat_sample_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_metadata.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+<pre class="r"><code>app_dir &lt;- str_split(rstudioapi::getActiveDocumentContext()$path, &#39;Code&#39;)[[1]][1]
+dir &lt;- file.path(app_dir, &#39;.local_data&#39;)
+
+# clinicopathological characteristics  
+dat_sample_braun = read.table(file.path(dir, &#39;ICB_Braun/ICB_Braun_metadata.tsv&#39;), sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_sample_braun)</code></pre>
 <pre><code>## [1] 319 145</code></pre>
 <pre class="r"><code># gene meta data
-dat_gene_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr_genes.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_gene_braun = read.table(file.path(dir, &#39;ICB_Braun/ICB_Braun_expr_genes.tsv&#39;), sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_gene_braun)</code></pre>
 <pre><code>## [1] 40994    17</code></pre>
 <pre class="r"><code># RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_braun = read.table(&#39;C:/ICBRoche/Data/ICB_Braun/ICB_Braun_expr.tsv&#39;, sep=&quot;\t&quot;) %&gt;% as.data.frame()
+dat_exp_braun = read.table(file.path(dir, &#39;ICB_Braun/ICB_Braun_expr.tsv&#39;), sep=&quot;\t&quot;) %&gt;% as.data.frame()
 dim(dat_exp_braun)</code></pre>
 <pre><code>## [1] 40994   181</code></pre>
 <pre class="r"><code># Get the subset of data with both clinical and expression data.
@@ -425,22 +436,48 @@ dat_exp_braun &lt;- dat_exp_braun[rownames(dat_exp_braun) %in% dat_gene_braun$ge
 <div id="signature-data" class="section level2">
 <h2>Signature data</h2>
 <p>To download signatures, consider the “~/Data/Signature” folder at
-GitHub repo. We make a list of available signatures.</p>
-<p>Under each study, we consider gene set variation analysis (GSVA)
-approach to compute the signature score. Then, we assess the association
-between signature score and overall survival (OS) using the Cox model.
-The meta-analysis is applied to integrate results (logHR and SE) across
-studies. The heterogeneity across studies is evaluated using the DL
-method.</p>
+GitHub repo. We make a list of available signatures. The following
+signatures are included in the analyses. Under each study, we consider
+gene set variation analysis (GSVA) approach to compute the signature
+score.</p>
+<ul>
+<li><p>CD8_Jiang (PMID 30127393): T cell dysfunction from large tumor
+cohorts by testing how the expression of each gene in tumors interacts
+with the cytotoxic T lymphocytes (CTL) infiltration level to influence
+patient survival. Gene expression level of CD8A + CD8B</p></li>
+<li><p>T_cell_inflamed (PMID 30804515): A pretreatment immune signature
+(neoadjuvant response signature) that was associated with immunologic
+responses to anti-PD-1 therapy in melanoma patients</p></li>
+<li><p>Inflammatory (PMID 31683225): The inflammatory state of the tumor
+and includes genes that identify T cells, T cell activation,
+interferon-responsive genes, chemokine expression and adaptive immune
+resistance</p></li>
+<li><p>CYT (PMID 25594174): A simple and quantitative measure of immune
+cytolytic activity (CYT) based on transcript levels of two key cytolytic
+effectors, granzyme A (GZMA) and perforin (PRF1), which are dramatically
+upregulated upon CD8+ T cell activation</p></li>
+<li><p>STAT1 (PMID 31316010, 26362649): Immune responses against
+carcinoma and melanoma converge on cytotoxic effectors and
+IFNγ-STAT1-IRF1 signalling</p></li>
+<li><p>IRG_Ayers (PMID 28650338): Preliminary expanded immune related
+gene expression signature predict response to PD-1 checkpoint blockade
+in melanoma</p></li>
+<li><p>TLS (PMID 31942071): Tertiary lymphoid structures improve
+immunotherapy and survival in melanoma</p></li>
+<li><p>IFNG (PMID 28650338): IFN-γ–related gene expression signatures
+predict response to PD-1 checkpoint blockade in melanoma, (IFNγ:
+Interferon gamma)</p></li>
+<li><p>PDL1 (OMID 30127393): An immunohistochemistry (IHC) biomarker
+approved by FDA . In this study, we used the PD-L1 gene expression as
+the IHC surrogate</p></li>
+</ul>
 <pre class="r"><code>signature_names &lt;- c(&quot;CD8_Jiang&quot;, &quot;T_cell_inflamed&quot;, &quot;Inflammatory&quot;, &quot;CYT&quot;,
                      &quot;STAT1&quot;, &quot;IRG_Ayers&quot;, &quot;TLS&quot;, &quot;IFNG&quot;, &quot;PDL1&quot;)
 
-dir0 &lt;- &quot;C:/ICBRoche/Signature/&quot;
-dir &lt;- paste(dir0, paste(signature_names, &quot;csv&quot;, sep=&quot;.&quot;), sep=&quot;&quot;)
-
-geneSets &lt;- lapply(1:length(dir), function(k){
+geneSets &lt;- lapply(1:length(signature_names), function(k){
   
-  dat &lt;- read.csv(dir[k])
+  dat &lt;- read.csv(file.path(dir, paste(&quot;Signature&quot;, paste(signature_names[k], &quot;csv&quot;, sep=&quot;.&quot;), sep=&quot;/&quot;)))
+  
   dat[,1]
   
 })
@@ -495,7 +532,7 @@ across studies using DL method to estimate heterogeneity. Signature CYT
 associated with OS. In addition, for the associated signatures with OS,
 the forestplots show significant heterogeneity across studies as well:
 CYT (<span class="math inline">\(I^2 = 62\%\)</span> and <span class="math inline">\(p = 9.5e-03\)</span>) and PDL1 (<span class="math inline">\(I^2 = 59\%\)</span> and <span class="math inline">\(p = 1.8e-02\)</span>).</p>
-<pre><code>##    signature_name      TE_RE    pval_RE        I2      Q_pval
+<pre><code>##    signature_name      logHR       pval        I2      Q_pval
 ## 1       CD8_Jiang -0.3572201 0.05540888 0.6318355 0.008145961
 ## 2 T_cell_inflamed -0.4423049 0.05273258 0.6409301 0.006770752
 ## 3    Inflammatory -0.4286362 0.05088034 0.6408281 0.006785203
