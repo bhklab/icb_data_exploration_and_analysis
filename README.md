@@ -5,7 +5,7 @@ This repo contains code associated with the PredictIO signature computation alon
 ## Data
 
 * The data associated with this analysis is downloaded using ORCESTRA's API. 
-* summary_tables.xlsx - (1) Discovery cohorts, (2) Validation cohorts, (3) Signature details (4) GSVA curated signature gene composition and (5) Weigthed-mean curated signature gene composition. 
+* summary_tables.xlsx - (1) discovery cohorts, (2) validation cohorts, (3) signature details (4) GSVA curated signature gene composition and (5) weigthed-mean curated signature gene composition. 
 * Signature - The list of signatures and their details.
 
 ## Organization of repo
