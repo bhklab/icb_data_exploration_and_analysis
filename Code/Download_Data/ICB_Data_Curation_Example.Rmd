@@ -77,6 +77,7 @@ library(biomaRt)
 library(stringr)
 library(readxl)
 library(tximport)
+library(knitr)
 ```
 
 ```{r VanDenEnde study}
@@ -165,18 +166,21 @@ assays(multi_assay_exp)
 \
 **Get patient metadata**
 ```{r VanDenEnde using MultiAssayExp object 2}
-colData(multi_assay_exp)[, c('patientid', 'cancer_type', 'response', 'treatment')]
+coldata <- colData(multi_assay_exp)[, c('patientid', 'cancer_type', 'response', 'treatment')]
+kable(coldata, caption='Patient metadata')
 ```
 \
 **View EXPR data assay**
 ```{r VanDenEnde using MultiAssayExp object 3}
 expr <- experiments(multi_assay_exp)[['expr']]
-assays(expr)[['expr']]
+assay <- assays(expr)[['expr']]
+kable(assay[1:20, ], caption='Gene expresison data')
 ```
 
 **View Gene Metadata for the Genes in the EXPR assay**
 ```{r VanDenEnde using MultiAssayExp object 4}
-rowData(expr)
+rowdata <- rowData(expr)
+kable(rowdata[1:20, ], caption='Gene metadata')
 ```
 
 **Subsetting Data**
@@ -185,18 +189,21 @@ MultiAssayExperiment object can be subset by gene ids, patient data values and a
 For exmaple: 
 ```{r VanDenEnde using MultiAssayExp object 5}
 subset <- multi_assay_exp[c('ENSG00000003056.3', 'ENSG00000005073.5'), multi_assay_exp$response == 'R' & !is.na(multi_assay_exp$response),'expr']
-colData(subset)[, c('patientid', 'cancer_type', 'response', 'treatment')]
+subset_coldata <- colData(subset)[, c('patientid', 'cancer_type', 'response', 'treatment')]
+kable(subset_coldata, caption='Patient metadata subset by the response value')
 ```
 
 View the subset EXPR data:
 ```{r VanDenEnde using MultiAssayExp object 6}
 subset_expr <- experiments(subset)[['expr']]
-assays(subset_expr)[['expr']]
+subset_assay <- assays(subset_expr)[['expr']]
+kable(subset_assay, caption='Assay data subset by gene id')
 ```
 
 View the subset gene metadata:
 ```{r VanDenEnde using MultiAssayExp object 7}
-rowData(subset_expr)
+subset_rowdata <- rowData(subset_expr)
+kable(subset_rowdata, caption='Subset gene metadata')
 ```
 
 ### 5. Extract TSV files from the Data Object
