@@ -367,6 +367,9 @@ To download signatures, consider the "~/Data/Signature" folder at GitHub repo. W
 
 ```{r signature analysis, warning=FALSE, message=FALSE}
 
+app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'icb_data_exploration_and_analysis')[[1]][1]
+dir <- file.path(app_dir, 'icb_data_exploration_and_analysis', 'Data')
+
 signature_names <- c("CD8_Jiang", "T_cell_inflamed", "Inflammatory", "CYT",
                      "STAT1", "IRG_Ayers", "TLS", "IFNG", "PDL1")
 

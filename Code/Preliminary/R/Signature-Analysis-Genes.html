@@ -471,7 +471,10 @@ Interferon gamma)</p></li>
 approved by FDA . In this study, we used the PD-L1 gene expression as
 the IHC surrogate</p></li>
 </ul>
-<pre class="r"><code>signature_names &lt;- c(&quot;CD8_Jiang&quot;, &quot;T_cell_inflamed&quot;, &quot;Inflammatory&quot;, &quot;CYT&quot;,
+<pre class="r"><code>app_dir &lt;- str_split(rstudioapi::getActiveDocumentContext()$path, &#39;icb_data_exploration_and_analysis&#39;)[[1]][1]
+dir &lt;- file.path(app_dir, &#39;icb_data_exploration_and_analysis&#39;, &#39;Data&#39;)
+
+signature_names &lt;- c(&quot;CD8_Jiang&quot;, &quot;T_cell_inflamed&quot;, &quot;Inflammatory&quot;, &quot;CYT&quot;,
                      &quot;STAT1&quot;, &quot;IRG_Ayers&quot;, &quot;TLS&quot;, &quot;IFNG&quot;, &quot;PDL1&quot;)
 
 geneSets &lt;- lapply(1:length(signature_names), function(k){
