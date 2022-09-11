@@ -39,10 +39,9 @@ We read RNA-seq expression, clinicopathological characteristics, and gene meta d
 2. Gide (PMID 30753825)
 3. Hugo (PMID 26997480)
 4. Miao1 (PMID 29301960)
-5. Nathanson (PMID 27956380) 
-6. Riaz (PMID 29301960)
-7. Snyder (PMID 28552987) 
-8. Van Allen (PMID 26359337)
+5. Riaz (PMID 29301960)
+6. Snyder (PMID 28552987) 
+7. Van Allen (PMID 26359337)
 
 As an example, we share the codes to get read the RNA-seq expression, clinicopathological characteristics, and gene meta data usign ICB Braun data. The Braun study includes 319 patients with clinical data and 40,994 genes. While only 181 patients have both clinical data and RNA-seq expression data. 
 
@@ -87,35 +86,6 @@ sub_dat_exp_braun <- dat_exp_braun[rownames(dat_exp_braun) %in% sub_dat_gene_bra
 ```
 
 ```{r load ICB data, include=FALSE}
-
-##################################
-### Nathanson study
-##################################
-
-# clinicopathological characteristics  
-dat_sample_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_metadata.tsv'), sep="\t") %>% as.data.frame()
-dim(dat_sample_nathanson)
-
-# gene meta data
-dat_gene_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_expr_genes.tsv'), sep="\t") %>% as.data.frame()
-dim(dat_gene_nathanson)
-
-# RNA-seq expression data (i.e., log2(TPM + 0.001)) 
-dat_exp_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_expr.tsv'), sep="\t") %>% as.data.frame()
-dim(dat_exp_nathanson)
-
-# Get the subset of data with both clinical and expression data.
-dat_sample_nathanson = dat_sample_nathanson[rownames(dat_sample_nathanson) %in% colnames(dat_exp_nathanson), ]
-
-dim(dat_sample_nathanson)
-dat_sample_nathanson <- dat_sample_nathanson[order(rownames(dat_sample_nathanson)), ]
-dat_exp_nathanson <- dat_exp_nathanson[, order(colnames(dat_exp_nathanson))]
-
-# get protein coding genes
-
-sub_dat_gene_nathanson <- dat_gene_nathanson[dat_gene_nathanson$gene_type == "protein_coding", ]
-sub_dat_gene_nathanson <- sub_dat_gene_nathanson[order(sub_dat_gene_nathanson$gene_id), ]
-sub_dat_exp_nathanson <- dat_exp_nathanson[rownames(dat_exp_nathanson) %in% sub_dat_gene_nathanson$gene_id, ]
 
 ####################################
 ### Snyder study
@@ -312,45 +282,69 @@ sub_dat_exp_gide <- dat_exp_gide[rownames(dat_exp_gide) %in% sub_dat_gene_gide$g
 ## find genes in common across following subset of studies including OS outcome
 #############################################################################################
 
-int <- intersect(intersect(intersect(intersect(intersect(intersect(intersect(rownames(sub_dat_exp_braun), 
-                 rownames(sub_dat_exp_hugo)), rownames(sub_dat_exp_van_allen)),
-                 rownames(sub_dat_exp_miao1)), rownames(sub_dat_exp_nathanson)), 
-                 rownames(sub_dat_exp_riaz)), rownames(sub_dat_exp_snyder)),
-                 rownames(sub_dat_exp_gide))
+dat_exp <- list(Braun = sub_dat_exp_braun, 
+                Hugo = sub_dat_exp_hugo,
+                Van_allen = sub_dat_exp_van_allen,
+                Miao1 = sub_dat_exp_miao1,
+                Riaz = sub_dat_exp_riaz,
+                Snyder = sub_dat_exp_snyder,
+                Gide = sub_dat_exp_gide)
+
+dat_gene <- list(Braun = sub_dat_gene_braun, 
+                Hugo = sub_dat_gene_hugo,
+                Van_allen = sub_dat_gene_van_allen,
+                Miao1 = sub_dat_gene_miao1,
+                Riaz = sub_dat_gene_riaz,
+                Snyder = sub_dat_gene_snyder,
+                Gide = sub_dat_gene_gide)
+
+dat <- lapply(1:length(dat_exp), function(k){
+  
+  dat <- dat_exp[[k]]
+  m <- apply(dat, 1, sd)
+  if(sum(m == 0) != 0){
+    dat <- dat[-which(m == 0), ]
+  }
+
+  dat
+})
+
+names(dat) <- names(dat_exp)
+
+int <- intersect(intersect(intersect(intersect(intersect(intersect(rownames(dat$Braun), 
+                 rownames(dat$Hugo)), rownames(dat$Van_allen)),
+                 rownames(dat$Miao1)), rownames(dat$Riaz)), 
+                 rownames(dat$Snyder)), rownames(dat$Gide))
 
 
-dat_exp <- list(Braun = sub_dat_exp_braun[rownames(sub_dat_exp_braun) %in% int, ], 
-                Hugo = sub_dat_exp_hugo[rownames(sub_dat_exp_hugo) %in% int, ],
-                Van_allen = sub_dat_exp_van_allen[rownames(sub_dat_exp_van_allen) %in% int, ],
-                Miao1 = sub_dat_exp_miao1[rownames(sub_dat_exp_miao1) %in% int, ],
-                Nathanson = sub_dat_exp_nathanson[rownames(sub_dat_exp_nathanson) %in% int, ],
-                Riaz = sub_dat_exp_riaz[rownames(sub_dat_exp_riaz) %in% int, ],
-                Snyder = sub_dat_exp_snyder[rownames(sub_dat_exp_snyder) %in% int, ],
-                Gide = sub_dat_exp_gide[rownames(sub_dat_exp_gide) %in% int, ])
+dat_exp <- lapply(1:length(dat), function(k){
+  
+  sub_dat <- dat[[k]]
+  sub_dat[rownames(sub_dat) %in% int, ]
+  
+})
+  
+names(dat_exp) <- names(dat)  
+ 
+dat_gene <- lapply(1:length(dat_gene), function(k){
+  
+  sub_dat <- dat_gene[[k]]
+  sub_dat[sub_dat$gene_id %in% int, ]
+  
+}) 
 
+names(dat_gene) <- names(dat_exp)
 
 pdata <- list(Braun = dat_sample_braun, 
               Hugo = dat_sample_hugo,
               Van_allen = dat_sample_van_allen,
               Miao1 = dat_sample_miao1,
-              Nathanson = dat_sample_nathanson,
               Riaz = dat_sample_riaz,
               Snyder = dat_sample_snyder,
               Gide = dat_sample_gide)
 
 
-dat_gene <- list(Braun = sub_dat_gene_braun[sub_dat_gene_braun$gene_id %in% int, ], 
-                Hugo = sub_dat_gene_hugo[sub_dat_gene_hugo$gene_id %in% int, ],
-                Van_allen = sub_dat_gene_van_allen[sub_dat_gene_van_allen$gene_id %in% int, ],
-                Miao1 = sub_dat_gene_miao1[sub_dat_gene_miao1$gene_id %in% int, ],
-                Nathanson = sub_dat_gene_nathanson[sub_dat_gene_nathanson$gene_id %in% int, ],
-                Riaz = sub_dat_gene_riaz[sub_dat_gene_riaz$gene_id %in% int, ],
-                Snyder = sub_dat_gene_snyder[sub_dat_gene_snyder$gene_id %in% int, ],
-                Gide = sub_dat_gene_gide[sub_dat_gene_gide$gene_id %in% int, ])
-
-
 ```
-
 
 
 ## Survival analysis (OS) 
@@ -367,7 +361,7 @@ cox_res <- lapply(1:length(dat_exp), function(k){
   
   res <- lapply(1:nrow(sub_dat_exp), function(j){
     
-    df <- data.frame(x = as.numeric(sub_dat_exp[j,]),
+    df <- data.frame(x = scale(as.numeric(sub_dat_exp[j,]))[,1],
                      t.os = sub_pdata$survival_time_os,
                      os = sub_pdata$event_occurred_os)
     
@@ -408,7 +402,7 @@ Assessing heterogeneity is a critical issue in meta-analysis because different m
 
 The meta-analysis was applied to integrate the results (logHR, SE) across studies using DL method to estimate heterogeneity. We consider the multiple test correction (Benjamini-Hochberg).
 
-The gene TMEM140 is associated with better survival ($logHR = -0.22$, $p = 5.4e-04$), while GOLGA8S is associated with worse survival ($logHR = 0.08$, $p = 4.7e-05$) with FDR < 0.15. The volcano plot shows the genes associated with OS with p < 0.05. 
+The gene TMEM140 is associated with better survival ($logHR = -0.22$, $p = 4.7e-04$, $FDR = 0.08$), while GOLGA8S is associated with worse survival ($logHR = 0.25$, $p = 4.5e-05$, $FDR = 0.01$). The volcano plot shows the genes associated with OS with p < 0.05. 
 
 
 ```{r meta analysis logistic resgression, fig.width = 7, warning=FALSE, message=FALSE, echo=FALSE}

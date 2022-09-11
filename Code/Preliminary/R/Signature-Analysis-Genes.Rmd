@@ -41,10 +41,10 @@ We read RNA-seq expression, clinicopathological characteristics, and gene meta d
 2. Gide (PMID 30753825)
 3. Hugo (PMID 26997480)
 4. Miao1 (PMID 29301960)
-5. Nathanson (PMID 27956380) 
-6. Riaz (PMID 29301960)
-7. Snyder (PMID 28552987) 
-8. Van Allen (PMID 26359337)
+5. Riaz (PMID 29301960)
+6. Van Allen (PMID 26359337)
+7. Nathanson (PMID 27956380)
+8. Snyder (PMID 28552987)
 
 As an example, we share the codes to get read the RNA-seq expression, clinicopathological characteristics, and gene meta data usign ICB Braun data. The Braun study includes 319 patients with clinical data and 40,994 genes. While only 181 patients have both clinical data and RNA-seq expression data. 
 
@@ -89,9 +89,9 @@ dat_exp_braun <- dat_exp_braun[rownames(dat_exp_braun) %in% dat_gene_braun$gene_
 
 ```{r load ICB data, include=FALSE}
 
-##################################
+####################################
 ### Nathanson study
-##################################
+####################################
 
 # clinicopathological characteristics  
 dat_sample_nathanson = read.table(file.path(dir, 'ICB_Nathanson/ICB_Nathanson_metadata.tsv'), sep="\t") %>% as.data.frame()
@@ -109,12 +109,15 @@ dim(dat_exp_nathanson)
 dat_sample_nathanson = dat_sample_nathanson[rownames(dat_sample_nathanson) %in% colnames(dat_exp_nathanson), ]
 
 dim(dat_sample_nathanson)
+
 dat_sample_nathanson <- dat_sample_nathanson[order(rownames(dat_sample_nathanson)), ]
 dat_exp_nathanson <- dat_exp_nathanson[, order(colnames(dat_exp_nathanson))]
+
 
 dat_gene_nathanson <- dat_gene_nathanson[order(dat_gene_nathanson$gene_id), ]
 dat_gene_nathanson <- dat_gene_nathanson[!duplicated(dat_gene_nathanson$gene_name), ]
 dat_exp_nathanson <- dat_exp_nathanson[rownames(dat_exp_nathanson) %in% dat_gene_nathanson$gene_id, ]
+
 
 ####################################
 ### Snyder study
@@ -303,30 +306,29 @@ dat_exp <- list(Braun = dat_exp_braun,
                 Hugo = dat_exp_hugo,
                 Van_allen = dat_exp_van_allen,
                 Miao1 = dat_exp_miao1,
-                Nathanson = dat_exp_nathanson,
                 Riaz = dat_exp_riaz,
                 Snyder = dat_exp_snyder,
-                Gide = dat_exp_gide)
+                Gide = dat_exp_gide,
+                Nathanson =dat_exp_nathanson)
+
+dat_gene <- list(Braun = dat_gene_braun, 
+                Hugo =dat_gene_hugo,
+                Van_allen = dat_gene_van_allen,
+                Miao1 = dat_gene_miao1,
+                Riaz = dat_gene_riaz,
+                Snyder = dat_gene_snyder,
+                Gide = dat_gene_gide,
+                Nathanson = dat_gene_nathanson)
+
 
 pdata <- list(Braun = dat_sample_braun, 
               Hugo = dat_sample_hugo,
               Van_allen = dat_sample_van_allen,
               Miao1 = dat_sample_miao1,
-              Nathanson = dat_sample_nathanson,
               Riaz = dat_sample_riaz,
               Snyder = dat_sample_snyder,
-              Gide = dat_sample_gide)
-
-
-dat_gene <- list(Braun = dat_gene_braun, 
-                Hugo = dat_gene_hugo,
-                Van_allen = dat_gene_van_allen,
-                Miao1 = dat_gene_miao1,
-                Nathanson = dat_gene_nathanson,
-                Riaz = dat_gene_riaz,
-                Snyder = dat_gene_snyder,
-                Gide = dat_gene_gide)
-
+              Gide = dat_sample_gide,
+              Nathanson = dat_sample_nathanson)
 
 
 for(i in 1:length(dat_exp)){
@@ -364,6 +366,9 @@ To download signatures, consider the "~/Data/Signature" folder at GitHub repo. W
 
 
 ```{r signature analysis, warning=FALSE, message=FALSE}
+
+app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'icb_data_exploration_and_analysis')[[1]][1]
+dir <- file.path(app_dir, 'icb_data_exploration_and_analysis', 'Data')
 
 signature_names <- c("CD8_Jiang", "T_cell_inflamed", "Inflammatory", "CYT",
                      "STAT1", "IRG_Ayers", "TLS", "IFNG", "PDL1")
