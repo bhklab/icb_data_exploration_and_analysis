@@ -157,6 +157,48 @@ multi_assay_exp <- get_MultiAssayExp(study = study, input_dir = processed_dir)
 
 **Data object is uploaded to Zenodo and made avaialble on ORCESTRA platform**: [ICB Datasets on ORCESTRA](https://www.orcestra.ca/clinical_icb)
 
+### Using a MultiAssayExperiment Object
+**Get a list of experiments included in this object**
+```{r VanDenEnde using MultiAssayExp object 1}
+assays(multi_assay_exp)
+```
+\
+**Get patient metadata**
+```{r VanDenEnde using MultiAssayExp object 2}
+colData(multi_assay_exp)[, c('patientid', 'cancer_type', 'response', 'treatment')]
+```
+\
+**View EXPR data assay**
+```{r VanDenEnde using MultiAssayExp object 3}
+expr <- experiments(multi_assay_exp)[['expr']]
+assays(expr)[['expr']]
+```
+
+**View Gene Metadata for the Genes in the EXPR assay**
+```{r VanDenEnde using MultiAssayExp object 4}
+rowData(expr)
+```
+
+**Subsetting Data**
+MultiAssayExperiment object can be subset by gene ids, patient data values and assay names.\
+\
+For exmaple: 
+```{r VanDenEnde using MultiAssayExp object 5}
+subset <- multi_assay_exp[c('ENSG00000003056.3', 'ENSG00000005073.5'), multi_assay_exp$response == 'R' & !is.na(multi_assay_exp$response),'expr']
+colData(subset)[, c('patientid', 'cancer_type', 'response', 'treatment')]
+```
+
+View the subset EXPR data:
+```{r VanDenEnde using MultiAssayExp object 6}
+subset_expr <- experiments(subset)[['expr']]
+assays(subset_expr)[['expr']]
+```
+
+View the subset gene metadata:
+```{r VanDenEnde using MultiAssayExp object 7}
+rowData(subset_expr)
+```
+
 ### 5. Extract TSV files from the Data Object
 \
 RDS objects are downloaded and converted into TSV files using rds_to_tsv.R.\
