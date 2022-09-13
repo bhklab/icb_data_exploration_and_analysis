@@ -1,5 +1,6 @@
 library(rstudioapi)
 library(pivottabler)
+library(data.table)
 
 app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'icb_data_exploration_and_analysis')[[1]][1]
 app_dir <- paste0(app_dir, 'icb_data_exploration_and_analysis')
