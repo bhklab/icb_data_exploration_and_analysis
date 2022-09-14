@@ -1,6 +1,6 @@
 import requests, zipfile, io, os
 
-zenodo_repo = 'https://zenodo.org/record/7058399/files/'
+zenodo_repo = 'https://zenodo.org/record/7080261/files/'
 studies = [] # empty or specify studies to download. exmaple: ICB_Braun, ICB_Gide...
 
 # Download datasets into local_data directory at the root of the repository directory.
