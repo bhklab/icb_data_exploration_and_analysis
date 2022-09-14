@@ -1,0 +1,31 @@
+---
+title: "cohort_explorer"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE}
+library(rstudioapi)
+library(stringr)
+library(pivottabler)
+library(data.table)
+library(knitr)
+```
+
+```{r pivot_table}
+app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'icb_data_exploration_and_analysis')[[1]][1]
+app_dir <- paste0(app_dir, 'icb_data_exploration_and_analysis')
+setwd(app_dir)
+
+merged_df <- read.csv('./Data/all_metadata.tsv', sep='\t')
+
+pt <- PivotTable$new()
+pt$addData(df_merged)
+pt$addColumnDataGroups("response")
+pt$addRowDataGroups("cancer_type", addTotal=FALSE)
+pt$defineCalculation(calculationName="TotalPatients", summariseExpression="n()")
+pt$renderPivot()
+```
