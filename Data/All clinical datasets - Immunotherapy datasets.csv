@@ -1,0 +1,20 @@
+Dataset Name,Treatment regimen,Drug targets,Metastasis status
+ICB_Braun,Nivolumab,PD-1,Yes
+ICB_Nathanson,Ipilimumab/Tremelimumab,CTLA4,No
+ICB_Gide,"anti-PD-1, anti-PD-1+anti-CTLA4",PD-1|CTLA4,Yes
+ICB_Miao1,Nivolumab,PD-1,Yes
+ICB_Kim,Pembrolizumab,PD-1,Yes
+ICB_Hwang ,Nivolumab|Pembrolizumab,PD-1,Yes
+ICB_Van_Allen,Ipilimumab,CTLA4,Yes
+ICB_Snyder,Atezolizumab,PDL-1,Yes
+ICB_Riaz,Nivolumab,PD-1,No
+ICB_Liu,Nivolumab|Pembrolizumab,PD-1,Yes
+ICB_Hugo,Nivolumab|Pembrolizumab,PD-1,Yes
+ICB_Mariathasan,Atezolizumab,PDL-1,Yes
+ICB_Jerby_Arnon,Pembrolizumab,PD-1,Yes
+ICB_Jung,Ipilimumab|Pembrolizumab,PD-1|CTLA4,
+ICB_Puch,anti-PD-1,PD-1,No
+ICB_Roh,anti-PD-1|anti-CTLA4,PD-1|CTLA4,Yes
+ICB_Shiuan,Nivolumab|Atezolizumab,PD-1|PDL-1,Yes
+ICB_VanDenEnde,Atezolizumab,PDL-1,
+ICB_Padron,Nivolumab|Sotigalimab:gemcitabine/nab-paclitaxel,PD-1,Yes
