@@ -20,11 +20,13 @@ app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'icb_data_expl
 app_dir <- paste0(app_dir, 'icb_data_exploration_and_analysis')
 setwd(app_dir)
 
-merged_df <- read.csv('./Data/all_metadata.tsv', sep='\t')
+df_merged <- read.csv('./Data/all_metadata.tsv', sep='\t')
 
 pt <- PivotTable$new()
 pt$addData(df_merged)
 pt$addColumnDataGroups("response")
+pt$addRowDataGroups("study", addTotal=FALSE)
+pt$addRowDataGroups("sex", addTotal=FALSE)
 pt$addRowDataGroups("cancer_type", addTotal=FALSE)
 pt$defineCalculation(calculationName="TotalPatients", summariseExpression="n()")
 pt$renderPivot()
