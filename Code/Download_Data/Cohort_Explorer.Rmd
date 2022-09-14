@@ -15,11 +15,17 @@ library(data.table)
 library(knitr)
 ```
 
-```{r pivot_table}
+```{r init}
 app_dir <- str_split(rstudioapi::getActiveDocumentContext()$path, 'icb_data_exploration_and_analysis')[[1]][1]
 app_dir <- paste0(app_dir, 'icb_data_exploration_and_analysis')
 setwd(app_dir)
+```
 
+```{r data_breakdown}
+
+```
+
+```{r pivot_table}
 df_merged <- read.csv('./Data/all_metadata.tsv', sep='\t')
 
 pt <- PivotTable$new()

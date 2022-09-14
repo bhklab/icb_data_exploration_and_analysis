@@ -16,4 +16,4 @@ genes_v19_no_version <- str_replace_all(genes_v19, '\\.*', '')
 genes_v40_no_version <- str_replace_all(genes_v40, '\\.*', '')
 length(intersect(genes_v40_no_version, genes_v19_no_version)) #25545
 
-write.table(intersect(genes_v40_no_version, genes_v19_no_version), 'Data/common_genes.txt', col.names=FALSE, row.names = FALSE, quote=FALSE)
+write.table(intersect(genes_v40, genes_v19), 'Data/common_genes.txt', col.names=FALSE, row.names = FALSE, quote=FALSE)
