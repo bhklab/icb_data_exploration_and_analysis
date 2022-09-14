@@ -16,7 +16,7 @@ for(study in dataset_names){
   study_colnames[[study]] <- colnames(study_df)
 }
 common_colnames <- Reduce(intersect, study_colnames)
-common_colnames <- common_colnames[!common_colnames %in% c("TMB_raw", "nsTMB_raw", "indel_TMB_raw", "indel_nsTMB_raw", "TMB_perMb", "nsTMB_perMb", "indel_TMB_perMb", "indel_nsTMB_perMb", "CIN", "CNA_tot", "AMP", "DEL")]
+# common_colnames <- common_colnames[!common_colnames %in% c("TMB_raw", "nsTMB_raw", "indel_TMB_raw", "indel_nsTMB_raw", "TMB_perMb", "nsTMB_perMb", "indel_TMB_perMb", "indel_nsTMB_perMb", "CIN", "CNA_tot", "AMP", "DEL")]
 df_merged <- data.frame(matrix(NA, 0, length(c('study', common_colnames)), dimnames=list(c(), c('study', common_colnames))), stringsAsFactors=F)
 total_rows <- 0
 for(study in dataset_names){
