@@ -120,7 +120,7 @@ The logistic regression model has several assumptions such as observations are i
 
 For a given gene ENSG00000065491.8 (TBC1D22B), the boxplot shows the distribution of expression data across the ICB response where almost 22\% of ICB response is missing. 
 
-After removing the missing values, the fitted logistic model demonstrates that TBC1D22B is associated with improved ICB response ($log\text{OR} = 0.63$ and $p = 0.003$).
+After removing the missing values, the fitted logistic model demonstrates that TBC1D22B is associated with improved ICB response ($log\text{OR} = 0.65$ and $p = 0.002$).
 
 
 ```{r logit single gene}
@@ -225,7 +225,7 @@ where
 * The quantity $\text{e}^\beta$ is called hazard ratios (HR)
 
 
-The fitted Cox model demonstrates that TBC1D22B is not associated with OS ($logHR = 0.08$, $p = 0.52$).
+The fitted Cox model demonstrates that TBC1D22B is not associated with OS ($logHR = 0.05$, $p = 0.53$).
 
 
 ```{r coxph}
@@ -250,21 +250,12 @@ We assess the association of 18808 protein coding genes and overall survival (OS
 
 The results after adjusting multiple test show 24 genes associated with survival outcome with $\text{FDR} < 0.05$. The following volcano plot demonstrates the distribution of significant genes.  
 
-```{r cox all genes outliers, echo = FALSE}
+
+```{r cox protein coding genes, warning=FALSE, message=FALSE}
 
 sub_dat_gene <- dat_gene[dat_gene$gene_type == "protein_coding", ]
 sub_dat_gene <- sub_dat_gene[order(sub_dat_gene$gene_id), ]
 sub_dat_exp <- dat_exp[rownames(dat_exp) %in% sub_dat_gene$gene_id, ]
-
-## remove outlier genes: 
-
-outliers <- c("ENSG00000206106.2", "ENSG00000187082.2")
-sub_dat_exp <- sub_dat_exp[!(rownames(sub_dat_exp) %in% outliers), ]
-
-```
-
-```{r cox all genes, warning=FALSE, message=FALSE}
-
 
 res <- lapply(1:nrow(sub_dat_exp), function(k){
   
