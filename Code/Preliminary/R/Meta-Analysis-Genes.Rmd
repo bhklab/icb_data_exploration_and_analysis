@@ -402,7 +402,7 @@ Assessing heterogeneity is a critical issue in meta-analysis because different m
 
 The meta-analysis was applied to integrate the results (logHR, SE) across studies using DL method to estimate heterogeneity. We consider the multiple test correction (Benjamini-Hochberg).
 
-The gene TMEM140 is associated with better survival ($logHR = -0.22$, $p = 4.7e-04$, $FDR = 0.08$), while GOLGA8S is associated with worse survival ($logHR = 0.25$, $p = 4.5e-05$, $FDR = 0.01$). The volcano plot shows the genes associated with OS with p < 0.05. 
+The gene GOLGA8S is associated with worse survival ($logHR = 0.26$, $p = 3.7e-05$, $FDR = 0.01$). The volcano plot shows the genes associated with OS with p < 0.05. 
 
 
 ```{r meta analysis logistic resgression, fig.width = 7, warning=FALSE, message=FALSE, echo=FALSE}
