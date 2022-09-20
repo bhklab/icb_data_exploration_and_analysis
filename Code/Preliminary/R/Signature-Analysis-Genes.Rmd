@@ -446,7 +446,7 @@ Assessing heterogeneity is a critical issue in meta-analysis because different m
 
 ### Part I: Overall survival (OS)
 
-The meta-analysis was applied to integrate the results (logHR, SE) across studies using DL method to estimate heterogeneity. Signature CYT (logHR = -0.38, p = 0.04) and PDL1 (logHR = -0.42, p = 0.03) are associated with OS. In addition, for the associated signatures with OS, the forestplots show significant heterogeneity across studies as well: CYT ($I^2 = 62\%$ and $p = 9.5e-03$) and PDL1 ($I^2 = 59\%$ and $p = 1.8e-02$).  
+The meta-analysis was applied to integrate the results (logHR, SE) across studies using DL method to estimate heterogeneity. Signature CYT (logHR = -0.38, p = 0.04) and PDL1 (logHR = -0.43, p = 0.02) are associated with OS. In addition, for the associated signatures with OS, the forestplots show significant heterogeneity across studies as well: CYT ($I^2 = 63\%$ and $p = 8.5e-03$) and PDL1 ($I^2 = 51\%$ and $p = 4.7e-02$).  
 
 ```{r meta analysis logistic resgression, fig.width = 7, warning=FALSE, message=FALSE, echo=FALSE}
 
