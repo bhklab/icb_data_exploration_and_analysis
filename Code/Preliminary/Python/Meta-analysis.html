@@ -14610,7 +14610,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># importing libraries</span>
@@ -14620,6 +14620,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
 <span class="kn">from</span> <span class="nn">lifelines</span> <span class="kn">import</span> <span class="n">CoxPHFitter</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
 <span class="kn">from</span> <span class="nn">statsmodels.stats.meta_analysis</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">effectsize_smd</span><span class="p">,</span>
     <span class="n">effectsize_2proportions</span><span class="p">,</span>
@@ -14651,7 +14652,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Braun </span>
@@ -14689,7 +14690,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Nathanson </span>
@@ -14727,7 +14728,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Snyder</span>
@@ -14765,7 +14766,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Van_Allen </span>
@@ -14804,15 +14805,24 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Braun </span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># define standard scaler</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
 
+<span class="c1"># Braun </span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">dat_sample_braun_subset</span><span class="p">[</span><span class="s2">&quot;response&quot;</span><span class="p">]</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">dat_exp_braun</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
 
-<span class="n">x_subset</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;ENSG00000065491.8&quot;</span><span class="p">]</span>
+<span class="c1"># transform data</span>
+<span class="n">scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">scaled_x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scaled</span><span class="p">,</span>
+                        <span class="n">columns</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="n">x_subset</span> <span class="o">=</span> <span class="n">scaled_x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;ENSG00000065491.8&quot;</span><span class="p">]</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x_subset</span><span class="p">,</span> 
         <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">}</span>
@@ -14838,7 +14848,14 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="n">y</span> <span class="o">=</span> <span class="n">dat_sample_nathanson_subset</span><span class="p">[</span><span class="s2">&quot;response&quot;</span><span class="p">]</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">dat_exp_nathanson</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
 
-<span class="n">x_subset</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;ENSG00000065491.8&quot;</span><span class="p">]</span>
+<span class="c1"># transform data</span>
+<span class="n">scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">scaled_x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scaled</span><span class="p">,</span>
+                        <span class="n">columns</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="n">x_subset</span> <span class="o">=</span> <span class="n">scaled_x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;ENSG00000065491.8&quot;</span><span class="p">]</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x_subset</span><span class="p">,</span> 
         <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">}</span>
@@ -14860,11 +14877,17 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 
 
 <span class="c1"># Snyder</span>
-
 <span class="n">y</span> <span class="o">=</span> <span class="n">dat_sample_snyder_subset</span><span class="p">[</span><span class="s2">&quot;response&quot;</span><span class="p">]</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">dat_exp_snyder</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
 
-<span class="n">x_subset</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;ENSG00000065491.8&quot;</span><span class="p">]</span>
+<span class="c1"># transform data</span>
+<span class="n">scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">scaled_x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scaled</span><span class="p">,</span>
+                        <span class="n">columns</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="n">x_subset</span> <span class="o">=</span> <span class="n">scaled_x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;ENSG00000065491.8&quot;</span><span class="p">]</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x_subset</span><span class="p">,</span> 
         <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">}</span>
@@ -14890,7 +14913,17 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="n">y</span> <span class="o">=</span> <span class="n">dat_sample_van_allen_subset</span><span class="p">[</span><span class="s2">&quot;response&quot;</span><span class="p">]</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">dat_exp_van_allen</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
 
-<span class="n">x_subset</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;ENSG00000065491.8&quot;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">dat_sample_snyder_subset</span><span class="p">[</span><span class="s2">&quot;response&quot;</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">dat_exp_snyder</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+<span class="c1"># transform data</span>
+<span class="n">scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">scaled_x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scaled</span><span class="p">,</span>
+                        <span class="n">columns</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+                        <span class="n">index</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="n">x_subset</span> <span class="o">=</span> <span class="n">scaled_x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;ENSG00000065491.8&quot;</span><span class="p">]</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x_subset</span><span class="p">,</span> 
         <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">}</span>
@@ -14931,17 +14964,17 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>Optimization terminated successfully.
-         Current function value: 0.553173
-         Iterations 6
+         Current function value: 0.551454
+         Iterations 5
 Optimization terminated successfully.
          Current function value: 0.659012
-         Iterations 5
+         Iterations 4
 Optimization terminated successfully.
          Current function value: 0.678649
          Iterations 4
 Optimization terminated successfully.
-         Current function value: 0.529296
-         Iterations 5
+         Current function value: 0.678649
+         Iterations 4
 </pre>
 </div>
 </div>
@@ -14964,7 +14997,7 @@ observed effects are due to sampling error. In contrast, the RE model incorporat
 <p>Assessing heterogeneity is a critical issue in meta-analysis because different models may lead to different estimates of overall effect and different standard errors.Several approaches have been suggested over the years for how best to assess homogeneity across studies, and the corresponding research is ongoing. DerSimonian and Laird (DL) (or chi2) is widely used to assess the heterogeneity.</p>
 <h3 id="Part-I:-response-(R-vs.-NR)">Part I: response (R vs. NR)<a class="anchor-link" href="#Part-I:-response-(R-vs.-NR)">&#182;</a></h3><p>The meta-analysis is applied to integrate the results (i.e., logOR and SE) across ICB studies.
 The forest plot demonstrates the fitted logistic regression model under each study including  the logOR, SE and p-value.</p>
-<p>The forest plot shows the estimate heterogeneity across studies $I^2 = 36\%$. In addition, both FE and RE models show no association between TBC1D22B and ICB response.</p>
+<p>The forest plot shows the estimate heterogeneity across studies $I^2 = 37\%$. In addition, both FE and RE models show no association between TBC1D22B and ICB response.</p>
 
 </div>
 </div>
@@ -14974,7 +15007,7 @@ The forest plot demonstrates the fitted logistic regression model under each stu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
@@ -15021,9 +15054,9 @@ The forest plot demonstrates the fitted logistic regression model under each stu
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>[ 0.9834 -0.8841  0.4076 -0.7336]
-[0.3277 0.9136 0.752  0.8009]
-[0.0027, 0.3332, 0.5878, 0.3597]
+<pre>[ 0.6444 -0.4144  0.2392  0.2392]
+[0.2104 0.4282 0.4413 0.4413]
+[0.0022, 0.3332, 0.5878, 0.5878]
 </pre>
 </div>
 </div>
@@ -15037,7 +15070,7 @@ The forest plot demonstrates the fitted logistic regression model under each stu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">res3</span> <span class="o">=</span> <span class="n">combine_effects</span><span class="p">(</span><span class="n">eff</span><span class="p">,</span> <span class="n">var_eff</span><span class="p">,</span> <span class="n">method_re</span> <span class="o">=</span> <span class="s2">&quot;chi2&quot;</span><span class="p">,</span> <span class="n">row_names</span> <span class="o">=</span> <span class="n">rownames</span><span class="p">)</span>
@@ -15065,14 +15098,14 @@ The forest plot demonstrates the fitted logistic regression model under each stu
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>                        eff    sd_eff    ci_low    ci_upp      w_fe      w_re
-Braun              0.983400  0.051962  0.881557  1.085243  0.980197  0.315947
-Nathanson         -0.884100  0.577235 -2.015459  0.247259  0.007943  0.241842
-Snyder             0.407600  0.766681 -1.095067  1.910267  0.004502  0.204832
-Van_Allen         -0.733600  0.599750 -1.909088  0.441888  0.007358  0.237378
-fixed effect       0.953341  0.051444  0.852512  1.054171  1.000000       NaN
-random effect      0.006239  0.583761 -1.137912  1.150390       NaN  1.000000
-fixed effect wls   0.953341  0.129075  0.700359  1.206324  1.000000       NaN
-random effect wls  0.006239  0.467731 -0.910498  0.922976       NaN  1.000000
+Braun              0.644400  0.046904  0.552470  0.736330  0.986108  0.716911
+Nathanson         -0.414400  0.577235 -1.545759  0.716959  0.006511  0.127232
+Snyder             0.239200  0.766681 -1.263467  1.741867  0.003691  0.077929
+Van_Allen          0.239200  0.766681 -1.263467  1.741867  0.003691  0.077929
+fixed effect       0.634515  0.046577  0.543226  0.725805  1.000000       NaN
+random effect      0.446533  0.226275  0.003042  0.890025       NaN  1.000000
+fixed effect wls   0.634515  0.052957  0.530721  0.738309  1.000000       NaN
+random effect wls  0.446533  0.207423  0.039992  0.853075       NaN  1.000000
 </pre>
 </div>
 </div>
