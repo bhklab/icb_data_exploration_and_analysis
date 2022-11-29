@@ -34,8 +34,6 @@ for(file in objects){
   obj_name <- str_extract(file, '.*(?=.rds)')
   obj <- readRDS(file.path(input_dir, file))
   coldata <- data.frame(colData(obj))
-  coldata_list[[obj_name]] <- coldata
-  cols_list[[obj_name]] <- colnames(coldata)
   
   experiment <- NA
   if(!is.null(experiments(obj)[['expr']])){
@@ -43,7 +41,11 @@ for(file in objects){
   }else{
     experiment <- experiments(obj)[['expr_gene_tpm']]
   }
-  expr_list[[obj_name]] <- data.frame(assay(experiment))
+  experiment_df <- data.frame(assay(experiment))
+  coldata <- coldata[rownames(coldata) %in% colnames(experiment_df), ]
+  coldata_list[[obj_name]] <- coldata
+  cols_list[[obj_name]] <- colnames(coldata)
+  expr_list[[obj_name]] <- experiment_df
 }
 
 objects <- str_replace(objects, '.rds', '')
@@ -57,12 +59,14 @@ for(obj in objects){
 }
 
 merged_metadata <- data.frame(matrix(nrow=0, ncol=length(common_cols) + 1))
-colnames(merged_metadata) <- c(common_cols, 'dataset')
+colnames(merged_metadata) <- c(common_cols, 'study')
 for(obj in objects){
   coldata <- coldata_list[[obj]][, common_cols]
   dataset_name <- str_replace(obj, 'ICB_', '')
-  coldata$dataset <- dataset_name
-  rownames(coldata) <- paste0(rownames(coldata), '_', dataset_name)
+  coldata$study <- dataset_name
+  unique_id <- paste0(rownames(coldata), '_', dataset_name)
+  rownames(coldata) <- unique_id
+  coldata$patientid <- unique_id
   merged_metadata <- rbind(merged_metadata, coldata)
 }
 
