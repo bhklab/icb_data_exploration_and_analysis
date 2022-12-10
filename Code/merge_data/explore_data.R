@@ -3,6 +3,7 @@ library(data.table)
 library(plotly)
 library(pheatmap)
 library(viridis)
+library(pivottabler)
 
 input_dir <- '~/Data/merged'
 
@@ -10,7 +11,7 @@ df_merged <- read.table(file=file.path(input_dir, 'merged_metadata.tsv'), header
 studies <- unique(df_merged$study)
 common_colnames <- c(
   "sex","age","cancer_type","histo","tissueid","treatmentid","stage","recist","response","treatment",
-  "survival_time_pfs","event_occurred_pfs","survival_time_os","event_occurred_os"
+  "survival_time_pfs","event_occurred_pfs","survival_time_os","event_occurred_os", "survival_type", "TMB_raw"
 )
 
 ### Available coldata heatmap ###
@@ -45,9 +46,20 @@ pheatmap(
   color=colorRampPalette(c("red", "blue"))(50)
 )
 
+### Pivot Table ###
+pt <- PivotTable$new()
+pt$addData(df_merged)
+pt$addColumnDataGroups("response")
+pt$addRowDataGroups("cancer_type", addTotal=FALSE)
+pt$defineCalculation(calculationName="TotalPatients", summariseExpression="n()")
+pt$renderPivot()
+
 
 ### Common genes heatmap ###
 df_expr_merged <- read.table(file=file.path(input_dir, 'merged_expr.tsv'), header = TRUE, sep = '\t')
+
+range(df_expr_merged, na.rm=TRUE)
+
 all.features <- list()
 for(study in studies){
   patients <- rownames(df_merged[df_merged$study == study, ])
@@ -56,7 +68,15 @@ for(study in studies){
   all.features[[study]] <- rownames(expr)
 }
 
-excluded_studies <- c('Hwang', 'Jerby_Arnon', 'Roh') # small number of common genes
+num_features_df <- data.frame(matrix(nrow=length(all.features), ncol=2))
+colnames(num_features_df) <- c('study', 'num_genes')
+num_features_df$study <- names(all.features)
+num_features_df$num_genes <- unlist(lapply(names(all.features), function(name){
+  length(all.features[[name]])
+}))
+
+# excluded_studies <- c('Hwang', 'Jerby_Arnon', 'Roh') # small number of common genes
+excluded_studies <- c()
 studies_common_genes <- studies[!studies %in% excluded_studies]
 temp.features <- all.features[names(all.features)[!names(all.features) %in% excluded_studies]]
 
@@ -77,9 +97,11 @@ heatmap.table <- (overlapping_genes_table / num_genes) * 100
 
 pheatmap(heatmap.table, color = viridis(30))
 
+### pie chart breaking down number of samples by tissueid,treatment etc. 
+
 
 ### pie chart for patient and gene availability (depth and breadth) ###
-studies_to_remove <- c('Puch', 'Shiuan', 'Liu', 'Padron', 'VanDenEnde', 'Snyder')
+studies_to_remove <- c('Puch', 'Shiuan', 'Liu', 'Padron', 'VanDenEnde', 'Snyder', 'Hwang', 'Jerby_Arnon', 'Roh', 'Mariathasan')
 
 available_studies <- df_merged[!df_merged$study %in% excluded_studies, ]
 all_patients <- length(rownames(available_studies))

@@ -1,0 +1,17 @@
+.container-fluid {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.navbar {
+    border-radius: 0px;
+	padding-left: 15px;
+}
+
+.row{
+	margin-left: 1px;
+}
+
+h1, h2, h3 {
+	margin-top: 10px;
+}

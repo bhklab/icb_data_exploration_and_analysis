@@ -31,6 +31,7 @@ coldata_list <- list()
 cols_list <- list()
 expr_list <- list()
 for(file in objects){
+  print(file)
   obj_name <- str_extract(file, '.*(?=.rds)')
   obj <- readRDS(file.path(input_dir, file))
   coldata <- data.frame(colData(obj))
@@ -46,6 +47,7 @@ for(file in objects){
   coldata_list[[obj_name]] <- coldata
   cols_list[[obj_name]] <- colnames(coldata)
   expr_list[[obj_name]] <- experiment_df
+  print(range(experiment_df))
 }
 
 objects <- str_replace(objects, '.rds', '')
@@ -94,23 +96,27 @@ features_gene_v19 <- features_gene
 load(file.path(ref_dir, 'Gencode.v40.annotation.RData'))
 features_gene_v40 <- features_gene
 
-genes_v19_no_version <- str_replace(features_gene_v19$gene_id, '\\.[0-9]+', '')
-genes_v40_no_version <- str_replace(features_gene_v40$gene_id, '\\.[0-9]+', '')
-common_genes <- intersect(genes_v40_no_version, genes_v19_no_version)
-common_genes_df <- features_gene_v40[str_replace(features_gene_v40$gene_id, '\\.[0-9]+', '') %in% as.character(common_genes), ]
+genes_v19 <- features_gene_v19$gene_id
+genes_v40 <- features_gene_v40$gene_id
+
+# genes_v19 <- str_replace(genes_v19$gene_id, '\\.[0-9]+', '')
+# genes_v40 <- str_replace(genes_v40$gene_id, '\\.[0-9]+', '')
+
+common_genes <- intersect(genes_v40, genes_v19)
+common_genes_df <- features_gene_v40[features_gene_v40$gene_id %in% as.character(common_genes), ]
 common_genes_df$gene_id_no_ver <- str_replace(common_genes_df$gene_id, '\\.[0-9]+', '')
 
 merged_expr <- data.frame(matrix(
   nrow=length(rownames(common_genes_df)), 
   ncol=0)
 )
-rownames(merged_expr) <- common_genes_df$gene_id_no_ver
+rownames(merged_expr) <- common_genes_df$gene_id
 merged_expr <- merged_expr[str_order(rownames(merged_expr)), ]
 for(obj in objects){
   expr <- expr_list[[obj]]
-  rownames(expr) <- str_replace(rownames(expr), '\\.[0-9]+', '')
-  expr <- expr[rownames(expr) %in% common_genes_df$gene_id_no_ver, ]
-  missing <- common_genes_df$gene_id_no_ver[!common_genes_df$gene_id_no_ver %in% rownames(expr)]
+  # rownames(expr) <- str_replace(rownames(expr), '\\.[0-9]+', '')
+  expr <- expr[rownames(expr) %in% common_genes_df$gene_id, ]
+  missing <- common_genes_df$gene_id[!common_genes_df$gene_id %in% rownames(expr)]
   missing_df <- data.frame(matrix(nrow=length(missing), ncol=length(colnames(expr))))
   rownames(missing_df) <- missing
   colnames(missing_df) <- colnames(expr)
