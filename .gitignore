@@ -42,4 +42,4 @@ vignettes/*.pdf
 
 .DS_Store
 
-ShinyApp/data
+# ShinyApp/data

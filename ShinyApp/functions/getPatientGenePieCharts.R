@@ -26,17 +26,19 @@ getPatientGenePieCharts <- function(df_metadata, overlapping_genes_table, exclud
   pie_patients <- plot_ly(
     patients, 
     labels = ~availability, 
-    values = ~percentage, 
+    values = ~percentage,
+    textinfo='label+percent',
     marker = list(colors = colors),
     type = 'pie',
-    textfont = list(size = 40)
+    textfont = list(size = 15)
   )
   pie_patients <- pie_patients %>% 
     layout(
       title = '',
       xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
       yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-      legend = list(font = list(size = 20))
+      legend = list(font = list(size = 10)),
+      margin = list(t=50)
     )
   
   # number of genes
@@ -49,19 +51,23 @@ getPatientGenePieCharts <- function(df_metadata, overlapping_genes_table, exclud
     genes, 
     labels = ~availability, 
     values = ~percentage, 
+    textinfo='label+percent',
     marker = list(colors = colors),
     type = 'pie',
-    textfont = list(size = 40)
+    textfont = list(size = 15)
   )
   pie_genes <- pie_genes %>% 
     layout(
       title = '',
       xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
       yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-      legend = list(font = list(size = 20))
+      legend = list(font = list(size = 10)),
+      margin = list(t=50)
     )
   return(list(
     pie_patients=pie_patients,
-    pie_genes=pie_genes
+    num_patients=available_patients,
+    pie_genes=pie_genes,
+    num_genes=available_genes
   ))
 }
