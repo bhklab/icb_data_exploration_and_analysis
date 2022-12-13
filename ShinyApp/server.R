@@ -7,7 +7,9 @@ server <- function(input, output){
   Query <- reactiveValues(
     studies = NULL, 
     excluded_studies = NULL,
-    columns = c()
+    columns = c(),
+    cancer_type = c(),
+    treatment = c()
   )
   
   observeEvent(
@@ -34,6 +36,20 @@ server <- function(input, output){
     }
   )
   
+  observeEvent(
+    input$cancer_type,
+    {
+      Query$cancer_type <- input$cancer_type
+    }
+  )
+  
+  observeEvent(
+    input$treatment,
+    {
+      Query$treatment <- input$treatment
+    }
+  )
+  
   observe({
     metadataHeatmap <- getMetadataHeatmap(df_metadata, Query$studies)
     output$metadataHeatmap <- renderPlot(
@@ -42,9 +58,15 @@ server <- function(input, output){
   })
   
   observe({
-    output$metadataPivotTable <- renderPivottabler(
-      getMetadataPivotTable(Query$columns)
-    )
+    if(length(Query$columns) > 0){
+      output$metadataPivotTable <- renderPivottabler(
+        getMetadataPivotTable(
+          Query$columns, 
+          Query$cancer_type, 
+          Query$treatment
+        )
+      )
+    }
   })
   
   observe({

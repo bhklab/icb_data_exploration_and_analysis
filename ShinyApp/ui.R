@@ -32,6 +32,28 @@ ui <- fluidPage(
               inline = TRUE,
               width = NULL,
             ),
+            conditionalPanel(
+              condition='input.columns.includes("cancer_type")',
+              checkboxGroupInput(
+                inputId='cancer_type',
+                label='Select cancer types to include:',
+                choices = cancer_types,
+                selected = cancer_types,
+                inline = TRUE,
+                width = NULL,
+              ),
+            ),
+            conditionalPanel(
+              condition='input.columns.includes("treatment")',
+              checkboxGroupInput(
+                inputId='treatment',
+                label='Select treatment value to include:',
+                choices = treatments,
+                selected = treatments,
+                inline = TRUE,
+                width = NULL,
+              ),
+            ),
             pivottablerOutput('metadataPivotTable')
           ), 
           tabPanel(

@@ -21,11 +21,16 @@ for(study in studies){
 source('functions/getMetadataHeatmap.R')
 source('functions/getPatientGeneNumberTable.R')
 source('functions/getPatientGenePieCharts.R')
+source('functions/getMetadataPivotTable.R')
 
 common_colnames <- c(
   "study", "sex","cancer_type","histo","treatmentid","stage","recist","response","treatment",
   "event_occurred_pfs","event_occurred_os", "survival_type"
 )
+
+cancer_types <- sort(unique(df_metadata$cancer_type))
+
+treatments <- sort(unique(df_metadata$treatment))
 
 getGenePatientPlots <- function(excluded_studies){
   plots <- list()
@@ -52,16 +57,4 @@ getGenePatientPlots <- function(excluded_studies){
   plots[['numPatients']] <- pieCharts[['num_patients']]
   plots[['numGenes']] <- pieCharts[['num_genes']]
   return(plots)
-}
-
-getMetadataPivotTable <- function(columns){
-  pt <- PivotTable$new()
-  pt$addData(df_metadata)
-  for(column in columns){
-    pt$addRowDataGroups(column, addTotal=FALSE)
-  }
-  pt$defineCalculation(calculationName="Total", summariseExpression="n()")
-  pt$evaluatePivot()
-  pt <- pivottabler(pt)
-  return(pt)
 }
